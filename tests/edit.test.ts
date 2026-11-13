@@ -17,7 +17,7 @@ test('editar desde el catálogo: cambia precio/estado/memoria y conserva marca, 
   updateQuick(db, dir, id, { price: 199, condition: 'nuevo', ramGb: 6, storageGb: 128 });
   const [p] = repo.listProducts();
   assert.equal(p.model, 'Galaxy A16'); assert.equal(p.price, 199); assert.equal(p.condition, 'nuevo'); assert.equal(p.ramGb, 6);
-  assert.equal(repo.getSpecs(p.modelId).find((s) => s.key === 'Procesador')!.value, 'MediaTek Helio G99');
+  assert.match(repo.getSpecs(p.modelId).find((s) => s.key === 'Procesador')!.value, /^MediaTek Helio G99/);
   const out = db.prepare(`SELECT content FROM repo_outbox WHERE path = ?`).get(`catalog/products/${id}.json`);
   const doc = JSON.parse(Buffer.from(out.content, 'base64').toString());
   assert.equal(doc.name, 'Samsung Galaxy A16 6/128'); assert.equal(doc.description, 'Texto');

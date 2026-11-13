@@ -5,8 +5,8 @@
  "aliases": [
   "Galaxy A54"
  ],
- "variant": "Galaxy A54 5G (SM-A546B global y SM-A546E con eSIM; otros códigos regionales sin eSIM). La unidad en stock no tiene código de modelo registrado.",
- "reviewedAt": "2026-11-13",
+ "variant": "Galaxy A54 5G (SM-A546B global, SM-A546E, SM-A546M Latinoamérica, SM-A546U EE.UU., entre otros). Mismo hardware; cambian bandas y eSIM. La unidad en stock no tiene código de modelo registrado.",
+ "reviewedAt": "2026-11-13b",
  "sources": {
   "nano": {
    "name": "Nanoreview — Samsung Galaxy A54 5G",
@@ -19,6 +19,18 @@
    "url": "https://comparigon.com/phones/samsung-galaxy-a54-5g",
    "date": "2026-11-13",
    "kind": "tecnica"
+  },
+  "news": {
+   "name": "Samsung Newsroom — Galaxy A54 5G y A34 5G (15/03/2023), tabla de especificaciones",
+   "url": "https://news.samsung.com/global/the-samsung-galaxy-a54-5g-and-galaxy-a34-5g-awesome-experiences-for-all",
+   "date": "2026-11-13",
+   "kind": "oficial"
+  },
+  "hk": {
+   "name": "Samsung Hong Kong — Especificaciones del Galaxy A54 5G",
+   "url": "https://www.samsung.com/hk_en/news/product/new-stars-of-the-samsung-galaxy-a-series-galaxy-a54-a34-5g",
+   "date": "2026-11-13",
+   "kind": "oficial"
   }
  },
  "fields": [
@@ -55,13 +67,13 @@
   {
    "group": "Pantalla",
    "key": "Brillo",
-   "value": "1000 nits (máximo declarado)",
+   "value": "1000 nits (pico)",
    "status": "verificado",
    "sources": [
-    "nano",
-    "comp"
+    "hk",
+    "nano"
    ],
-   "note": "Ninguna fuente separa brillo típico, HBM y pico; Nanoreview midió 983 nits."
+   "note": "Samsung HK publica 1000 nits de brillo pico; no publica brillo típico ni HBM por separado."
   },
   {
    "group": "Chip",
@@ -86,51 +98,51 @@
   {
    "group": "Memoria",
    "key": "RAM",
-   "value": "6 / 8 GB (según la configuración)",
-   "status": "sin_confirmar",
+   "value": "6 / 8 GB",
+   "status": "verificado",
    "sources": [
-    "comp",
-    "nano"
+    "news"
    ],
-   "note": "Comparigon indica 4/6/8 GB y Nanoreview solo 4 GB: no coinciden. La unidad en stock es 8/256 según el inventario."
+   "note": "Combinaciones oficiales: 6/128, 8/128 y 8/256 GB («pueden variar según el mercado»). La unidad en stock figura como 8/256 en el inventario."
   },
   {
    "group": "Memoria",
    "key": "Almacenamiento",
    "value": "128 / 256 GB",
-   "status": "sin_confirmar",
+   "status": "verificado",
    "sources": [
-    "comp",
-    "nano"
-   ],
-   "note": "Nanoreview solo lista 128 GB."
+    "news"
+   ]
   },
   {
    "group": "Memoria",
    "key": "microSD",
    "value": "Sí, hasta 1 TB (bandeja híbrida)",
-   "status": "sin_confirmar",
-   "sources": [
-    "nano"
-   ],
-   "note": "Comparigon no lo indica."
-  },
-  {
-   "group": "Batería y carga",
-   "key": "Batería",
-   "value": "5000 mAh",
    "status": "verificado",
    "sources": [
-    "nano",
-    "comp"
+    "news",
+    "hk"
    ]
   },
   {
    "group": "Batería y carga",
-   "key": "Carga rápida",
-   "value": "25 W máx. por cable",
+   "key": "Batería",
+   "value": "5000 mAh (típica; 4905 mAh nominal)",
    "status": "verificado",
    "sources": [
+    "news",
+    "nano",
+    "comp"
+   ],
+   "note": "Valor típico según IEC 61960 (nota al pie de Samsung)."
+  },
+  {
+   "group": "Batería y carga",
+   "key": "Carga rápida",
+   "value": "25 W máx. por cable (cargador no incluido)",
+   "status": "verificado",
+   "sources": [
+    "hk",
     "nano",
     "comp"
    ]
@@ -158,41 +170,42 @@
   {
    "group": "Cámaras",
    "key": "Cámara principal",
-   "value": "50 MP f/1.8 con estabilización óptica (OIS)",
+   "value": "50 MP f/1.8, AF, con estabilización óptica (OIS)",
    "status": "verificado",
    "sources": [
-    "nano",
-    "comp"
+    "news",
+    "hk"
    ]
   },
   {
    "group": "Cámaras",
    "key": "Gran angular",
-   "value": "12 MP ultra gran angular f/2.2",
+   "value": "12 MP ultra gran angular f/2.2, 123°",
    "status": "verificado",
    "sources": [
-    "nano",
-    "comp"
+    "news",
+    "hk"
    ]
   },
   {
    "group": "Cámaras",
    "key": "Macro",
    "value": "5 MP f/2.4",
-   "status": "sin_confirmar",
+   "status": "verificado",
    "sources": [
-    "nano"
-   ],
-   "note": "Comparigon menciona triple cámara sin datos de la tercera."
+    "news",
+    "hk"
+   ]
   },
   {
    "group": "Cámaras",
    "key": "Zoom óptico",
-   "value": "No (solo digital)",
-   "status": "sin_confirmar",
+   "value": "No (sin teleobjetivo)",
+   "status": "no_compatible",
    "sources": [
-    "nano"
-   ]
+    "news"
+   ],
+   "note": "La ficha oficial lista tres cámaras traseras: principal, ultra gran angular y macro."
   },
   {
    "group": "Cámaras",
@@ -200,16 +213,17 @@
    "value": "32 MP f/2.2",
    "status": "verificado",
    "sources": [
-    "nano",
-    "comp"
+    "news",
+    "hk"
    ]
   },
   {
    "group": "Cámaras",
    "key": "Video",
-   "value": "4K a 30 fps; 1080p a 60 fps",
+   "value": "4K a 30 fps",
    "status": "verificado",
    "sources": [
+    "hk",
     "nano",
     "comp"
    ]
@@ -237,23 +251,23 @@
   {
    "group": "Conectividad",
    "key": "Bandas",
-   "value": "Depende de la variante",
+   "value": "Depende de la variante (Hong Kong: 5G n1/n5/n28/n40/n41/n78/n79; LTE B1–B41)",
    "status": "depende_variante",
    "sources": [
-    "nano"
+    "hk"
    ],
-   "note": "Hace falta el código de modelo (SM-A546…) de la unidad."
+   "note": "Bandas publicadas para la variante de Hong Kong. Para la unidad hace falta el código SM-A546…."
   },
   {
    "group": "Conectividad",
    "key": "SIM",
-   "value": "2 nano-SIM; eSIM solo en SM-A546B y SM-A546E",
+   "value": "Dual nano-SIM (bandeja híbrida); eSIM según la variante",
    "status": "depende_variante",
    "sources": [
-    "nano",
-    "comp"
+    "hk",
+    "nano"
    ],
-   "note": "Para saber si tiene eSIM hace falta el código de modelo."
+   "note": "Hace falta el código de modelo para saber si tiene eSIM."
   },
   {
    "group": "Conectividad",
@@ -261,6 +275,7 @@
    "value": "Sí",
    "status": "verificado",
    "sources": [
+    "hk",
     "nano",
     "comp"
    ]
@@ -268,29 +283,31 @@
   {
    "group": "Conectividad",
    "key": "Wi-Fi",
-   "value": "Wi-Fi 6",
-   "status": "sin_confirmar",
+   "value": "Wi-Fi 6 (802.11 a/b/g/n/ac/ax), 2,4 + 5 GHz",
+   "status": "verificado",
    "sources": [
+    "hk",
     "nano"
-   ],
-   "note": "Comparigon no indica el estándar."
+   ]
   },
   {
    "group": "Conectividad",
    "key": "Bluetooth",
    "value": "5.3",
-   "status": "sin_confirmar",
+   "status": "verificado",
    "sources": [
+    "hk",
     "nano"
    ],
-   "note": "Hay datos contradictorios (comentarios citan 5.0 según Samsung); falta la ficha oficial."
+   "note": "Ficha oficial de Samsung Hong Kong."
   },
   {
    "group": "Otros",
    "key": "Lanzamiento",
-   "value": "Marzo de 2023",
+   "value": "Anunciado el 15/03/2023",
    "status": "verificado",
    "sources": [
+    "news",
     "nano",
     "comp"
    ]
@@ -298,21 +315,23 @@
   {
    "group": "Soporte",
    "key": "Sistema operativo",
-   "value": "Android 13 de fábrica",
-   "status": "sin_confirmar",
+   "value": "Android 13 (One UI 5.1) de fábrica",
+   "status": "verificado",
    "sources": [
-    "nano"
+    "news",
+    "hk"
    ]
   },
   {
    "group": "Soporte",
    "key": "Años de actualizaciones",
-   "value": "4 versiones de Android y 5 años de seguridad",
-   "status": "sin_confirmar",
+   "value": "Hasta 4 generaciones de Android y 5 años de seguridad",
+   "status": "verificado",
    "sources": [
-    "nano"
+    "news",
+    "hk"
    ],
-   "note": "Falta confirmarlo con la política oficial de Samsung."
+   "note": "Política publicada por Samsung en el lanzamiento."
   },
   {
    "group": "Dimensiones",
@@ -337,20 +356,20 @@
   {
    "group": "Protección",
    "key": "Resistencia",
-   "value": "IP67",
-   "status": "sin_confirmar",
+   "value": "IP67 (hasta 1 m durante 30 min)",
+   "status": "verificado",
    "sources": [
+    "hk",
     "nano"
-   ],
-   "note": "Comparigon solo dice «resistente al agua»."
+   ]
   },
   {
    "group": "Protección",
    "key": "Biometría",
-   "value": "Huella en pantalla",
-   "status": "sin_confirmar",
+   "value": "Huella en pantalla y reconocimiento facial",
+   "status": "verificado",
    "sources": [
-    "nano"
+    "hk"
    ]
   },
   {
@@ -360,16 +379,18 @@
    "status": "sin_confirmar",
    "sources": [
     "nano"
-   ]
+   ],
+   "note": "La ficha oficial no detalla materiales."
   },
   {
    "group": "Otros",
    "key": "Audio",
-   "value": "Parlantes estéreo, sin conector de auriculares",
-   "status": "sin_confirmar",
+   "value": "Parlantes estéreo con Dolby Atmos",
+   "status": "verificado",
    "sources": [
-    "nano"
-   ]
+    "hk"
+   ],
+   "note": "Conector de auriculares: solo una fuente indica que no tiene."
   }
  ],
  "antutu": {
@@ -381,20 +402,16 @@
  },
  "pending": [
   {
-   "key": "Combinaciones de RAM/almacenamiento",
-   "why": "Las dos fuentes técnicas no coinciden y no se pudo abrir la ficha oficial de Samsung (falta habilitar el sitio)."
-  },
-  {
-   "key": "Brillo típico / HBM / pico",
-   "why": "Ninguna fuente los separa."
-  },
-  {
-   "key": "Wi-Fi, Bluetooth, IP67, microSD, cámara macro",
-   "why": "Una sola fuente técnica o contradicciones; falta la ficha oficial de Samsung."
+   "key": "Materiales",
+   "why": "Una sola fuente técnica. Pendiente de búsqueda web en GSMArena (requiere aprobar el acceso): \"Galaxy A54\" build frame site:gsmarena.com"
   },
   {
    "key": "Bandas y eSIM de la unidad",
-   "why": "Falta el código de modelo (SM-A546…) en el inventario."
+   "why": "Falta el código de modelo (SM-A546…) de la unidad en el inventario."
+  },
+  {
+   "key": "Brillo típico / HBM",
+   "why": "Samsung solo publica el pico (1000 nits); ninguna fuente abierta separa típico y HBM."
   }
  ]
 }

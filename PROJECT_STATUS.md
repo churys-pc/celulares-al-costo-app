@@ -56,6 +56,7 @@
 - [x] v0.11.1: comparador limitado a 3 celulares (antes 4), pedido del usuario; si había 4 guardados se conservan los 3 primeros. Catálogo cargado desde el PDF del 13/11 (116 celulares en el repo de datos).
 - [x] v0.11.2: se quitó la sección «Fichas técnicas» de Ajustes (pedido del usuario). El avance de fichas sigue en `server/data/fichas/AVANCE.md` y en `GET /api/fichas`.
 - [x] v0.12.0: el admin edita (precio USD, estado, RAM, almacenamiento, color, foto) y elimina productos desde el Catálogo (botones en la fila y en «Ver equipo»; `PATCH /api/quick/products/:id` → `updateQuick`, conserva marca/modelo/descripción/ficha y lo sube al repo). Buscador en la lista de «Cargar productos».
+- [x] v0.12.1: fichas lote 1b — se reabrieron los «Sin confirmar» con fuentes oficiales (Apple Newsroom, Samsung Newsroom global/UK/AR, Samsung HK/CO/LB). iPhone 11 30/33, A54 5G 30/35, A16 5G 23/31, A16 4G 23/32 verificados. Pendientes y consultas listas en `fichas/AVANCE.md`.
 - [ ] Fase 1 (bloque 3): import/export CSV.
 - [ ] Luego: versión móvil (Safari) con el diseño del mockup.
 - [ ] Fases 2-6 según prompt original.

@@ -22,8 +22,29 @@ y tiene prioridad sobre los datos cargados automáticamente (Nanoreview / lotes 
 Fuentes usadas: support.apple.com, nanoreview.net, comparigon.com.
 **Bloqueado**: samsung.com y gsmarena.com necesitan que el usuario habilite el acceso en esta sesión.
 
+## Lote 1b — 2026-11-13 (reapertura de «Sin confirmar» con fuentes oficiales)
+| Ficha | Antes → ahora (verificados) | Sigue abierto |
+|---|---|---|
+| apple-iphone-11 | 28/31 → 30/33 | microSD (una sola fuente explícita) |
+| samsung-galaxy-a54-5g | 19/35 → 30/35 | Materiales; bandas/eSIM de la unidad; brillo típico/HBM |
+| samsung-galaxy-a16-5g | 18/31 → 23/31 | Procesador de la unidad; RAM/almacenamiento; microSD máxima (Samsung se contradice) |
+| samsung-galaxy-a16-4g | 0/26 → 23/32 | Nombre del chip; RAM/almacenamiento; Android de fábrica; carga inalámbrica |
+
+Fuentes oficiales agregadas: Apple Newsroom (iPhone 11), Samsung Newsroom global/UK/Argentina, Samsung Hong Kong, Samsung Colombia (SM-A166M), Samsung Líbano (SM-A165F).
+
+### Pendiente de búsqueda web (requiere aprobar acceso a gsmarena.com)
+- iPhone 11 · microSD → `"iPhone 11" "card slot" site:gsmarena.com`
+- Galaxy A54 5G · materiales → `"Galaxy A54" build frame plastic site:gsmarena.com`
+- Galaxy A16 (SM-A165F) · chip → `"Galaxy A16" SM-A165F chipset site:gsmarena.com`
+- Galaxy A16 (SM-A165F) · Android de fábrica → `"Galaxy A16" LTE "Android 14" site:gsmarena.com`
+- Galaxy A16 5G · 4 GB/128 GB → `"Galaxy A16 5G" "4GB RAM" 128GB site:samsung.com`
+
+### Valores vistos en Google sin validar
+- GSMArena (vista previa): Galaxy A16 «4-8GB RAM Helio G99» y modelos SM-A165F/M. No se abrió: el acceso a gsmarena.com quedó sin aprobar.
+- Three UK (devicesupport.three.co.uk): A16 4G con Helio G99 y BT 5.3. No se abrió: operador, dominio sin aprobar.
+
 ## Próximos lotes (orden)
-1. Completar lo pendiente del lote 1 con la ficha oficial de Samsung y GSMArena.
+1. Lote 2: iPhone en stock (12, 13, 13 Pro, 13 Pro Max, 14, 14 Pro, 14 Pro Max, 15, 16, 17, 17 Air, 17 Pro, 17 Pro Max, 18 Pro, 18 Pro Max, 8 Plus) con support.apple.com.
 2. Modelos de los lotes precargados (Apple, Samsung, Xiaomi, varios): ~49 modelos con datos de una sola fuente.
 3. Base popular (`popular-models.json`, 84 modelos) que las PCs bajan de Nanoreview.
 4. Cada modelo nuevo cargado en «Cargar productos» aparece en Ajustes → Fichas técnicas como pendiente.

@@ -34,11 +34,12 @@ test('fichas: iPhone, par 4G/5G y modelo sin stock usan la misma ficha en catál
   assert.deepEqual(cmp.specs, repo.getSpecs(id('iPhone 11'))); // misma fuente para ficha y comparador
   assert.equal(repo.listBenchmarks(id('iPhone 11'))[0].sample, 'individual');
   // Nombres parecidos: cada variante tiene su propia ficha.
-  assert.equal(spec(repo, id('Galaxy A16'), 'Procesador')!.value, 'MediaTek Helio G99');
+  assert.match(spec(repo, id('Galaxy A16'), 'Procesador')!.value, /^MediaTek Helio G99/);
   assert.equal(spec(repo, id('Galaxy A16 5G'), 'Procesador')!.status, 'depende_variante');
   assert.equal(findFicha('Samsung', 'Galaxy A16 LTE')!.id, 'samsung-galaxy-a16-4g');
-  // Pendiente ≠ no compatible: el A16 4G no tiene 5G confirmado por dos fuentes → «Sin confirmar», no «No compatible».
-  assert.equal(spec(repo, id('Galaxy A16'), '5G')!.status, 'sin_confirmar');
+  // Pendiente ≠ no compatible: el A16 4G no tiene 5G (oficial) → «No compatible»; su carga inalámbrica sigue «Sin confirmar».
+  assert.equal(spec(repo, id('Galaxy A16'), '5G')!.status, 'no_compatible');
+  assert.equal(spec(repo, id('Galaxy A16'), 'Carga inalámbrica')!.status, 'sin_confirmar');
   assert.equal(spec(repo, id('Galaxy A16 5G'), 'Carga inalámbrica')!.status, 'no_compatible');
   const st = fichasStatus(db);
   assert.equal(st.withFicha, 4);

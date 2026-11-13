@@ -4,7 +4,7 @@
  "model": "iPhone 11",
  "aliases": [],
  "variant": "iPhone 11 (A2111 EE.UU./Canadá · A2221 global · A2223 China/Hong Kong). Mismas características salvo bandas celulares y eSIM según región.",
- "reviewedAt": "2026-11-13",
+ "reviewedAt": "2026-11-13b",
  "sources": {
   "apple": {
    "name": "Apple — iPhone 11: especificaciones técnicas",
@@ -23,6 +23,12 @@
    "url": "https://comparigon.com/phones/apple-iphone-11",
    "date": "2026-11-13",
    "kind": "tecnica"
+  },
+  "news": {
+   "name": "Apple Newsroom — Apple presenta el iPhone 11 (10/09/2019)",
+   "url": "https://www.apple.com/uk/newsroom/2019/09/apple-introduces-dual-camera-iphone-11/",
+   "date": "2026-11-13",
+   "kind": "oficial"
   }
  },
  "fields": [
@@ -53,6 +59,17 @@
     "apple"
    ],
    "note": "Apple publica el brillo máximo típico; no publica brillo pico."
+  },
+  {
+   "group": "Pantalla",
+   "key": "Frecuencia",
+   "value": "60 Hz",
+   "status": "verificado",
+   "sources": [
+    "nano",
+    "comp"
+   ],
+   "note": "Apple no la publica; coinciden dos fuentes técnicas (sección Display)."
   },
   {
    "group": "Chip",
@@ -91,6 +108,16 @@
    "sources": [
     "apple"
    ]
+  },
+  {
+   "group": "Memoria",
+   "key": "microSD",
+   "value": "No (según una fuente técnica)",
+   "status": "sin_confirmar",
+   "sources": [
+    "nano"
+   ],
+   "note": "Nanoreview indica «Memory card: No»; Apple lista solo capacidades fijas sin mencionar ranura. Falta una segunda fuente explícita."
   },
   {
    "group": "Batería y carga",
@@ -255,9 +282,10 @@
   {
    "group": "Otros",
    "key": "Lanzamiento",
-   "value": "Septiembre de 2019",
+   "value": "Septiembre de 2019 (en tiendas desde el 20/09/2019)",
    "status": "verificado",
    "sources": [
+    "news",
     "nano",
     "comp"
    ]
@@ -266,11 +294,12 @@
    "group": "Soporte",
    "key": "Sistema operativo",
    "value": "iOS 13 de fábrica",
-   "status": "sin_confirmar",
+   "status": "verificado",
    "sources": [
+    "news",
     "nano"
    ],
-   "note": "Solo una fuente técnica lo indica; la ficha oficial no nombra la versión de lanzamiento."
+   "note": "Comunicado oficial de lanzamiento: «iOS 13 on iPhone 11». Disponible en tiendas desde el 20/09/2019."
   },
   {
    "group": "Dimensiones",
@@ -328,16 +357,8 @@
  },
  "pending": [
   {
-   "key": "Frecuencia de pantalla",
-   "why": "Apple no la publica y no se confirmó con dos fuentes técnicas en esta revisión."
-  },
-  {
    "key": "microSD",
-   "why": "No hay respaldo explícito en las fuentes consultadas (la ficha oficial no menciona ranura)."
-  },
-  {
-   "key": "Sistema operativo de fábrica",
-   "why": "Solo una fuente técnica (Nanoreview); falta una segunda o la nota oficial de lanzamiento."
+   "why": "Una sola fuente explícita (Nanoreview). Pendiente de búsqueda web en GSMArena (requiere aprobar el acceso). Consulta lista: \"iPhone 11\" \"card slot\" site:gsmarena.com"
   }
  ]
 }

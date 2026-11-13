@@ -6,14 +6,26 @@
   "Galaxy A16 4G",
   "Galaxy A16 LTE"
  ],
- "variant": "Galaxy A16 4G (LTE), MediaTek Helio G99. No confundir con el Galaxy A16 5G.",
- "reviewedAt": "2026-11-13",
+ "variant": "Galaxy A16 4G / LTE (SM-A165F, SM-A165M). No confundir con el Galaxy A16 5G (SM-A166…).",
+ "reviewedAt": "2026-11-13b",
  "sources": {
   "nano": {
    "name": "Nanoreview — Samsung Galaxy A16 4G",
    "url": "https://nanoreview.net/en/phone/samsung-galaxy-a16-4g",
    "date": "2026-11-13",
    "kind": "tecnica"
+  },
+  "uk": {
+   "name": "Samsung Newsroom UK — Galaxy A16 Series (A16 5G y A16 LTE)",
+   "url": "https://news.samsung.com/uk/samsung-introduces-the-galaxy-a16-series-featuring-two-new-devices",
+   "date": "2026-11-13",
+   "kind": "oficial"
+  },
+  "lb": {
+   "name": "Samsung Líbano — Galaxy A16 (SM-A165F), especificaciones",
+   "url": "https://www.samsung.com/lb/smartphones/galaxy-a/galaxy-a16-light-green-128gb-sm-a165flgdmea/",
+   "date": "2026-11-13",
+   "kind": "oficial"
   }
  },
  "fields": [
@@ -21,26 +33,28 @@
    "group": "Pantalla",
    "key": "Tamaño y tipo",
    "value": "6,7\" Super AMOLED",
-   "status": "sin_confirmar",
+   "status": "verificado",
    "sources": [
-    "nano"
+    "lb",
+    "uk"
    ]
   },
   {
    "group": "Pantalla",
    "key": "Resolución",
-   "value": "1080 x 2340",
-   "status": "sin_confirmar",
+   "value": "1080 x 2340 (FHD+)",
+   "status": "verificado",
    "sources": [
-    "nano"
+    "lb"
    ]
   },
   {
    "group": "Pantalla",
    "key": "Frecuencia",
    "value": "90 Hz",
-   "status": "sin_confirmar",
+   "status": "verificado",
    "sources": [
+    "uk",
     "nano"
    ]
   },
@@ -56,11 +70,13 @@
   {
    "group": "Chip",
    "key": "Procesador",
-   "value": "MediaTek Helio G99",
+   "value": "MediaTek Helio G99 (octa-core 2,2 + 2,0 GHz)",
    "status": "sin_confirmar",
    "sources": [
-    "nano"
-   ]
+    "nano",
+    "lb"
+   ],
+   "note": "Samsung publica solo «octa-core 2,2 GHz + 2 GHz», consistente con el Helio G99, pero no nombra el chip. Pendiente de una segunda fuente técnica."
   },
   {
    "group": "Chip",
@@ -74,11 +90,13 @@
   {
    "group": "Memoria",
    "key": "RAM",
-   "value": "4 / 6 / 8 GB",
+   "value": "4 GB (SM-A165F 128 GB); 6 y 8 GB según el mercado",
    "status": "sin_confirmar",
    "sources": [
+    "lb",
     "nano"
-   ]
+   ],
+   "note": "Samsung Líbano confirma 4/128 GB; las demás combinaciones solo por una fuente técnica."
   },
   {
    "group": "Memoria",
@@ -86,34 +104,37 @@
    "value": "128 / 256 GB",
    "status": "sin_confirmar",
    "sources": [
+    "lb",
     "nano"
-   ]
+   ],
+   "note": "128 GB confirmado por Samsung."
   },
   {
    "group": "Memoria",
    "key": "microSD",
-   "value": "Sí, hasta 1,5 TB",
-   "status": "sin_confirmar",
+   "value": "Sí, hasta 1,5 TB (bandeja híbrida)",
+   "status": "verificado",
    "sources": [
-    "nano"
+    "lb"
    ]
   },
   {
    "group": "Batería y carga",
    "key": "Batería",
-   "value": "5000 mAh",
-   "status": "sin_confirmar",
+   "value": "5000 mAh (típica; 4860 mAh nominal)",
+   "status": "verificado",
    "sources": [
-    "nano"
+    "lb"
    ]
   },
   {
    "group": "Batería y carga",
    "key": "Carga rápida",
-   "value": "25 W máx. por cable",
-   "status": "sin_confirmar",
+   "value": "25 W máx. por cable (cargador no incluido)",
+   "status": "verificado",
    "sources": [
-    "nano"
+    "uk",
+    "lb"
    ]
   },
   {
@@ -123,134 +144,197 @@
    "status": "sin_confirmar",
    "sources": [
     "nano"
-   ]
+   ],
+   "note": "La ficha oficial no la menciona."
   },
   {
    "group": "Conectividad",
    "key": "Puerto",
    "value": "USB-C 2.0",
-   "status": "sin_confirmar",
+   "status": "verificado",
    "sources": [
-    "nano"
+    "lb"
    ]
   },
   {
    "group": "Cámaras",
    "key": "Cámara principal",
-   "value": "50 MP f/1.8, sin estabilización óptica",
-   "status": "sin_confirmar",
+   "value": "50 MP f/1.8, AF, sin estabilización óptica",
+   "status": "verificado",
    "sources": [
-    "nano"
+    "lb"
    ]
   },
   {
    "group": "Cámaras",
    "key": "Gran angular",
    "value": "5 MP ultra gran angular f/2.2",
-   "status": "sin_confirmar",
+   "status": "verificado",
    "sources": [
-    "nano"
+    "lb"
    ]
   },
   {
    "group": "Cámaras",
    "key": "Macro",
    "value": "2 MP f/2.4",
-   "status": "sin_confirmar",
+   "status": "verificado",
    "sources": [
-    "nano"
+    "lb"
    ]
   },
   {
    "group": "Cámaras",
    "key": "Cámara frontal",
    "value": "13 MP f/2.0",
-   "status": "sin_confirmar",
+   "status": "verificado",
    "sources": [
-    "nano"
+    "lb"
    ]
   },
   {
    "group": "Cámaras",
    "key": "Video",
    "value": "1080p a 30 fps",
-   "status": "sin_confirmar",
+   "status": "verificado",
    "sources": [
-    "nano"
+    "lb"
    ]
   },
   {
    "group": "Conectividad",
    "key": "5G",
    "value": "No",
-   "status": "sin_confirmar",
+   "status": "no_compatible",
    "sources": [
-    "nano"
+    "uk",
+    "lb"
    ],
-   "note": "Es la versión 4G; falta una segunda fuente para confirmarlo como «No compatible»."
+   "note": "Samsung lo presenta como versión LTE; la ficha oficial lista bandas 2G/3G/4G sin 5G."
   },
   {
    "group": "Conectividad",
    "key": "NFC",
-   "value": "Según la región",
-   "status": "sin_confirmar",
+   "value": "Sí (SM-A165F)",
+   "status": "verificado",
    "sources": [
-    "nano"
+    "lb"
    ]
   },
   {
    "group": "Otros",
    "key": "Lanzamiento",
-   "value": "Noviembre de 2024",
-   "status": "sin_confirmar",
+   "value": "Noviembre de 2024 (Reino Unido: 20/11/2024)",
+   "status": "verificado",
    "sources": [
+    "uk",
     "nano"
    ]
   },
   {
    "group": "Soporte",
    "key": "Sistema operativo",
-   "value": "Android 14 de fábrica",
+   "value": "Android 14 (One UI 6.1) de fábrica",
    "status": "sin_confirmar",
    "sources": [
-    "nano"
-   ]
+    "nano",
+    "lb"
+   ],
+   "note": "Samsung menciona One UI 6.1 pero la ficha no indica la versión de Android."
   },
   {
    "group": "Soporte",
    "key": "Años de actualizaciones",
-   "value": "6 años de Android y seguridad",
-   "status": "sin_confirmar",
+   "value": "Hasta 6 generaciones de Android y 6 años de seguridad",
+   "status": "verificado",
    "sources": [
-    "nano"
-   ]
+    "uk"
+   ],
+   "note": "Samsung aclara que la política está sujeta a cambios."
   },
   {
    "group": "Dimensiones",
    "key": "Medidas",
    "value": "164,4 x 77,9 x 7,9 mm",
-   "status": "sin_confirmar",
+   "status": "verificado",
    "sources": [
-    "nano"
+    "lb"
    ]
   },
   {
    "group": "Dimensiones",
    "key": "Peso",
    "value": "200 g",
-   "status": "sin_confirmar",
+   "status": "verificado",
    "sources": [
-    "nano"
+    "lb"
    ]
   },
   {
    "group": "Protección",
    "key": "Resistencia",
    "value": "IP54",
-   "status": "sin_confirmar",
+   "status": "verificado",
    "sources": [
-    "nano"
+    "uk",
+    "lb"
    ]
+  },
+  {
+   "key": "Bandas",
+   "value": "LTE FDD B1/3/5/7/8/20/28; TDD B38/40/41 (SM-A165F)",
+   "status": "depende_variante",
+   "sources": [
+    "lb"
+   ],
+   "note": "Bandas de la variante SM-A165F (Medio Oriente). SM-A165M puede diferir."
+  },
+  {
+   "key": "SIM",
+   "value": "Dual nano-SIM (bandeja híbrida con microSD)",
+   "status": "verificado",
+   "sources": [
+    "lb"
+   ],
+   "note": null
+  },
+  {
+   "key": "Wi-Fi",
+   "value": "Wi-Fi 5 (802.11 a/b/g/n/ac), 2,4 + 5 GHz",
+   "status": "verificado",
+   "sources": [
+    "lb"
+   ],
+   "note": null
+  },
+  {
+   "key": "Bluetooth",
+   "value": "5.3",
+   "status": "verificado",
+   "sources": [
+    "lb"
+   ],
+   "note": null
+  },
+  {
+   "key": "Biometría",
+   "group": "Protección",
+   "value": "Huella (lector de huellas)",
+   "status": "verificado",
+   "sources": [
+    "lb"
+   ],
+   "note": null
+  },
+  {
+   "key": "Audio",
+   "group": "Otros",
+   "value": "Sin parlantes estéreo",
+   "status": "verificado",
+   "sources": [
+    "lb"
+   ],
+   "note": null
   }
  ],
  "antutu": {
@@ -261,8 +345,16 @@
  },
  "pending": [
   {
-   "key": "Toda la ficha",
-   "why": "Solo una fuente técnica disponible (Comparigon no tiene página; la ficha oficial de Samsung y GSMArena necesitan que se habilite el acceso)."
+   "key": "Nombre del procesador",
+   "why": "Samsung no nombra el chip; solo Nanoreview dice Helio G99. GSMArena requiere aprobar el acceso: \"Galaxy A16\" SM-A165F chipset site:gsmarena.com"
+  },
+  {
+   "key": "Combinaciones de RAM/almacenamiento",
+   "why": "Samsung confirma solo 4/128 GB en esta variante."
+  },
+  {
+   "key": "Android de fábrica",
+   "why": "Solo una fuente técnica nombra Android 14."
   }
  ]
 }

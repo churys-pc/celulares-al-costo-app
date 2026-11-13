@@ -3,8 +3,8 @@
  "brand": "Samsung",
  "model": "Galaxy A16 5G",
  "aliases": [],
- "variant": "Galaxy A16 5G. El procesador cambia según la región (Exynos 1330 o Dimensity 6300).",
- "reviewedAt": "2026-11-13",
+ "variant": "Galaxy A16 5G. Latinoamérica (SM-A166M): Exynos 1330 según Samsung. Otras variantes (SM-A166P y otras) usan Dimensity 6300. El catálogo no indica el código de la unidad.",
+ "reviewedAt": "2026-11-13b",
  "sources": {
   "nano": {
    "name": "Nanoreview — Samsung Galaxy A16 5G",
@@ -17,6 +17,24 @@
    "url": "https://comparigon.com/phones/samsung-galaxy-a16-5g",
    "date": "2026-11-13",
    "kind": "tecnica"
+  },
+  "uk": {
+   "name": "Samsung Newsroom UK — Galaxy A16 Series (A16 5G y A16 LTE)",
+   "url": "https://news.samsung.com/uk/samsung-introduces-the-galaxy-a16-series-featuring-two-new-devices",
+   "date": "2026-11-13",
+   "kind": "oficial"
+  },
+  "co": {
+   "name": "Samsung Colombia — Galaxy A16 5G (SM-A166M) vs A36 5G",
+   "url": "https://www.samsung.com/co/support/mobile-devices/galaxy-a16-5g-vs-galaxy-a36-5g/",
+   "date": "2026-11-13",
+   "kind": "oficial"
+  },
+  "ar": {
+   "name": "Samsung Newsroom Argentina — Galaxy A16 5G (SM-A166M)",
+   "url": "https://news.samsung.com/ar/samsung-presenta-el-galaxy-a16-5g-en-argentina-con-hasta-seis-actualizaciones-del-sistema-android-y-seguridad",
+   "date": "2026-11-13",
+   "kind": "oficial"
   }
  },
  "fields": [
@@ -26,16 +44,18 @@
    "value": "6,7\" Super AMOLED",
    "status": "verificado",
    "sources": [
-    "nano",
-    "comp"
+    "uk",
+    "co",
+    "ar"
    ]
   },
   {
    "group": "Pantalla",
    "key": "Resolución",
-   "value": "1080 x 2340",
+   "value": "1080 x 2340 (FHD+)",
    "status": "verificado",
    "sources": [
+    "co",
     "nano",
     "comp"
    ]
@@ -43,19 +63,20 @@
   {
    "group": "Pantalla",
    "key": "Frecuencia",
-   "value": "90 Hz",
+   "value": "Hasta 90 Hz",
    "status": "verificado",
    "sources": [
-    "nano",
-    "comp"
+    "uk",
+    "co"
    ]
   },
   {
    "group": "Pantalla",
    "key": "Brillo",
-   "value": "800 nits (máximo declarado)",
+   "value": "800 nits en HBM (modo de alto brillo)",
    "status": "verificado",
    "sources": [
+    "ar",
     "nano",
     "comp"
    ]
@@ -63,18 +84,19 @@
   {
    "group": "Chip",
    "key": "Procesador",
-   "value": "Exynos 1330 o MediaTek Dimensity 6300 (según región)",
+   "value": "Exynos 1330 en SM-A166M (Latinoamérica); Dimensity 6300 en otras variantes",
    "status": "depende_variante",
    "sources": [
-    "nano",
+    "co",
+    "ar",
     "comp"
    ],
-   "note": "Las fuentes no coinciden en cuál corresponde a cada región; hace falta el código de modelo de la unidad."
+   "note": "Samsung confirma Exynos 1330 (S5E8535) para SM-A166M. Para la unidad hace falta el código de modelo."
   },
   {
    "group": "Chip",
    "key": "GPU",
-   "value": "Mali-G68 MP2 (Exynos) o Mali-G57 MC2 (Dimensity)",
+   "value": "Según el procesador (Mali-G68 MP2 con Exynos 1330)",
    "status": "depende_variante",
    "sources": [
     "nano",
@@ -84,12 +106,13 @@
   {
    "group": "Memoria",
    "key": "RAM",
-   "value": "4 / 6 / 8 GB",
+   "value": "4 / 6 / 8 GB según el mercado",
    "status": "sin_confirmar",
    "sources": [
-    "comp"
+    "comp",
+    "co"
    ],
-   "note": "Nanoreview solo lista 4 GB."
+   "note": "Samsung confirma 8/256 para SM-A166M y advierte que las opciones varían por país; 4 y 6 GB solo por fuentes técnicas."
   },
   {
    "group": "Memoria",
@@ -97,37 +120,43 @@
    "value": "128 / 256 GB",
    "status": "sin_confirmar",
    "sources": [
-    "comp"
+    "comp",
+    "co"
    ],
-   "note": "Nanoreview solo lista 128 GB."
+   "note": "256 GB confirmado por Samsung (SM-A166M); 128 GB solo por fuentes técnicas."
   },
   {
    "group": "Memoria",
    "key": "microSD",
-   "value": "Sí, hasta 1,5 TB",
+   "value": "Sí, hasta 1 TB o 1,5 TB",
    "status": "sin_confirmar",
    "sources": [
-    "nano"
-   ]
+    "ar",
+    "co"
+   ],
+   "note": "Las fichas oficiales de Samsung se contradicen: Argentina dice 1 TB, Colombia 1,5 TB."
   },
   {
    "group": "Batería y carga",
    "key": "Batería",
-   "value": "5000 mAh",
+   "value": "5000 mAh (típica)",
    "status": "verificado",
    "sources": [
-    "nano",
-    "comp"
-   ]
+    "uk",
+    "co",
+    "ar"
+   ],
+   "note": "La capacidad nominal figura como 4900 y 4860 mAh en la misma página de Samsung Argentina."
   },
   {
    "group": "Batería y carga",
    "key": "Carga rápida",
-   "value": "25 W máx. por cable",
+   "value": "25 W máx. por cable (cargador no incluido)",
    "status": "verificado",
    "sources": [
-    "nano",
-    "comp"
+    "uk",
+    "co",
+    "ar"
    ]
   },
   {
@@ -146,6 +175,7 @@
    "value": "USB-C 2.0",
    "status": "verificado",
    "sources": [
+    "co",
     "nano",
     "comp"
    ]
@@ -156,9 +186,12 @@
    "value": "50 MP f/1.8, sin estabilización óptica",
    "status": "verificado",
    "sources": [
+    "uk",
+    "co",
     "nano",
     "comp"
-   ]
+   ],
+   "note": "Apertura y ausencia de OIS según dos fuentes técnicas."
   },
   {
    "group": "Cámaras",
@@ -166,6 +199,8 @@
    "value": "5 MP ultra gran angular f/2.2",
    "status": "verificado",
    "sources": [
+    "uk",
+    "co",
     "nano",
     "comp"
    ]
@@ -176,10 +211,10 @@
    "value": "2 MP",
    "status": "verificado",
    "sources": [
-    "nano",
-    "comp"
-   ],
-   "note": "Apertura f/2.4 solo según Nanoreview."
+    "co",
+    "ar",
+    "nano"
+   ]
   },
   {
    "group": "Cámaras",
@@ -187,6 +222,8 @@
    "value": "13 MP f/2.0",
    "status": "verificado",
    "sources": [
+    "uk",
+    "co",
     "nano",
     "comp"
    ]
@@ -224,9 +261,10 @@
   {
    "group": "Conectividad",
    "key": "SIM",
-   "value": "2 nano-SIM",
+   "value": "Nano-SIM (4FF), dual",
    "status": "verificado",
    "sources": [
+    "co",
     "nano",
     "comp"
    ]
@@ -234,30 +272,32 @@
   {
    "group": "Conectividad",
    "key": "eSIM",
-   "value": "No indicado",
+   "value": "No figura",
    "status": "sin_confirmar",
    "sources": [
+    "co",
     "nano"
    ],
-   "note": "Nanoreview dice que no; Comparigon no lo menciona."
+   "note": "La ficha oficial lista solo nano-SIM (4FF), sin mencionar eSIM."
   },
   {
    "group": "Conectividad",
    "key": "NFC",
-   "value": "Según la región",
+   "value": "Sí en SM-A166M; según la región en otras variantes",
    "status": "depende_variante",
    "sources": [
-    "nano",
-    "comp"
-   ],
-   "note": "Nanoreview: depende de la región; Comparigon: sí."
+    "co",
+    "ar",
+    "nano"
+   ]
   },
   {
    "group": "Conectividad",
    "key": "Wi-Fi",
-   "value": "Wi-Fi 5 (doble banda)",
-   "status": "sin_confirmar",
+   "value": "Wi-Fi 5 (802.11 a/b/g/n/ac), 2,4 + 5 GHz",
+   "status": "verificado",
    "sources": [
+    "co",
     "nano"
    ]
   },
@@ -265,8 +305,9 @@
    "group": "Conectividad",
    "key": "Bluetooth",
    "value": "5.3",
-   "status": "sin_confirmar",
+   "status": "verificado",
    "sources": [
+    "co",
     "nano"
    ]
   },
@@ -276,6 +317,7 @@
    "value": "Octubre de 2024",
    "status": "verificado",
    "sources": [
+    "uk",
     "nano",
     "comp"
    ]
@@ -283,22 +325,23 @@
   {
    "group": "Soporte",
    "key": "Sistema operativo",
-   "value": "Android 14 de fábrica",
-   "status": "sin_confirmar",
+   "value": "Android 14 (One UI 6.1) de fábrica",
+   "status": "verificado",
    "sources": [
-    "nano"
-   ],
-   "note": "La propia página es inconsistente."
+    "co",
+    "ar"
+   ]
   },
   {
    "group": "Soporte",
    "key": "Años de actualizaciones",
-   "value": "2 años de Android y 3 de seguridad, según una sola fuente",
-   "status": "sin_confirmar",
+   "value": "Hasta 6 generaciones de Android y 6 años de seguridad",
+   "status": "verificado",
    "sources": [
-    "nano"
+    "uk",
+    "ar"
    ],
-   "note": "Nanoreview indica 2 años de Android y 3 de seguridad, pero para el A16 4G indica 6 años: contradicción sin resolver."
+   "note": "Samsung aclara que la política está sujeta a cambios."
   },
   {
    "group": "Dimensiones",
@@ -306,8 +349,8 @@
    "value": "164,4 x 77,9 x 7,9 mm",
    "status": "verificado",
    "sources": [
-    "nano",
-    "comp"
+    "co",
+    "ar"
    ]
   },
   {
@@ -316,19 +359,19 @@
    "value": "200 g",
    "status": "verificado",
    "sources": [
-    "nano",
-    "comp"
+    "co",
+    "ar"
    ]
   },
   {
    "group": "Protección",
    "key": "Resistencia",
-   "value": "IP54",
-   "status": "sin_confirmar",
+   "value": "IP54 (salpicaduras y polvo)",
+   "status": "verificado",
    "sources": [
-    "nano"
-   ],
-   "note": "Comparigon solo dice «resistente al agua»."
+    "uk",
+    "ar"
+   ]
   }
  ],
  "antutu": {
@@ -336,24 +379,20 @@
   "total": 576249,
   "sample": "individual",
   "source": "nano",
-  "note": "Nanoreview y Comparigon publican el mismo valor exacto: se cuenta como una sola fuente. Corresponde a una de las variantes de procesador."
+  "note": "Nanoreview y Comparigon publican el mismo valor: se cuenta como una sola fuente. No indica a qué procesador corresponde."
  },
  "pending": [
   {
-   "key": "Procesador por región",
-   "why": "Hace falta el código de modelo de la unidad y la ficha oficial de Samsung para esa región."
+   "key": "Procesador de la unidad",
+   "why": "Falta el código de modelo (SM-A166…) en el inventario."
   },
   {
    "key": "Combinaciones de RAM/almacenamiento",
-   "why": "Las fuentes técnicas no coinciden."
+   "why": "Samsung solo confirma 8/256 para SM-A166M; 4 y 6 GB y 128 GB, solo por fuentes técnicas."
   },
   {
-   "key": "Política de actualizaciones",
-   "why": "Datos contradictorios; falta la fuente oficial de Samsung."
-  },
-  {
-   "key": "IP54, Wi-Fi, Bluetooth, eSIM, microSD",
-   "why": "Una sola fuente técnica."
+   "key": "microSD máxima",
+   "why": "Dos páginas oficiales de Samsung se contradicen (1 TB vs 1,5 TB)."
   }
  ]
 }
