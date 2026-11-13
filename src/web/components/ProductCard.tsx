@@ -13,7 +13,7 @@ export function ProductCard({ p, settings, onOpen, onFavorite }: Props) {
   return (
     <article className="pcard simple" onClick={onOpen} tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && onOpen()}>
       <div className="pcard-img">
-        {(cover(p.brand, p.model) ?? p.photoUrl) ? <img src={cover(p.brand, p.model) ?? p.photoUrl!} alt={`${p.brand} ${p.model}`} loading="lazy" /> : <Icon name="phone" size={54} className="ph-icon" />}
+        {(cover(p.brand, p.model, p.coverKey) ?? p.photoUrl) ? <img src={cover(p.brand, p.model, p.coverKey) ?? p.photoUrl!} alt={`${p.brand} ${p.model}`} loading="lazy" /> : <Icon name="phone" size={54} className="ph-icon" />}
         <div className="pcard-tags">
           <span className={`tag ${p.condition}`}>{p.condition === 'nuevo' ? 'Nuevo' : 'Usado'}</span>
         </div>

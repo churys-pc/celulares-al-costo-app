@@ -46,7 +46,7 @@ export const api = {
   stats: (includeDemo: boolean) => call<Stats>('GET', `/api/stats?${qs({ includeDemo: includeDemo ? undefined : '0' })}`),
   addPhoto: (productId: number, dataUrl: string, license: string) => call<Photo[]>('POST', `/api/catalog/products/${productId}/photos`, { dataUrl, license }),
   removePhoto: (id: number) => call('DELETE', `/api/photos/${id}`),
-  compareCandidates: (includeDemo: boolean) => call<{ modelId: number; brand: string; model: string; isDemo: boolean; benches: number; specs: number }[]>('GET', `/api/compare/models?${qs({ includeDemo: includeDemo ? undefined : '0' })}`),
+  compareCandidates: (includeDemo: boolean) => call<{ modelId: number; brand: string; model: string; coverKey: string | null; isDemo: boolean; benches: number; specs: number }[]>('GET', `/api/compare/models?${qs({ includeDemo: includeDemo ? undefined : '0' })}`),
   lookup: (q: string) => call<{ slug: string; name: string }[]>('GET', `/api/lookup?q=${encodeURIComponent(q)}`),
   lookupImport: (slug: string) => call<{ modelId: number; name: string; specs: number; antutu: boolean }>('POST', '/api/lookup', { slug }),
   createModel: (brand: string, model: string) => call<{ modelId: number }>('POST', '/api/compare/models', { brand, model }),

@@ -1029,153 +1029,324 @@
    ],
    "url": "https://i01.appmifile.com/v1/MI_18455B3E4DA706226CF7535A58E875F0267/pms_1666350199.33692514.png",
    "page": "https://www.mi.com/global/product/redmi-note-11/"
+  },
+  {
+   "key": "motorola-moto-e14",
+   "brand": "Motorola",
+   "models": [
+    "Moto E14",
+    "E14"
+   ],
+   "url": "https://p2-ofp.static.pub/fes/cms/2024/12/15/jnz1bu3bhaaacfu1k84g7u6ffqd479535915.png",
+   "page": "https://www.motorola.com/sk/sk/p/phones/moto-e/motorola-e14/pmipmhb38m2",
+   "note": "Imagen oficial del fabricante; fondo transparente, centrada en 768 × 768."
+  },
+  {
+   "key": "motorola-moto-g06",
+   "brand": "Motorola",
+   "models": [
+    "Moto G06",
+    "G06"
+   ],
+   "url": "https://brmotorolanew.vteximg.com.br/arquivos/ids/182948/traseira-frente-smartphone-moto-g06-azul-marinho.png",
+   "page": "https://www.motorola.com.br/smartphone-motorola-moto-g06-64gb/p",
+   "note": "Imagen oficial del fabricante; fondo transparente, centrada en 768 × 768."
+  },
+  {
+   "key": "motorola-moto-g24",
+   "brand": "Motorola",
+   "models": [
+    "Moto G24",
+    "G24"
+   ],
+   "url": "https://brmotorolanew.vteximg.com.br/arquivos/ids/171329/frente-atras-smartphone-moto-g24-grafite.png",
+   "page": "https://www.motorola.com.br/smartphone-motorola-moto-g24-256gb/p",
+   "note": "Imagen oficial del fabricante; fondo transparente, centrada en 768 × 768."
+  },
+  {
+   "key": "motorola-moto-g35",
+   "brand": "Motorola",
+   "models": [
+    "Moto G35",
+    "Moto G35 5G",
+    "G35"
+   ],
+   "url": "https://brmotorolanew.vteximg.com.br/arquivos/ids/171427/frente-smartphone-moto-g35-grafite.png",
+   "page": "https://www.motorola.com.br/smartphone-motorola-moto-g35-5g-128gb/p",
+   "note": "Imagen oficial del fabricante; fondo transparente, centrada en 768 × 768."
+  },
+  {
+   "key": "motorola-moto-g55",
+   "brand": "Motorola",
+   "models": [
+    "Moto G55",
+    "Moto G55 5G",
+    "G55"
+   ],
+   "url": "https://brmotorolanew.vteximg.com.br/arquivos/ids/171474/frente-atras-smartphone-moto-g55-rosa-vegan-leather.png",
+   "page": "https://www.motorola.com.br/smartphone-motorola-moto-g55-5g/p",
+   "note": "Imagen oficial del fabricante; fondo transparente, centrada en 768 × 768."
+  },
+  {
+   "key": "motorola-moto-g75",
+   "brand": "Motorola",
+   "models": [
+    "Moto G75",
+    "Moto G75 5G",
+    "G75"
+   ],
+   "url": "https://brmotorolanew.vteximg.com.br/arquivos/ids/171494/frente-atras-smartphone-moto-g75-preto.png",
+   "page": "https://www.motorola.com.br/smartphone-motorola-moto-g75-5g/p",
+   "note": "Imagen oficial del fabricante; fondo transparente, centrada en 768 × 768."
+  },
+  {
+   "key": "motorola-moto-g85",
+   "brand": "Motorola",
+   "models": [
+    "Moto G85",
+    "Moto G85 5G",
+    "G85"
+   ],
+   "url": "https://cdn.beebom.com/mobile/motorola-g85-5g-front-and-back.png",
+   "page": "https://gadgets.beebom.com/mobile/motorola-g85-5g",
+   "note": "Imagen del equipo tomada de gadgets.beebom.com (sin imagen oficial descargable); fondo quitado y centrada en 768 × 768."
+  },
+  {
+   "key": "motorola-edge-50-fusion",
+   "brand": "Motorola",
+   "models": [
+    "Edge 50 Fusion",
+    "Motorola Edge 50 Fusion"
+   ],
+   "url": "https://armoto.vtexassets.com/assets/vtex.file-manager-graphql/images/aa054ee0-f1a9-4430-b59f-d547cd5fa5c9___efee01af653fe2d3b9ccc5ee2c2bc508.png",
+   "page": "https://www.motorola.com.ar/motorola-edge-50-fusion/p",
+   "note": "Imagen oficial del fabricante; fondo transparente, centrada en 768 × 768."
+  },
+  {
+   "key": "motorola-edge-60-fusion",
+   "brand": "Motorola",
+   "models": [
+    "Edge 60 Fusion",
+    "Motorola Edge 60 Fusion"
+   ],
+   "url": "https://brmotorolanew.vteximg.com.br/arquivos/ids/177189/EDGE60FUSION_MOCHA-MOUSSE_1000X1000PX_01-min.png",
+   "page": "https://www.motorola.com.br/smartphone-motorola-edge-60-fusion-5g/p",
+   "note": "Imagen oficial del fabricante; fondo transparente, centrada en 768 × 768."
+  },
+  {
+   "key": "itel-a100c",
+   "brand": "Itel",
+   "models": [
+    "A100c",
+    "A100C"
+   ],
+   "url": "https://cdn.beebom.com/mobile/itel-a100c-front-back-2.png",
+   "page": "https://gadgets.beebom.com/mobile/itel-a100c",
+   "note": "Imagen del equipo tomada de gadgets.beebom.com (sin imagen oficial descargable); fondo quitado y centrada en 768 × 768."
+  },
+  {
+   "key": "zte-blade-a56",
+   "brand": "ZTE",
+   "models": [
+    "Blade A56"
+   ],
+   "url": "https://www.ztedevices.com/content/dam/zte-devices/global/products/smartphones/blade/zte-blade-a56/Blade A56-front.png",
+   "page": "https://www.ztedevices.com/en/products/smartphones/blade/zte-blade-a56.html",
+   "note": "Imagen oficial del fabricante; fondo transparente, centrada en 768 × 768."
+  },
+  {
+   "key": "cat-s42-h-plus",
+   "brand": "CAT",
+   "models": [
+    "S42 H+",
+    "S42 H Plus",
+    "S42H+"
+   ],
+   "url": "https://cdn-ru.bitrix24.kz/b6464303/landing/6fd/6fd9f9895b028abdaee1e4cf46c8d60e/cat_s42h_black_frontandback_1x.png",
+   "page": "https://itall.kz/smartfon-cat-s42_lbqo/",
+   "note": "Imagen del equipo tomada de itall.kz (sin imagen oficial descargable); fondo quitado y centrada en 768 × 768."
+  },
+  {
+   "key": "xiaomi-poco-m4-pro-5g",
+   "brand": "Xiaomi",
+   "models": [
+    "Poco M4 Pro 5G"
+   ],
+   "url": "https://files.tecnoblog.net/wp-content/uploads/2025/03/Poco-M4-Pro-5G-Cool-Blue-768x768.png",
+   "page": "https://tecnoblog.net/produtos/xiaomi-poco-m4-pro-5g/",
+   "note": "Imagen del equipo tomada de tecnoblog.net (sin imagen oficial descargable); fondo quitado y centrada en 768 × 768."
+  },
+  {
+   "key": "xiaomi-redmi-note-13-4g",
+   "brand": "Xiaomi",
+   "models": [
+    "Redmi Note 13 LTE",
+    "Redmi Note 13 4G"
+   ],
+   "url": "https://superfon.rs/wp-content/uploads/2024/01/Redmi-Note-13-Crni-Slika-1.png",
+   "page": "https://superfon.rs/proizvod/xiaomi-redmi-note-13-8-256gb-crni-midnight-black/",
+   "note": "Imagen del equipo tomada de superfon.rs (sin imagen oficial descargable); fondo quitado y centrada en 768 × 768."
+  },
+  {
+   "key": "xiaomi-poco-c40",
+   "brand": "Xiaomi",
+   "models": [
+    "Poco C40"
+   ],
+   "url": "https://i01.appmifile.com/v1/MI_18455B3E4DA706226CF7535A58E875F0267/pms_1672022018.87064499.png",
+   "page": "https://www.mi.com/ph/product-list/poco/",
+   "note": "Imagen oficial del fabricante; fondo transparente, centrada en 768 × 768."
+  },
+  {
+   "key": "xiaomi-poco-x7",
+   "brand": "Xiaomi",
+   "models": [
+    "Poco X7 5G",
+    "Poco X7"
+   ],
+   "url": "https://files.tecnoblog.net/wp-content/uploads/2025/02/Poco-X7-Prata-1060x1060.png",
+   "page": "https://tecnoblog.net/produtos/xiaomi-poco-x7/",
+   "note": "Imagen del equipo tomada de tecnoblog.net (sin imagen oficial descargable); fondo quitado y centrada en 768 × 768."
+  },
+  {
+   "key": "xiaomi-poco-c65",
+   "brand": "Xiaomi",
+   "models": [
+    "Poco C65"
+   ],
+   "url": "https://files.tecnoblog.net/wp-content/uploads/2025/02/Poco-C65-Preto.png",
+   "page": "https://tecnoblog.net/produtos/xiaomi-poco-c65/",
+   "note": "Imagen del equipo tomada de tecnoblog.net (sin imagen oficial descargable); fondo quitado y centrada en 768 × 768."
+  },
+  {
+   "key": "xiaomi-poco-x6-pro",
+   "brand": "Xiaomi",
+   "models": [
+    "Poco X6 Pro 5G",
+    "Poco X6 Pro"
+   ],
+   "url": "https://www.kibotek.com/wp-content/uploads/2024/01/kiboTEK_xiaomi_poco_x6_pro_1.png",
+   "page": "https://www.kibotek.com/kibostore/xiaomi-poco-x6-pro-5g-8gb-256gb/",
+   "note": "Imagen del equipo tomada de kibotek.com (sin imagen oficial descargable); fondo quitado y centrada en 768 × 768."
+  },
+  {
+   "key": "xiaomi-redmi-14c",
+   "brand": "Xiaomi",
+   "models": [
+    "Redmi 14C",
+    "Redmi 14C 4G"
+   ],
+   "url": "https://www.kibotek.com/wp-content/uploads/2024/10/kiboTEK_xiaomi_redmi_14c_1.png",
+   "page": "https://www.kibotek.com/kibostore/xiaomi-redmi-14c-8gb-256gb/",
+   "note": "Imagen del equipo tomada de kibotek.com (sin imagen oficial descargable); fondo quitado y centrada en 768 × 768."
+  },
+  {
+   "key": "xiaomi-poco-m6-pro-4g",
+   "brand": "Xiaomi",
+   "models": [
+    "Poco M6 Pro 4G",
+    "Poco M6 Pro"
+   ],
+   "url": "https://files.tecnoblog.net/wp-content/uploads/2025/02/Poco-M6-Pro-Violeta.png",
+   "page": "https://tecnoblog.net/produtos/xiaomi-poco-m6-pro-4g/",
+   "note": "Imagen del equipo tomada de tecnoblog.net (sin imagen oficial descargable); fondo quitado y centrada en 768 × 768."
+  },
+  {
+   "key": "xiaomi-redmi-13-5g",
+   "brand": "Xiaomi",
+   "models": [
+    "Redmi 13 5G"
+   ],
+   "url": "https://cdn.beebom.com/mobile/2024/04/Redmi13-5G.png",
+   "page": "https://gadgets.beebom.com/mobile/redmi-13-5g",
+   "note": "Imagen del equipo tomada de gadgets.beebom.com (sin imagen oficial descargable); fondo quitado y centrada en 768 × 768."
+  },
+  {
+   "key": "xiaomi-14t",
+   "brand": "Xiaomi",
+   "models": [
+    "14T",
+    "Xiaomi 14T"
+   ],
+   "url": "https://cdn.beebom.com/mobile/xiaomi-14t-front-and-back-1.png",
+   "page": "https://gadgets.beebom.com/mobile/xiaomi-14t",
+   "note": "Imagen del equipo tomada de gadgets.beebom.com (sin imagen oficial descargable); fondo quitado y centrada en 768 × 768."
+  },
+  {
+   "key": "honor-x7d",
+   "brand": "Honor",
+   "models": [
+    "X7d LTE",
+    "X7d",
+    "X7d 4G"
+   ],
+   "url": "https://www.ais.th/content/dam/ais/consumer/store/devices/honor/phone/x7d-4g/honor-x7d-4g-desert-gold.png",
+   "page": "https://www.ais.th/en/consumers/store/phones/honor/honor-x7d-4g-ram8",
+   "note": "Imagen del equipo tomada de ais.th (sin imagen oficial descargable); fondo quitado y centrada en 768 × 768."
+  },
+  {
+   "key": "honor-x6b",
+   "brand": "Honor",
+   "models": [
+    "X6b"
+   ],
+   "url": "https://cdn.beebom.com/mobile/honor-x6b-front-back-2.png",
+   "page": "https://gadgets.beebom.com/mobile/honor-x6b",
+   "note": "Imagen del equipo tomada de gadgets.beebom.com (sin imagen oficial descargable); fondo quitado y centrada en 768 × 768."
+  },
+  {
+   "key": "honor-x7c",
+   "brand": "Honor",
+   "models": [
+    "X7c",
+    "X7c 4G"
+   ],
+   "url": "https://d1rolhgenksxtm.cloudfront.net/Custom/Content/Themes/honor_fg/Imagens/X7c_(Branco).png",
+   "page": "https://www.honor.com.br/listas/todos-produtos",
+   "note": "Imagen oficial del fabricante; fondo transparente, centrada en 768 × 768."
+  },
+  {
+   "key": "honor-x8b",
+   "brand": "Honor",
+   "models": [
+    "X8b"
+   ],
+   "url": "https://files.tecnoblog.net/wp-content/uploads/2025/03/Honor-X8b-Midnight-Black.png",
+   "page": "https://tecnoblog.net/produtos/honor-x8b/",
+   "note": "Imagen del equipo tomada de tecnoblog.net (sin imagen oficial descargable); fondo quitado y centrada en 768 × 768."
+  },
+  {
+   "key": "honor-x8c",
+   "brand": "Honor",
+   "models": [
+    "X8c"
+   ],
+   "url": "https://cdn.beebom.com/mobile/honor-x8c-front-and-back.png",
+   "page": "https://gadgets.beebom.com/mobile/honor-x8c",
+   "note": "Imagen del equipo tomada de gadgets.beebom.com (sin imagen oficial descargable); fondo quitado y centrada en 768 × 768."
+  },
+  {
+   "key": "honor-400-pro",
+   "brand": "Honor",
+   "models": [
+    "400 Pro",
+    "400 Pro 5G"
+   ],
+   "url": "https://superfon.rs/wp-content/uploads/2025/05/5-10.png",
+   "page": "https://superfon.rs/proizvod/honor-400-pro-12-512gb-sivi-lunar-grey/",
+   "note": "Imagen del equipo tomada de superfon.rs (sin imagen oficial descargable); fondo quitado y centrada en 768 × 768."
+  },
+  {
+   "key": "honor-400-lite",
+   "brand": "Honor",
+   "models": [
+    "400 Lite",
+    "400 Lite 5G"
+   ],
+   "url": "https://honorstore.pl/cdn/shop/files/HONOR-400-lite-grey-main.png?v=1744367958&width=1400",
+   "page": "https://honorstore.pl/",
+   "note": "Imagen del equipo tomada de honorstore.pl (sin imagen oficial descargable); fondo quitado y centrada en 768 × 768."
   }
  ],
- "pending": [
-  {
-   "brand": "Motorola",
-   "model": "Moto E14",
-   "why": "Los sitios oficiales de Motorola (Latinoamérica, Europa) respondieron error 500; sin imagen oficial verificable."
-  },
-  {
-   "brand": "Motorola",
-   "model": "Moto G06",
-   "why": "Los sitios oficiales de Motorola (Latinoamérica, Europa) respondieron error 500; sin imagen oficial verificable."
-  },
-  {
-   "brand": "Motorola",
-   "model": "Moto G24",
-   "why": "Los sitios oficiales de Motorola (Latinoamérica, Europa) respondieron error 500; sin imagen oficial verificable."
-  },
-  {
-   "brand": "Motorola",
-   "model": "Moto G35",
-   "why": "Los sitios oficiales de Motorola (Latinoamérica, Europa) respondieron error 500; sin imagen oficial verificable."
-  },
-  {
-   "brand": "Motorola",
-   "model": "Moto G55",
-   "why": "Los sitios oficiales de Motorola (Latinoamérica, Europa) respondieron error 500; sin imagen oficial verificable."
-  },
-  {
-   "brand": "Motorola",
-   "model": "Moto G75",
-   "why": "Los sitios oficiales de Motorola (Latinoamérica, Europa) respondieron error 500; sin imagen oficial verificable."
-  },
-  {
-   "brand": "Motorola",
-   "model": "Moto G85",
-   "why": "Los sitios oficiales de Motorola (Latinoamérica, Europa) respondieron error 500; sin imagen oficial verificable."
-  },
-  {
-   "brand": "Motorola",
-   "model": "Edge 50 Fusion",
-   "why": "Los sitios oficiales de Motorola (Latinoamérica, Europa) respondieron error 500; sin imagen oficial verificable."
-  },
-  {
-   "brand": "Motorola",
-   "model": "Edge 60 Fusion",
-   "why": "Los sitios oficiales de Motorola (Latinoamérica, Europa) respondieron error 500; sin imagen oficial verificable."
-  },
-  {
-   "brand": "Honor",
-   "model": "X7d LTE",
-   "why": "Pendiente de buscar en honor.com (no se llegó en esta tanda)."
-  },
-  {
-   "brand": "Honor",
-   "model": "X6b",
-   "why": "Pendiente de buscar en honor.com (no se llegó en esta tanda)."
-  },
-  {
-   "brand": "Honor",
-   "model": "X7c",
-   "why": "Pendiente de buscar en honor.com (no se llegó en esta tanda)."
-  },
-  {
-   "brand": "Honor",
-   "model": "X8b",
-   "why": "Pendiente de buscar en honor.com (no se llegó en esta tanda)."
-  },
-  {
-   "brand": "Honor",
-   "model": "X8c",
-   "why": "Pendiente de buscar en honor.com (no se llegó en esta tanda)."
-  },
-  {
-   "brand": "Honor",
-   "model": "400 Pro",
-   "why": "Pendiente de buscar en honor.com (no se llegó en esta tanda)."
-  },
-  {
-   "brand": "Honor",
-   "model": "400 Lite",
-   "why": "Pendiente de buscar en honor.com (no se llegó en esta tanda)."
-  },
-  {
-   "brand": "CAT",
-   "model": "S42 H+",
-   "why": "Equipo discontinuado; sin galería oficial vigente."
-  },
-  {
-   "brand": "Itel",
-   "model": "A100c",
-   "why": "Sin galería oficial encontrada."
-  },
-  {
-   "brand": "ZTE",
-   "model": "Blade A56",
-   "why": "Sin galería oficial encontrada."
-  },
-  {
-   "brand": "Xiaomi",
-   "model": "Poco C40",
-   "why": "La página oficial de mi.com no respondió (503/504) o no publica imagen del equipo."
-  },
-  {
-   "brand": "Xiaomi",
-   "model": "Poco C65",
-   "why": "La página oficial de mi.com no respondió (503/504) o no publica imagen del equipo."
-  },
-  {
-   "brand": "Xiaomi",
-   "model": "Poco M4 Pro 5G",
-   "why": "La página oficial de mi.com no respondió (503/504) o no publica imagen del equipo."
-  },
-  {
-   "brand": "Xiaomi",
-   "model": "Poco X6 Pro 5G",
-   "why": "La página oficial de mi.com no respondió (503/504) o no publica imagen del equipo."
-  },
-  {
-   "brand": "Xiaomi",
-   "model": "Poco X7 5G",
-   "why": "La página oficial de mi.com no respondió (503/504) o no publica imagen del equipo."
-  },
-  {
-   "brand": "Xiaomi",
-   "model": "Redmi Note 13 LTE",
-   "why": "La página oficial de mi.com no respondió (503/504) o no publica imagen del equipo."
-  },
-  {
-   "brand": "Xiaomi",
-   "model": "Redmi 14C",
-   "why": "La página oficial de mi.com no respondió (503/504) o no publica imagen del equipo."
-  },
-  {
-   "brand": "Xiaomi",
-   "model": "Poco M6 Pro",
-   "why": "La página oficial de mi.com no respondió (503/504) o no publica imagen del equipo."
-  },
-  {
-   "brand": "Xiaomi",
-   "model": "Redmi 13 5G",
-   "why": "La página oficial de mi.com no respondió (503/504) o no publica imagen del equipo."
-  },
-  {
-   "brand": "Xiaomi",
-   "model": "Xiaomi 14T",
-   "why": "La página oficial de mi.com no respondió (503/504) o no publica imagen del equipo."
-  }
- ]
+ "pending": []
 }

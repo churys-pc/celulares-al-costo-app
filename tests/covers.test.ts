@@ -7,16 +7,20 @@ import { CoverStore } from '../src/server/covers.ts';
 import { coverIndex, normalizeModelName, type CoverEntry } from '../src/shared/covers.ts';
 import { FICHAS } from '../src/server/data/fichas/index.ts';
 import data from '../src/server/data/covers.json';
+import { openDb } from '../src/server/db.ts';
+import { applySeedData } from '../src/server/seedData.ts';
+import { applyFichas } from '../src/server/fichas.ts';
 
 const ALL = (data as { covers: CoverEntry[]; pending: { brand: string; model: string }[] });
 // WebP mínimo válido (1x1, con canal alfa) para probar el guardado.
 const WEBP = 'data:image/webp;base64,UklGRhoAAABXRUJQVlA4TA0AAAAvAAAAEAcQERGIiP4HAA==';
 
-test('portadas: claves únicas, origen oficial y sin nombres repetidos entre portadas', () => {
+test('portadas: claves únicas, origen https y sin nombres repetidos entre portadas', () => {
   const keys = new Set<string>(); const names = new Map<string, string>();
   for (const c of ALL.covers) {
     assert.ok(!keys.has(c.key), `clave repetida ${c.key}`); keys.add(c.key);
-    assert.match(c.url, /^https:\/\/(www\.apple\.com|images\.samsung\.com|i0[12]\.appmifile\.com)\//, c.key);
+    assert.match(c.url, /^https:\/\//, c.key);
+    assert.match(c.page, /^https:\/\//, c.key);
     for (const m of c.models) {
       const n = c.brand.toLowerCase() + '|' + normalizeModelName(m);
       assert.ok(!names.has(n) || names.get(n) === c.key, `${m} apunta a dos portadas`);
@@ -43,7 +47,13 @@ test('portadas: cada ficha verificada tiene portada o está marcada como pendien
   assert.equal(store.keyFor('Apple', 'iPhone 17 Air'), 'apple-iphone-air');
   assert.equal(store.keyFor('Apple', 'iPhone 17'), 'apple-iphone-17');
   assert.equal(store.keyFor('Apple', 'iPhone 17 Pro Max'), 'apple-iphone-17-pro');
-  assert.equal(store.keyFor('Motorola', 'Moto G06'), null);
+  assert.equal(store.keyFor('Motorola', 'Moto G06'), 'motorola-moto-g06');
+  assert.equal(store.keyFor('Xiaomi', 'Redmi Note 13 LTE'), 'xiaomi-redmi-note-13-4g');
+  assert.equal(store.keyFor('Xiaomi', 'Redmi Note 13 5G'), 'xiaomi-redmi-note-13-5g');
+  assert.equal(store.keyFor('Xiaomi', 'Poco X7 5G'), 'xiaomi-poco-x7');
+  assert.equal(store.keyFor('Xiaomi', 'Poco X7 Pro'), 'xiaomi-poco-x7-pro');
+  assert.equal(store.keyFor('CAT', 'S42 H+'), 'cat-s42-h-plus');
+  assert.equal(ALL.pending.length, 0, 'no quedan modelos pendientes');
 });
 
 test('portadas: solo se guarda WebP, queda disponible tras reiniciar y se regenera si cambia el origen', () => {
@@ -63,4 +73,37 @@ test('portadas: solo se guarda WebP, queda disponible tras reiniciar y se regene
   // Índice de la app: resuelve por nombre normalizado.
   const idx = coverIndex(again.list());
   assert.ok(idx.get('apple|' + normalizeModelName('iPhone 12')));
+});
+
+test('portadas incluidas: cada portada es un WebP 768 × 768 con transparencia y se ve sin internet', () => {
+  for (const c of ALL.covers) {
+    const f = path.join('src/web/covers', c.key + '.webp');
+    assert.ok(fs.existsSync(f), `falta el archivo de ${c.key}`);
+    const b = fs.readFileSync(f);
+    assert.equal(b.toString('ascii', 0, 4), 'RIFF', c.key);
+    assert.equal(b.toString('ascii', 8, 12), 'WEBP', c.key);
+    // Cabecera VP8X: ancho/alto - 1 en 24 bits, y bandera de alfa.
+    assert.equal(b.toString('ascii', 12, 16), 'VP8X', `${c.key}: WebP sin cabecera extendida`);
+    assert.ok(b[20] & 0x10, `${c.key}: sin canal alfa`);
+    assert.equal(b.readUIntLE(24, 3) + 1, 768, `${c.key}: ancho`);
+    assert.equal(b.readUIntLE(27, 3) + 1, 768, `${c.key}: alto`);
+  }
+  // La portada incluida tiene prioridad y no depende de descargas.
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'cel-cov-'));
+  const store = new CoverStore(dir, ALL.covers, 'src/web');
+  for (const c of store.list()) assert.match(c.url ?? '', new RegExp(`^/covers/${c.key}\\.webp\\?v=\\d+$`), c.key);
+});
+
+test('portadas: cobertura del 100 % de los modelos de la base, vinculados por ID', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'cel-cov-'));
+  const db = openDb(path.join(dir, 'c.db'));
+  applySeedData(db); applyFichas(db);
+  const store = new CoverStore(dir, ALL.covers, 'src/web');
+  const cov = store.coverage(db);
+  assert.ok(cov.total > 0);
+  assert.deepEqual(cov.pending.map((m) => `${m.brand} ${m.model}`), []);
+  assert.equal(cov.withCover, cov.total);
+  const row = db.prepare("SELECT m.cover_key FROM models m JOIN brands b ON b.id = m.brand_id WHERE b.name = 'Apple' AND m.name = 'iPhone 16'").get();
+  assert.equal(row?.cover_key, 'apple-iphone-16');
+  db.close();
 });

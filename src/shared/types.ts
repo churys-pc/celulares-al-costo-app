@@ -93,6 +93,8 @@ export interface Product {
   stockKnown: boolean;
   /** Primera foto del producto o null. */
   photoUrl: string | null;
+  /** Clave de la portada oficial vinculada al modelo (data/covers.json), o null. */
+  coverKey?: string | null;
   /** Especificaciones destacadas (máx. 4) para tarjetas. */
   highlights: Pick<Spec, 'group' | 'key' | 'value'>[];
   createdAt: string;
@@ -212,6 +214,8 @@ export interface CompareModel {
   releaseYear: number | null;
   isDemo: boolean;
   photoUrl: string | null;
+  /** Clave de la portada oficial vinculada al modelo (data/covers.json), o null. */
+  coverKey?: string | null;
   specs: Spec[];
   benchmarks: Benchmark[];
   /** Precio más bajo en catálogo con stock, por moneda. null si no hay. */

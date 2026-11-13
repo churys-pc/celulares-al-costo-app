@@ -47,7 +47,7 @@ export function Presentation({ items, start = 0, settings, onClose }: { items: P
   // Las 6 especificaciones más importantes (mismo orden que la ficha y el comparador).
   const highlights = p ? keySpecValues(p.specs).map((s) => ({ key: s.label, value: s.value, group: LABEL_GROUP[s.label] ?? 'Otros' })).slice(0, 6) : [];
   const bench = p?.benchmarks.find((b) => b.version === 'v11') ?? p?.benchmarks[0];
-  const coverSrc = cover(base.brand, base.model);
+  const coverSrc = cover(base.brand, base.model, base.coverKey);
   const photos = [...(coverSrc ? [{ id: -1, url: coverSrc }] : []), ...(p?.photos ?? [])];
 
   return (

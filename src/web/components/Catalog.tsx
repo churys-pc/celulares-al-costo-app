@@ -97,7 +97,7 @@ export function Catalog({ settings, initialQuery = '', onNew }: { settings: Sett
             return (
               <div key={p.id} className="cat2-tr" onClick={() => openProduct(p.id)}>
                 <div className="cat2-eq">
-                  <div className="cat2-img">{(cover(p.brand, p.model) ?? p.photoUrl) ? <img src={cover(p.brand, p.model) ?? p.photoUrl!} alt={`${p.brand} ${p.model}`} loading="lazy" /> : <Icon name="phone" size={28} />}</div>
+                  <div className="cat2-img">{(cover(p.brand, p.model, p.coverKey) ?? p.photoUrl) ? <img src={cover(p.brand, p.model, p.coverKey) ?? p.photoUrl!} alt={`${p.brand} ${p.model}`} loading="lazy" /> : <Icon name="phone" size={28} />}</div>
                   <div><h3>{p.model}</h3>
                     <span className="muted small">{sub}</span></div>
                 </div>

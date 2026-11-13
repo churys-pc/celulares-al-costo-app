@@ -119,6 +119,8 @@ const MIGRATIONS: string[] = [
    ALTER TABLE benchmarks ADD COLUMN sample TEXT;
    ALTER TABLE models ADD COLUMN ficha_id TEXT;
    ALTER TABLE models ADD COLUMN ficha_rev TEXT;`,
+  // v7: portada oficial vinculada al ID de cada modelo (clave de data/covers.json).
+  `ALTER TABLE models ADD COLUMN cover_key TEXT;`,
 ];
 
 function migrate(db: Db) {

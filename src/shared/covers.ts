@@ -14,7 +14,7 @@ export interface CoverEntry {
   note?: string;
 }
 
-export interface CoverInfo { key: string; brand: string; models: string[]; page: string; note: string | null; url: string | null }
+export interface CoverInfo { key: string; brand: string; models: string[]; page: string; note: string | null; url: string | null; bundled?: boolean }
 
 /** Normaliza el nombre de un modelo: minúsculas, sin paréntesis, sin espacios y «Plus» = «+». */
 export function normalizeModelName(s: string): string {

@@ -119,7 +119,7 @@ export function Compare({ settings }: { settings: Settings | null }) {
       <div className="cmp2-models">
         {models.map((m, i) => (
           <article key={m.modelId} className={`cmp2-model ${a.best === i ? 'on' : ''}`}>
-            <div className="cmp2-photo">{(cover(m.brand, m.model) ?? m.photoUrl) ? <img src={cover(m.brand, m.model) ?? m.photoUrl!} alt={`${m.brand} ${m.model}`} /> : <Icon name="phone" size={34} />}</div>
+            <div className="cmp2-photo">{(cover(m.brand, m.model, m.coverKey) ?? m.photoUrl) ? <img src={cover(m.brand, m.model, m.coverKey) ?? m.photoUrl!} alt={`${m.brand} ${m.model}`} /> : <Icon name="phone" size={34} />}</div>
             <div className="cmp2-info">
               <h3>{name(m)}</h3>
               <div className={`cmp2-stock ${m.stock ? 'in' : ''}`}><i />{m.stock ? `En stock (${m.stock})` : 'Sin stock'}

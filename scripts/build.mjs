@@ -7,6 +7,9 @@ fs.mkdirSync('dist/web', { recursive: true });
 fs.copyFileSync('src/web/index.html', 'dist/web/index.html');
 fs.copyFileSync('src/web/styles.css', 'dist/web/styles.css');
 fs.copyFileSync('src/web/logo.png', 'dist/web/logo.png');
+// Portadas por modelo incluidas en la app (WebP 768 × 768, fondo transparente).
+fs.rmSync('dist/web/covers', { recursive: true, force: true });
+if (fs.existsSync('src/web/covers')) fs.cpSync('src/web/covers', 'dist/web/covers', { recursive: true });
 
 // Clave del repo de datos (secreto DATA_REPO_TOKEN en GitHub Actions) para que cada PC se conecte sola.
 // Se ofusca para que no quede en texto plano; NO es cifrado real.

@@ -6,12 +6,13 @@ import { processCover } from './coverProcess.ts';
 
 let list: CoverInfo[] = [];
 let index = new Map<string, CoverInfo>();
+let byKey = new Map<string, CoverInfo>();
 const listeners = new Set<() => void>();
 const failed = new Set<string>();
 let running = false;
 
 function set(next: CoverInfo[]) {
-  list = next; index = coverIndex(next);
+  list = next; index = coverIndex(next); byKey = new Map(next.map((c) => [c.key, c]));
   listeners.forEach((f) => f());
 }
 
@@ -21,13 +22,13 @@ export async function loadCovers(): Promise<CoverInfo[]> {
   return list;
 }
 
-/** URL de la portada del modelo o null si no hay (o si todavía no se generó en esta PC). */
-export function coverUrl(brand: string, model: string): string | null {
-  return index.get(brand.toLowerCase() + '|' + normalizeModelName(model))?.url ?? null;
+/** URL de la portada del modelo: primero por la clave vinculada al ID del modelo, si no por marca y nombre. */
+export function coverUrl(brand: string, model: string, key?: string | null): string | null {
+  return (key ? byKey.get(key)?.url : null) ?? index.get(brand.toLowerCase() + '|' + normalizeModelName(model))?.url ?? null;
 }
 
 /** Hook: devuelve la función de búsqueda y vuelve a pintar cuando aparecen portadas nuevas. */
-export function useCovers(): (brand: string, model: string) => string | null {
+export function useCovers(): (brand: string, model: string, key?: string | null) => string | null {
   const [, tick] = useState(0);
   useEffect(() => { const f = () => tick((n: number) => n + 1); listeners.add(f); return () => { listeners.delete(f); }; }, []);
   return coverUrl;

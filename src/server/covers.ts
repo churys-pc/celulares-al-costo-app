@@ -1,7 +1,8 @@
-// Portadas por modelo: una imagen oficial del fabricante por modelo (catálogo, ficha y comparador).
-// La app baja la imagen de origen (solo de los sitios oficiales listados), la recorta en el navegador
-// (fondo transparente, WebP) y la guarda en <dataDir>/covers/<clave>.webp. Si cambia la URL de origen en
-// data/covers.json, la portada se vuelve a generar.
+// Portadas por modelo: una imagen del equipo por modelo (catálogo, ficha y comparador).
+// Las portadas vienen incluidas en la app (web/covers/<clave>.webp, WebP 768 × 768 con fondo transparente),
+// así se ven desde el primer inicio y sin internet. Si alguna no viniera incluida, la app baja la imagen de
+// origen (solo de los sitios oficiales listados), la recorta en el navegador y la guarda en <dataDir>/covers.
+// Cada modelo de la base queda vinculado a su portada por ID (models.cover_key).
 import fs from 'node:fs';
 import path from 'node:path';
 import https from 'node:https';
@@ -9,6 +10,7 @@ import { decodeImage } from './photos.ts';
 import { ValidationError } from '../shared/types.ts';
 import { normalizeModelName, type CoverEntry, type CoverInfo } from '../shared/covers.ts';
 import data from './data/covers.json';
+import type { Db } from './db.ts';
 
 const ENTRIES = (data as { covers: CoverEntry[] }).covers;
 /** Solo se descargan imágenes de los sitios oficiales usados en covers.json. */
@@ -23,7 +25,10 @@ export class CoverStore {
   readonly dir: string;
   private metaPath: string;
   private meta: Record<string, Meta>;
-  constructor(dataDir: string, private entries: CoverEntry[] = ENTRIES) {
+  /** Carpeta de portadas incluidas en la app (o null). */
+  private bundledDir: string | null;
+  constructor(dataDir: string, private entries: CoverEntry[] = ENTRIES, webRoot?: string) {
+    this.bundledDir = webRoot ? path.join(webRoot, 'covers') : null;
     this.dir = path.join(dataDir, 'covers');
     fs.mkdirSync(this.dir, { recursive: true });
     this.metaPath = path.join(this.dir, 'index.json');
@@ -41,12 +46,49 @@ export class CoverStore {
     return this.meta[e.key]?.url === e.url && fs.existsSync(path.join(this.dir, e.key + '.webp'));
   }
 
+  /** Archivo incluido en la app para esa clave (o null). */
+  bundled(key: string): string | null {
+    if (!this.bundledDir || !KEY_RE.test(key)) return null;
+    const f = path.join(this.bundledDir, key + '.webp');
+    try { return fs.statSync(f).size > 0 ? f : null; } catch { return null; }
+  }
+
+  private urlFor(e: CoverEntry): string | null {
+    const b = this.bundled(e.key);
+    if (b) return `/covers/${e.key}.webp?v=${fs.statSync(b).size}`;
+    return this.ready(e) ? `/api/covers/${e.key}.webp?v=${encodeURIComponent(this.meta[e.key].savedAt)}` : null;
+  }
+
   list(): CoverInfo[] {
-    return this.entries.map((e) => {
-      const ok = this.ready(e);
-      return { key: e.key, brand: e.brand, models: e.models, page: e.page, note: e.note ?? null,
-        url: ok ? `/api/covers/${e.key}.webp?v=${encodeURIComponent(this.meta[e.key].savedAt)}` : null };
+    return this.entries.map((e) => ({ key: e.key, brand: e.brand, models: e.models, page: e.page, note: e.note ?? null,
+      bundled: !!this.bundled(e.key), url: this.urlFor(e) }));
+  }
+
+  /** Vincula cada modelo de la base con su portada (models.cover_key). Devuelve cuántos cambiaron. */
+  assignKeys(db: Db): number {
+    const rows = db.prepare('SELECT m.id, m.name, m.cover_key, b.name AS brand FROM models m JOIN brands b ON b.id = m.brand_id').all();
+    const upd = db.prepare('UPDATE models SET cover_key = ? WHERE id = ?');
+    let n = 0;
+    for (const r of rows) {
+      const k = this.keyFor(String(r.brand), String(r.name));
+      if ((r.cover_key ?? null) !== k) { upd.run(k, r.id); n++; }
+    }
+    return n;
+  }
+
+  /** Control de cobertura: todos los modelos de la base (con o sin stock) contra sus portadas visibles. */
+  coverage(db: Db) {
+    this.assignKeys(db);
+    const rows = db.prepare(`SELECT m.id, m.name, m.cover_key, b.name AS brand,
+        (SELECT COUNT(*) FROM products p JOIN variants v ON v.id = p.variant_id WHERE v.model_id = m.id) AS products
+      FROM models m JOIN brands b ON b.id = m.brand_id WHERE m.is_demo = 0 ORDER BY b.name, m.name`).all();
+    const models = rows.map((r) => {
+      const e = r.cover_key ? this.entries.find((x) => x.key === r.cover_key) : undefined;
+      return { modelId: Number(r.id), brand: String(r.brand), model: String(r.name), coverKey: r.cover_key ?? null,
+        inCatalog: Number(r.products) > 0, url: e ? this.urlFor(e) : null };
     });
+    const pending = models.filter((m) => !m.url);
+    return { total: models.length, withCover: models.length - pending.length, pending };
   }
 
   /** Clave de portada para una marca y modelo (o null si no hay portada para ese modelo). */

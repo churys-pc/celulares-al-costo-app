@@ -63,7 +63,8 @@ export function createServer(db: Db, webRoot: string, dataDir: string, opts: { s
   ];
   const repo = new CatalogRepo(db);
   const photos = new PhotoRepo(db, dataDir);
-  const covers = new CoverStore(dataDir);
+  const covers = new CoverStore(dataDir, undefined, webRoot);
+  covers.assignKeys(db);
   const idOf = (s: string) => { const n = Number(s); if (!Number.isInteger(n) || n <= 0) throw new HttpError(400, 'ID inválido'); return n; };
 
   type Handler = (m: RegExpMatchArray, req: http.IncomingMessage, url: URL) => Promise<unknown> | unknown;
@@ -108,7 +109,8 @@ export function createServer(db: Db, webRoot: string, dataDir: string, opts: { s
     ['GET', /^\/api\/lookup$/, (_m, _r, u) => searchOnline(u.searchParams.get('q'))],
     ['POST', /^\/api\/lookup$/, async (_m, req) => importOnline(db, (await readJson(req)).slug)],
     ['POST', /^\/api\/quick\/preview$/, async (_m, req) => { const b = await readJson(req); return preview(b.name, b.slug); }],
-    ['GET', /^\/api\/covers$/, () => covers.list()],
+    ['GET', /^\/api\/covers$/, () => { covers.assignKeys(db); return covers.list(); }],
+    ['GET', /^\/api\/covers\/coverage$/, () => covers.coverage(db)],
     ['POST', /^\/api\/covers\/([a-z0-9-]+)$/, async (m, req) => covers.save(m[1], await readJson(req))],
     ['POST', /^\/api\/quick\/products$/, async (_m, req) => { const r = saveQuick(db, dataDir, await readJson(req)); kick(); return r; }],
     ['PATCH', /^\/api\/quick\/products\/([a-f0-9-]{36})$/, async (m, req) => { const r = updateQuick(db, dataDir, m[1], await readJson(req)); kick(); return r; }],

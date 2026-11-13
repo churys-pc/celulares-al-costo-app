@@ -37,7 +37,7 @@ export function ProductSheet({ product: p, settings, onClose, onEdit, onDelete, 
         </div>
         <h2 style={{ margin: '10px 0 2px' }}>{p.brand} {p.model}</h2>
         <div className="muted">{variantLabel(p) || 'Variante sin detallar'}</div>
-        <Gallery productId={p.id} initial={p.photos} cover={cover(p.brand, p.model)} label={`${p.brand} ${p.model}`} onChanged={onChanged} readOnly={!!p.repoId || !admin} />
+        <Gallery productId={p.id} initial={p.photos} cover={cover(p.brand, p.model, p.coverKey)} label={`${p.brand} ${p.model}`} onChanged={onChanged} readOnly={!!p.repoId || !admin} />
         <div className="row">
           <span className="price">{money(p.price, p.currency)}</span>
           {conv && <span className="muted small">≈ {conv} (cotización manual)</span>}

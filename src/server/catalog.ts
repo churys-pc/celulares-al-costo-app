@@ -91,7 +91,7 @@ const PRODUCT_SELECT = `
   SELECT p.id, p.condition, p.status, p.price, p.currency, p.cost, p.stock, p.warranty_months,
          p.notes, p.uses, p.favorite, p.is_demo, p.created_at, p.updated_at, p.source, p.availability, p.stock_known, p.repo_id, p.description,
          v.id AS variant_id, v.storage_gb, v.ram_gb, v.region, v.color,
-         m.id AS model_id, m.name AS model, b.id AS brand_id, b.name AS brand,
+         m.id AS model_id, m.name AS model, m.cover_key, b.id AS brand_id, b.name AS brand,
          (SELECT ph.id FROM photos ph WHERE ph.product_id = p.id ORDER BY ph.position, ph.id LIMIT 1) AS photo_id,
          (SELECT json_group_array(json_object('group', grp, 'key', key, 'value', value)) FROM
            (SELECT grp, key, value FROM specs WHERE model_id = m.id AND highlight = 1 ORDER BY position, id LIMIT 4)) AS hl
@@ -105,7 +105,7 @@ const mapProduct = (r: any): Product => ({
   price: Number(r.price), currency: r.currency, cost: r.cost ?? null, stock: Number(r.stock),
   warrantyMonths: Number(r.warranty_months), notes: r.notes, uses: JSON.parse(r.uses),
   favorite: !!r.favorite, isDemo: !!r.is_demo, source: r.source ?? 'manual', repoId: r.repo_id ?? null, description: r.description ?? '', availability: r.availability ?? '', stockKnown: r.stock_known !== 0,
-  photoUrl: r.photo_id ? `/api/photos/${r.photo_id}` : null, highlights: r.hl ? JSON.parse(r.hl) : [],
+  photoUrl: r.photo_id ? `/api/photos/${r.photo_id}` : null, coverKey: r.cover_key ?? null, highlights: r.hl ? JSON.parse(r.hl) : [],
   createdAt: r.created_at, updatedAt: r.updated_at,
 });
 
@@ -346,12 +346,12 @@ export class CatalogRepo {
 
   /** Modelos disponibles para comparar (con o sin productos). */
   compareCandidates(includeDemo: boolean) {
-    return this.db.prepare(`SELECT m.id, m.name, m.is_demo, b.name AS brand,
+    return this.db.prepare(`SELECT m.id, m.name, m.is_demo, m.cover_key, b.name AS brand,
         (SELECT COUNT(*) FROM benchmarks x WHERE x.model_id = m.id) AS benches,
         (SELECT COUNT(*) FROM specs s WHERE s.model_id = m.id) AS specs
       FROM models m JOIN brands b ON b.id = m.brand_id ${includeDemo ? '' : 'WHERE m.is_demo = 0'}
       ORDER BY m.is_demo, b.name, m.name`).all()
-      .map((r) => ({ modelId: Number(r.id), brand: r.brand, model: r.name, isDemo: !!r.is_demo, benches: Number(r.benches), specs: Number(r.specs) }));
+      .map((r) => ({ modelId: Number(r.id), brand: r.brand, model: r.name, coverKey: r.cover_key ?? null, isDemo: !!r.is_demo, benches: Number(r.benches), specs: Number(r.specs) }));
   }
 
   compareModels(ids: number[]): CompareModel[] {
@@ -367,7 +367,7 @@ export class CatalogRepo {
       const photo = this.db.prepare(`SELECT ph.id FROM photos ph JOIN products p ON p.id = ph.product_id
         JOIN variants v ON v.id = p.variant_id WHERE v.model_id = ? ORDER BY ph.position, ph.id LIMIT 1`).get(id);
       return {
-        modelId: id, brand: m.brand, model: m.name, releaseYear: m.release_year ?? null, isDemo: !!m.is_demo,
+        modelId: id, brand: m.brand, model: m.name, coverKey: m.cover_key ?? null, releaseYear: m.release_year ?? null, isDemo: !!m.is_demo,
         photoUrl: photo ? `/api/photos/${photo.id}` : null, specs: this.getSpecs(id), benchmarks: this.listBenchmarks(id),
         priceFrom: price ? { price: Number(price.price), currency: price.currency } : null, stock: Number(stock.s),
       };

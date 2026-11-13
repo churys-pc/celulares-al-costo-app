@@ -1,10 +1,11 @@
 // Procesa una imagen oficial de un celular para usarla como portada: quita el fondo liso (si no es transparente),
-// recorta al equipo, agrega margen y la devuelve como WebP con transparencia. Se ejecuta en el navegador (canvas).
+// recorta al equipo y lo centra en un cuadrado de 768 × 768 con márgenes parejos, como WebP con transparencia.
+// Se ejecuta en el navegador (canvas). Es el mismo criterio de las portadas incluidas en la app.
 
 export interface CoverResult { blob: Blob; width: number; height: number; removedBackground: boolean }
 
-const MAX_SIDE = 1000;   // lado máximo de la portada final
-const MARGIN = 0.04;     // margen alrededor del equipo (fracción del lado mayor)
+export const COVER_SIDE = 768;   // portada final: cuadrado de 768 × 768
+const MARGIN = 0.06;              // margen parejo alrededor del equipo (fracción del lado)
 
 /** Quita el fondo liso conectado a los bordes (inundación desde el borde) con borde suavizado. Devuelve false si el fondo no es liso. */
 export function removeFlatBackground(img: ImageData): boolean {
@@ -75,14 +76,15 @@ export async function processCover(source: Blob): Promise<CoverResult> {
   const box = bbox(img);
   if (!box) throw new Error('La imagen quedó vacía al quitar el fondo');
   ctx.putImageData(img, 0, 0);
-  const side = Math.max(box.w, box.h);
-  const pad = Math.round(side * MARGIN);
-  const scale = Math.min(1, MAX_SIDE / (side + pad * 2));
-  const ow = Math.round((box.w + pad * 2) * scale), oh = Math.round((box.h + pad * 2) * scale);
+  const inner = COVER_SIDE * (1 - MARGIN * 2);
+  const scale = inner / Math.max(box.w, box.h);
+  const dw = box.w * scale, dh = box.h * scale;
+  const ow = COVER_SIDE, oh = COVER_SIDE;
   const out = new OffscreenCanvas(ow, oh);
   const octx = out.getContext('2d')!;
+  octx.imageSmoothingEnabled = true;
   octx.imageSmoothingQuality = 'high';
-  octx.drawImage(c, box.x, box.y, box.w, box.h, pad * scale, pad * scale, box.w * scale, box.h * scale);
+  octx.drawImage(c, box.x, box.y, box.w, box.h, (ow - dw) / 2, (oh - dh) / 2, dw, dh);
   const blob = await out.convertToBlob({ type: 'image/webp', quality: 0.92 });
   if (blob.type !== 'image/webp') throw new Error('Este equipo no puede generar WebP');
   return { blob, width: ow, height: oh, removedBackground: removed };
