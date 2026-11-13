@@ -6,6 +6,8 @@ import { Icon } from '../icons.tsx';
 import { Presentation } from './Presentation.tsx';
 import { ProductForm } from './ProductForm.tsx';
 import { ProductSheet } from './ProductSheet.tsx';
+import { EditProduct } from './EditProduct.tsx';
+import { useIsAdmin } from '../session.ts';
 
 export function Catalog({ settings, initialQuery = '', onNew }: { settings: Settings | null; initialQuery?: string; onNew?: () => void }) {
   const [items, setItems] = useState<Product[]>([]);
@@ -37,6 +39,13 @@ export function Catalog({ settings, initialQuery = '', onNew }: { settings: Sett
 
   const openProduct = async (id: number) => setOpen(await api.product(id));
   const toggleFav = async (p: Product) => { await api.favorite(p.id, !p.favorite); load(); };
+  const admin = useIsAdmin();
+  const [editing, setEditing] = useState<Product | null>(null);
+  const edit = (p: Product) => (p.repoId ? setEditing(p) : api.product(p.id).then((d) => setForm({ product: d })));
+  async function removeProduct(p: Product) {
+    if (!confirm(`¿Eliminar ${p.brand} ${p.model}${p.storageGb ? ` ${p.storageGb} GB` : ''} del catálogo? Se borra en todas las PCs.`)) return;
+    try { await (p.repoId ? api.quickDelete(p.repoId) : api.remove(p.id)); setOpen(null); load(); } catch (e) { setError((e as Error).message); }
+  }
 
   // Orden por precio comparando en dólares (los productos sin precio van al final).
   const usdOf = (p: Product) => dualPrice(p, settings).usd;
@@ -78,7 +87,7 @@ export function Catalog({ settings, initialQuery = '', onNew }: { settings: Sett
         {!settings?.usdRate && <span className="cat2-warn">Cargá la cotización del dólar en Ajustes para ver los precios en pesos.</span>}</div>
       {error && <p className="error">{error}</p>}
       {items.length === 0 ? <div className="empty">No hay productos con estos filtros.</div> : (
-        <div className="cat2-table">
+        <div className={`cat2-table ${admin ? 'admin' : ''}`}>
           <div className="cat2-tr th"><div>Equipo</div><div>Estado</div><div className="r">Precio</div><div className="r">Acciones</div></div>
           {sorted.map((p) => {
             const pr = dualPrice(p, settings);
@@ -98,6 +107,8 @@ export function Catalog({ settings, initialQuery = '', onNew }: { settings: Sett
                 </div>
                 <div className="r cat2-act" onClick={(e) => e.stopPropagation()}>
                   <button className={`cat2-star ${p.favorite ? 'on' : ''}`} aria-label="Favorito" onClick={() => toggleFav(p)}><Icon name="star" size={16} /></button>
+                  {admin && <button className="cat2-star" title="Editar" aria-label="Editar" onClick={() => edit(p)}><Icon name="edit" size={16} /></button>}
+                  {admin && <button className="cat2-star del" title="Eliminar" aria-label="Eliminar" onClick={() => removeProduct(p)}><Icon name="trash" size={16} /></button>}
                   <button className="cat2-see" onClick={() => openProduct(p.id)}>Ver equipo <Icon name="right" size={14} /></button>
                 </div>
               </div>);
@@ -105,11 +116,12 @@ export function Catalog({ settings, initialQuery = '', onNew }: { settings: Sett
         </div>)}
 
       {open && <ProductSheet key={open.id} product={open} settings={settings} onClose={() => setOpen(null)}
-        onEdit={() => { setForm({ product: open }); setOpen(null); }} onChanged={load}
+        onEdit={() => { const o = open; setOpen(null); if (o.repoId) setEditing(o); else setForm({ product: o }); }} onDelete={() => removeProduct(open)} onChanged={load}
         onPresent={() => { const k = sorted.findIndex((x) => x.id === open.id); setOpen(null); setPresent(Math.max(0, k)); }} />}
       {present !== null && <Presentation items={sorted} start={present} settings={settings} onClose={() => setPresent(null)} />}
       {form && <ProductForm product={form.product} brands={brands} settings={settings} onClose={() => setForm(null)}
         onSaved={(p) => { setForm(null); load(); setOpen(p); }} />}
+      {editing && <EditProduct p={editing} settings={settings} onClose={() => setEditing(null)} onSaved={() => { setEditing(null); load(); }} />}
     </div>
   );
 }

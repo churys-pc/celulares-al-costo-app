@@ -7,9 +7,9 @@ import { Icon } from '../icons.tsx';
 import { SPEC_TEMPLATE } from '../../shared/specTemplate.ts';
 import { converted, money, STATUS_LABEL, USE_LABEL, variantLabel } from '../format.ts';
 
-interface Props { product: ProductDetail; settings: Settings | null; onClose: () => void; onEdit: () => void; onChanged: () => void; onPresent?: () => void }
+interface Props { product: ProductDetail; settings: Settings | null; onClose: () => void; onEdit: () => void; onDelete?: () => void; onChanged: () => void; onPresent?: () => void }
 
-export function ProductSheet({ product: p, settings, onClose, onEdit, onChanged, onPresent }: Props) {
+export function ProductSheet({ product: p, settings, onClose, onEdit, onDelete, onChanged, onPresent }: Props) {
   const ios = iosSupport(p.brand, p.model);
   const admin = useIsAdmin();
   const [showAll, setShowAll] = useState(true);
@@ -64,9 +64,9 @@ export function ProductSheet({ product: p, settings, onClose, onEdit, onChanged,
 
         <div className="row" style={{ marginTop: 24 }}>
           {onPresent && <button className="btn" onClick={onPresent}><Icon name="screen" size={16} /> Presentar al cliente</button>}
-          {!admin ? null : p.repoId ? <span className="muted small">Para editar o eliminar este producto usá «Cargar productos».</span> : <>
-            <button className="btn primary" onClick={onEdit}>Editar producto</button>
-            <button className="btn danger" onClick={remove}>Eliminar</button></>}
+          {admin && <>
+            <button className="btn primary" onClick={onEdit}><Icon name="edit" size={16} /> Editar producto</button>
+            <button className="btn danger" onClick={onDelete ?? remove}><Icon name="trash" size={16} /> Eliminar</button></>}
         </div>
       </aside>
     </div>

@@ -7,7 +7,7 @@ import { CatalogRepo } from './catalog.ts';
 import { getSettings, updateSettings } from './settings.ts';
 import { PhotoRepo } from './photos.ts';
 import { importOnline, searchOnline } from './lookup.ts';
-import { deleteQuick, preview, saveQuick } from './quickProducts.ts';
+import { deleteQuick, preview, saveQuick, updateQuick } from './quickProducts.ts';
 import { repoStatus, setRepoConfig, type Secret } from './repoSync.ts';
 import { Auth, AuthError } from './auth.ts';
 import { publishRate } from './sharedConfig.ts';
@@ -105,6 +105,7 @@ export function createServer(db: Db, webRoot: string, dataDir: string, opts: { s
     ['POST', /^\/api\/lookup$/, async (_m, req) => importOnline(db, (await readJson(req)).slug)],
     ['POST', /^\/api\/quick\/preview$/, async (_m, req) => { const b = await readJson(req); return preview(b.name, b.slug); }],
     ['POST', /^\/api\/quick\/products$/, async (_m, req) => { const r = saveQuick(db, dataDir, await readJson(req)); kick(); return r; }],
+    ['PATCH', /^\/api\/quick\/products\/([a-f0-9-]{36})$/, async (m, req) => { const r = updateQuick(db, dataDir, m[1], await readJson(req)); kick(); return r; }],
     ['DELETE', /^\/api\/quick\/products\/([a-f0-9-]{36})$/, (m) => { deleteQuick(db, dataDir, m[1]); kick(); return { ok: true }; }],
     ['GET', /^\/api\/repo$/, () => repoStatus(db, opts.secret)],
     ['PUT', /^\/api\/repo$/, async (_m, req) => { setRepoConfig(db, await readJson(req), opts.secret); kick(); return repoStatus(db, opts.secret); }],

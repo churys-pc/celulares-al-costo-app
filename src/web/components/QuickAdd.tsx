@@ -19,6 +19,10 @@ export function QuickAdd({ settings }: { settings: Settings | null }) {
   const [list, setList] = useState<Product[]>([]);
   const [repo, setRepo] = useState<Awaited<ReturnType<typeof api.repoStatus>> | null>(null);
   const descTouched = useRef(false);
+  const [q, setQ] = useState('');
+  // Búsqueda en la lista de cargados: marca, modelo, memoria y estado.
+  const norm = (s: string) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  const shown = list.filter((p) => norm(`${p.brand} ${p.model} ${p.ramGb ?? ''}/${p.storageGb ?? ''} ${p.storageGb ?? ''}gb ${p.condition}`).includes(norm(q.trim())));
 
   const load = () => { api.products({}).then((l) => setList(l.filter((p) => p.repoId))).catch(() => {}); api.repoStatus().then(setRepo).catch(() => {}); };
   useEffect(() => { load(); const t = setInterval(load, 10_000); return () => clearInterval(t); }, []);
@@ -116,9 +120,12 @@ export function QuickAdd({ settings }: { settings: Settings | null }) {
         </form>
 
         <section className="qa-list">
-          <h2>Cargados ({list.length})</h2>
+          <h2>Cargados ({q ? `${shown.length} de ${list.length}` : list.length})</h2>
+          {list.length > 0 && <div className="searchbar inline qa-search"><Icon name="search" size={18} />
+            <input placeholder="Buscar en los cargados (marca, modelo, memoria…)" value={q} onChange={(e) => setQ(e.target.value)} /></div>}
           {!list.length && <div className="empty small-empty">Todavía no cargaste productos.</div>}
-          {list.map((p) => (
+          {list.length > 0 && !shown.length && <div className="empty small-empty">Ningún producto coincide con «{q}».</div>}
+          {shown.map((p) => (
             <div key={p.id} className="qa-item">
               <div className="qa-img">{p.photoUrl ? <img src={p.photoUrl} alt="" /> : <Icon name="phone" size={22} className="ph-icon" />}</div>
               <div className="qa-info"><b>{p.brand} {p.model}</b><span className="muted small">{[p.ramGb && `${p.ramGb} GB RAM`, p.storageGb && `${p.storageGb} GB`, p.condition === 'nuevo' ? 'Nuevo' : 'Usado'].filter(Boolean).join(' · ')}</span></div>

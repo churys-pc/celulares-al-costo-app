@@ -115,6 +115,43 @@ export function saveQuick(db: Db, dataDir: string, body: any): { id: string; pro
   return { id, productId };
 }
 
+/** Edición desde el catálogo: cambia precio, estado, memoria, color y foto; conserva marca, modelo, descripción y ficha. */
+export function updateQuick(db: Db, dataDir: string, id: string, body: any): { id: string; productId: number } {
+  if (!/^[a-f0-9-]{36}$/.test(id)) throw new ValidationError('Producto inválido');
+  const repo = new CatalogRepo(db);
+  const row = db.prepare('SELECT id FROM products WHERE repo_id = ?').get(id);
+  if (!row) throw new ValidationError('Producto no encontrado');
+  const cur = repo.getProduct(Number(row.id))!;
+  const price = body?.price === undefined ? cur.price : Number(body.price);
+  if (!Number.isFinite(price) || price <= 0 || price > 1e8) throw new ValidationError('Precio inválido');
+  const condition = CONDITIONS.includes(body?.condition) ? body.condition : cur.condition;
+  const memNum = (v: unknown, prev: number | null) => (v === undefined ? prev : v === null || v === '' ? null : Number.isInteger(Number(v)) && Number(v) > 0 && Number(v) <= 4096 ? Number(v) : prev);
+  const ramGb = memNum(body?.ramGb, cur.ramGb), storageGb = memNum(body?.storageGb, cur.storageGb);
+  const color = body?.color === undefined ? cur.color : body.color ? String(body.color).trim().slice(0, 40) : null;
+  const mem = ramGb && storageGb ? `${ramGb}/${storageGb}` : storageGb ? `${storageGb} GB` : '';
+  // La ficha viaja con el producto para las PCs que todavía no la tienen (si el modelo tiene ficha verificada, esa manda).
+  const specs = repo.getSpecs(cur.modelId).map(({ id: _id, ...s }) => s);
+  const b = repo.listBenchmarks(cur.modelId).find((x) => x.version === 'v11') ?? null;
+  const photoBuf = body?.photo ? decodeImage(body.photo).buf : null;
+  const hadPhoto = !!cur.photos.length;
+  const doc: ProductDoc = {
+    id, name: `${cur.brand} ${cur.model}${mem ? ` ${mem}` : ''}${condition === 'usado' ? ' (usado)' : ''}`, brand: cur.brand, model: cur.model,
+    price, currency: cur.currency, condition, storageGb, ramGb, color, description: cur.description ?? '', specs,
+    antutu: b ? { version: b.version, total: b.total, cpu: b.cpu, gpu: b.gpu, mem: b.mem, ux: b.ux } : null,
+    source: b ? { name: b.sourceName, url: b.sourceUrl ?? '', date: b.measuredAt } : null,
+    photo: photoBuf || (hadPhoto && body?.photo !== null) ? `${PHOTOS_DIR}${id}.jpg` : null, updatedAt: new Date().toISOString(),
+  };
+  const productId = tx(db, () => {
+    const pid = applyDoc(db, dataDir, doc, photoBuf);
+    if (body?.photo === null) db.prepare('DELETE FROM photos WHERE product_id = ?').run(pid);
+    enqueue(db, `${PRODUCTS_DIR}${id}.json`, 'put', JSON.stringify(doc, null, 1));
+    if (photoBuf) enqueue(db, `${PHOTOS_DIR}${id}.jpg`, 'put', photoBuf);
+    if (body?.photo === null && hadPhoto) enqueue(db, `${PHOTOS_DIR}${id}.jpg`, 'delete');
+    return pid;
+  });
+  return { id, productId };
+}
+
 export function deleteQuick(db: Db, dataDir: string, id: string) {
   if (!/^[a-f0-9-]{36}$/.test(id)) throw new ValidationError('Producto inválido');
   tx(db, () => {
