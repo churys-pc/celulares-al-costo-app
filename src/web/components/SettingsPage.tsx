@@ -3,7 +3,6 @@ import type { Settings } from '../../shared/types.ts';
 import { api, fileToDataUrl } from '../api.ts';
 import { UpdatesSection } from './UpdatesSection.tsx';
 import { AccountSection, UsersSection } from './UsersSection.tsx';
-import { FichasSection } from './FichasSection.tsx';
 import { useIsAdmin } from '../session.ts';
 import { RepoSection } from './RepoSection.tsx';
 
@@ -68,7 +67,6 @@ export function SettingsPage({ settings, onChange }: { settings: Settings; onCha
         </div>
         <p className="muted small">La importación es atómica: si una fila tiene errores no se importa nada y se indica la fila.</p>
       </div>
-      <FichasSection />
       <UsersSection />
       <RepoSection />
       </>}
