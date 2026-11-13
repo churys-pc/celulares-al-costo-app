@@ -1,0 +1,359 @@
+{
+ "id": "samsung-galaxy-a16-5g",
+ "brand": "Samsung",
+ "model": "Galaxy A16 5G",
+ "aliases": [],
+ "variant": "Galaxy A16 5G. El procesador cambia según la región (Exynos 1330 o Dimensity 6300).",
+ "reviewedAt": "2026-11-13",
+ "sources": {
+  "nano": {
+   "name": "Nanoreview — Samsung Galaxy A16 5G",
+   "url": "https://nanoreview.net/en/phone/samsung-galaxy-a16-5g",
+   "date": "2026-11-13",
+   "kind": "tecnica"
+  },
+  "comp": {
+   "name": "Comparigon — Samsung Galaxy A16 5G",
+   "url": "https://comparigon.com/phones/samsung-galaxy-a16-5g",
+   "date": "2026-11-13",
+   "kind": "tecnica"
+  }
+ },
+ "fields": [
+  {
+   "group": "Pantalla",
+   "key": "Tamaño y tipo",
+   "value": "6,7\" Super AMOLED",
+   "status": "verificado",
+   "sources": [
+    "nano",
+    "comp"
+   ]
+  },
+  {
+   "group": "Pantalla",
+   "key": "Resolución",
+   "value": "1080 x 2340",
+   "status": "verificado",
+   "sources": [
+    "nano",
+    "comp"
+   ]
+  },
+  {
+   "group": "Pantalla",
+   "key": "Frecuencia",
+   "value": "90 Hz",
+   "status": "verificado",
+   "sources": [
+    "nano",
+    "comp"
+   ]
+  },
+  {
+   "group": "Pantalla",
+   "key": "Brillo",
+   "value": "800 nits (máximo declarado)",
+   "status": "verificado",
+   "sources": [
+    "nano",
+    "comp"
+   ]
+  },
+  {
+   "group": "Chip",
+   "key": "Procesador",
+   "value": "Exynos 1330 o MediaTek Dimensity 6300 (según región)",
+   "status": "depende_variante",
+   "sources": [
+    "nano",
+    "comp"
+   ],
+   "note": "Las fuentes no coinciden en cuál corresponde a cada región; hace falta el código de modelo de la unidad."
+  },
+  {
+   "group": "Chip",
+   "key": "GPU",
+   "value": "Mali-G68 MP2 (Exynos) o Mali-G57 MC2 (Dimensity)",
+   "status": "depende_variante",
+   "sources": [
+    "nano",
+    "comp"
+   ]
+  },
+  {
+   "group": "Memoria",
+   "key": "RAM",
+   "value": "4 / 6 / 8 GB",
+   "status": "sin_confirmar",
+   "sources": [
+    "comp"
+   ],
+   "note": "Nanoreview solo lista 4 GB."
+  },
+  {
+   "group": "Memoria",
+   "key": "Almacenamiento",
+   "value": "128 / 256 GB",
+   "status": "sin_confirmar",
+   "sources": [
+    "comp"
+   ],
+   "note": "Nanoreview solo lista 128 GB."
+  },
+  {
+   "group": "Memoria",
+   "key": "microSD",
+   "value": "Sí, hasta 1,5 TB",
+   "status": "sin_confirmar",
+   "sources": [
+    "nano"
+   ]
+  },
+  {
+   "group": "Batería y carga",
+   "key": "Batería",
+   "value": "5000 mAh",
+   "status": "verificado",
+   "sources": [
+    "nano",
+    "comp"
+   ]
+  },
+  {
+   "group": "Batería y carga",
+   "key": "Carga rápida",
+   "value": "25 W máx. por cable",
+   "status": "verificado",
+   "sources": [
+    "nano",
+    "comp"
+   ]
+  },
+  {
+   "group": "Batería y carga",
+   "key": "Carga inalámbrica",
+   "value": "No",
+   "status": "no_compatible",
+   "sources": [
+    "nano",
+    "comp"
+   ]
+  },
+  {
+   "group": "Conectividad",
+   "key": "Puerto",
+   "value": "USB-C 2.0",
+   "status": "verificado",
+   "sources": [
+    "nano",
+    "comp"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Cámara principal",
+   "value": "50 MP f/1.8, sin estabilización óptica",
+   "status": "verificado",
+   "sources": [
+    "nano",
+    "comp"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Gran angular",
+   "value": "5 MP ultra gran angular f/2.2",
+   "status": "verificado",
+   "sources": [
+    "nano",
+    "comp"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Macro",
+   "value": "2 MP",
+   "status": "verificado",
+   "sources": [
+    "nano",
+    "comp"
+   ],
+   "note": "Apertura f/2.4 solo según Nanoreview."
+  },
+  {
+   "group": "Cámaras",
+   "key": "Cámara frontal",
+   "value": "13 MP f/2.0",
+   "status": "verificado",
+   "sources": [
+    "nano",
+    "comp"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Video",
+   "value": "1080p a 30 fps",
+   "status": "verificado",
+   "sources": [
+    "nano",
+    "comp"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Video frontal",
+   "value": "1080p a 30 fps",
+   "status": "verificado",
+   "sources": [
+    "nano",
+    "comp"
+   ]
+  },
+  {
+   "group": "Conectividad",
+   "key": "5G",
+   "value": "Sí",
+   "status": "verificado",
+   "sources": [
+    "nano",
+    "comp"
+   ]
+  },
+  {
+   "group": "Conectividad",
+   "key": "SIM",
+   "value": "2 nano-SIM",
+   "status": "verificado",
+   "sources": [
+    "nano",
+    "comp"
+   ]
+  },
+  {
+   "group": "Conectividad",
+   "key": "eSIM",
+   "value": "No indicado",
+   "status": "sin_confirmar",
+   "sources": [
+    "nano"
+   ],
+   "note": "Nanoreview dice que no; Comparigon no lo menciona."
+  },
+  {
+   "group": "Conectividad",
+   "key": "NFC",
+   "value": "Según la región",
+   "status": "depende_variante",
+   "sources": [
+    "nano",
+    "comp"
+   ],
+   "note": "Nanoreview: depende de la región; Comparigon: sí."
+  },
+  {
+   "group": "Conectividad",
+   "key": "Wi-Fi",
+   "value": "Wi-Fi 5 (doble banda)",
+   "status": "sin_confirmar",
+   "sources": [
+    "nano"
+   ]
+  },
+  {
+   "group": "Conectividad",
+   "key": "Bluetooth",
+   "value": "5.3",
+   "status": "sin_confirmar",
+   "sources": [
+    "nano"
+   ]
+  },
+  {
+   "group": "Otros",
+   "key": "Lanzamiento",
+   "value": "Octubre de 2024",
+   "status": "verificado",
+   "sources": [
+    "nano",
+    "comp"
+   ]
+  },
+  {
+   "group": "Soporte",
+   "key": "Sistema operativo",
+   "value": "Android 14 de fábrica",
+   "status": "sin_confirmar",
+   "sources": [
+    "nano"
+   ],
+   "note": "La propia página es inconsistente."
+  },
+  {
+   "group": "Soporte",
+   "key": "Años de actualizaciones",
+   "value": "2 años de Android y 3 de seguridad, según una sola fuente",
+   "status": "sin_confirmar",
+   "sources": [
+    "nano"
+   ],
+   "note": "Nanoreview indica 2 años de Android y 3 de seguridad, pero para el A16 4G indica 6 años: contradicción sin resolver."
+  },
+  {
+   "group": "Dimensiones",
+   "key": "Medidas",
+   "value": "164,4 x 77,9 x 7,9 mm",
+   "status": "verificado",
+   "sources": [
+    "nano",
+    "comp"
+   ]
+  },
+  {
+   "group": "Dimensiones",
+   "key": "Peso",
+   "value": "200 g",
+   "status": "verificado",
+   "sources": [
+    "nano",
+    "comp"
+   ]
+  },
+  {
+   "group": "Protección",
+   "key": "Resistencia",
+   "value": "IP54",
+   "status": "sin_confirmar",
+   "sources": [
+    "nano"
+   ],
+   "note": "Comparigon solo dice «resistente al agua»."
+  }
+ ],
+ "antutu": {
+  "version": "v11",
+  "total": 576249,
+  "sample": "individual",
+  "source": "nano",
+  "note": "Nanoreview y Comparigon publican el mismo valor exacto: se cuenta como una sola fuente. Corresponde a una de las variantes de procesador."
+ },
+ "pending": [
+  {
+   "key": "Procesador por región",
+   "why": "Hace falta el código de modelo de la unidad y la ficha oficial de Samsung para esa región."
+  },
+  {
+   "key": "Combinaciones de RAM/almacenamiento",
+   "why": "Las fuentes técnicas no coinciden."
+  },
+  {
+   "key": "Política de actualizaciones",
+   "why": "Datos contradictorios; falta la fuente oficial de Samsung."
+  },
+  {
+   "key": "IP54, Wi-Fi, Bluetooth, eSIM, microSD",
+   "why": "Una sola fuente técnica."
+  }
+ ]
+}

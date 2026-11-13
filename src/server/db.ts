@@ -112,6 +112,13 @@ const MIGRATIONS: string[] = [
    DELETE FROM models WHERE is_demo = 1 AND id NOT IN (SELECT model_id FROM variants);
    DELETE FROM brands WHERE is_demo = 1 AND id NOT IN (SELECT brand_id FROM models);
    DELETE FROM settings WHERE key IN ('showDemo', 'demoSeeded');`,
+  // v6: fichas verificadas campo por campo (estado, nota, fuentes extra) y AnTuTu promedio/individual.
+  `ALTER TABLE specs ADD COLUMN status TEXT NOT NULL DEFAULT 'sin_confirmar';
+   ALTER TABLE specs ADD COLUMN note TEXT;
+   ALTER TABLE specs ADD COLUMN extra_sources TEXT;
+   ALTER TABLE benchmarks ADD COLUMN sample TEXT;
+   ALTER TABLE models ADD COLUMN ficha_id TEXT;
+   ALTER TABLE models ADD COLUMN ficha_rev TEXT;`,
 ];
 
 function migrate(db: Db) {

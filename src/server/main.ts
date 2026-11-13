@@ -6,6 +6,7 @@ import { openDb } from './db.ts';
 import { CatalogRepo } from './catalog.ts';
 import { createServer } from './http.ts';
 import { applySeedData } from './seedData.ts';
+import { applyFichas } from './fichas.ts';
 import { startPopularImport } from './lookup.ts';
 import { repoConfig, RepoClient, startRepoSync, type Secret } from './repoSync.ts';
 import { applySharedConfig } from './sharedConfig.ts';
@@ -21,6 +22,8 @@ export async function startServer(opts: { dataDir?: string; webRoot: string; por
   const dataDir = opts.dataDir ?? defaultDataDir();
   const db = openDb(path.join(dataDir, 'celulares.db'));
   applySeedData(db);
+  // Fichas verificadas: tienen prioridad sobre los lotes y las cargas automáticas.
+  applyFichas(db);
   // Catálogo compartido entre PCs: repo privado de GitHub (reemplaza la lectura de la planilla de Drive).
   const client = new RepoClient(db, (d, doc, photo) => applyDoc(d, dataDir, doc, photo), (d, id) => removeLocal(d, dataDir, id), opts.secret, applySharedConfig);
   const sync = opts.noBackgroundJobs ? { syncNow: () => client.sync() } : startRepoSync(client);

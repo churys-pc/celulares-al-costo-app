@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { PHOTO_LICENSE_LABEL, PHOTO_LICENSES, SPEC_GROUPS, type Photo, type ProductDetail, type Settings, type Spec } from '../../shared/types.ts';
+import { PHOTO_LICENSE_LABEL, PHOTO_LICENSES, SPEC_GROUPS, SPEC_STATUSES, SPEC_STATUS_LABEL, type SpecStatus, type Photo, type ProductDetail, type Settings, type Spec } from '../../shared/types.ts';
 import { api, fileToDataUrl } from '../api.ts';
 import { useIsAdmin } from '../session.ts';
 import { iosSupport, IOS_SOURCE } from '../../shared/iosSupport.ts';
@@ -12,7 +12,7 @@ interface Props { product: ProductDetail; settings: Settings | null; onClose: ()
 export function ProductSheet({ product: p, settings, onClose, onEdit, onChanged, onPresent }: Props) {
   const ios = iosSupport(p.brand, p.model);
   const admin = useIsAdmin();
-  const [showAll, setShowAll] = useState(false);
+  const [showAll, setShowAll] = useState(true);
   const [editing, setEditing] = useState(false);
   const [specs, setSpecs] = useState<Spec[]>(p.specs);
   const highlights = specs.filter((s) => s.highlight);
@@ -73,16 +73,33 @@ export function ProductSheet({ product: p, settings, onClose, onEdit, onChanged,
   );
 }
 
+export function StatusTag({ status }: { status?: SpecStatus }) {
+  const st = status ?? 'sin_confirmar';
+  return <span className={`vtag v-${st}`}>{SPEC_STATUS_LABEL[st]}</span>;
+}
+
 export function AllSpecs({ specs }: { specs: Spec[] }) {
+  // Fuentes únicas de la ficha, numeradas para referenciarlas en cada dato.
+  const all: { name: string; url: string | null; date: string | null }[] = [];
+  const refOf = (n: string | null, u: string | null, d: string | null) => {
+    if (!n) return null;
+    let i = all.findIndex((x) => x.name === n && x.url === u);
+    if (i < 0) { all.push({ name: n, url: u, date: d }); i = all.length - 1; }
+    return i + 1;
+  };
+  const rows = specs.map((s) => ({ s, refs: [refOf(s.sourceName, s.sourceUrl, s.sourceDate), ...(s.extraSources ?? []).map((x) => refOf(x.name, x.url, x.date))].filter(Boolean) }));
   return <>{SPEC_GROUPS.filter((g) => specs.some((s) => s.group === g)).map((g) => (
     <div key={g} className="spec-group"><h4>{g}</h4>
-      <table className="specs"><tbody>{specs.filter((s) => s.group === g).map((s, i) => (
-        <tr key={i}><td>{s.key}</td><td>{s.value}
-          <div className="muted small">{s.sourceName
-            ? <>Fuente: {s.sourceUrl ? <a href={s.sourceUrl} target="_blank" rel="noreferrer">{s.sourceName}</a> : s.sourceName}{s.sourceDate && ` · ${s.sourceDate}`}</>
-            : <span className="badge st-no_verificado">Sin fuente · No verificado</span>}</div>
+      <table className="specs"><tbody>{rows.filter((r) => r.s.group === g).map(({ s, refs }, i) => (
+        <tr key={i}><td>{s.key}</td><td>{s.value} <StatusTag status={s.status} />
+          {refs.length > 0 && <sup className="muted"> [{refs.join(', ')}]</sup>}
+          {s.note && <div className="muted small">{s.note}</div>}
+          {!s.sourceName && <div className="muted small">Sin fuente</div>}
         </td></tr>))}</tbody></table>
-    </div>))}</>;
+    </div>))}
+    {all.length > 0 && <div className="spec-sources"><h4>Fuentes</h4><ol>{all.map((x, i) => (
+      <li key={i}>{x.url ? <a href={x.url} target="_blank" rel="noreferrer">{x.name}</a> : x.name}{x.date && <span className="muted"> · consultada {x.date}</span>}</li>))}</ol></div>}
+  </>;
 }
 
 const blank = (): Spec => ({ group: 'Chip', key: '', value: '', highlight: false, sourceName: '', sourceUrl: '', sourceDate: '' });
@@ -119,6 +136,8 @@ export function SpecEditor({ modelId, initial, onSaved }: { modelId: number; ini
             {SPEC_GROUPS.map((g) => <option key={g}>{g}</option>)}</select>
           <input className="input" placeholder="Especificación" value={r.key} onChange={(e) => upd(i, 'key', e.target.value)} />
           <input className="input" placeholder={SPEC_TEMPLATE.find((t) => t.key === r.key)?.hint ?? 'Valor'} value={r.value} onChange={(e) => upd(i, 'value', e.target.value)} />
+          <select className="input" value={r.status ?? 'sin_confirmar'} onChange={(e) => upd(i, 'status', e.target.value)} title="Estado del dato">
+            {SPEC_STATUSES.map((st) => <option key={st} value={st}>{SPEC_STATUS_LABEL[st]}</option>)}</select>
           <button type="button" className={`icon-btn ${r.highlight ? 'on' : ''}`} title="Destacar" onClick={() => upd(i, 'highlight', !r.highlight)}>★</button>
         </div>))}
       <button className="btn ghost" onClick={() => setRows([...rows, blank()])}>+ Agregar fila</button>

@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import type { Db } from './db.ts';
 import { tx } from './db.ts';
+import { applyFichaFor } from './fichas.ts';
 import { CatalogRepo, validateSpecs } from './catalog.ts';
 import { decodeImage } from './photos.ts';
 import { fetchPhone, searchOnline, LOOKUP_SOURCE } from './lookup.ts';
@@ -53,8 +54,10 @@ export function applyDoc(db: Db, dataDir: string, doc: ProductDoc, photo: Buffer
   const existing = db.prepare('SELECT id FROM products WHERE repo_id = ?').get(doc.id);
   const p = existing ? repo.updateProduct(Number(existing.id), input) : repo.createProduct(input);
   db.prepare(`UPDATE products SET repo_id = ?, description = ?, source = 'repo', notes = '' WHERE id = ?`).run(doc.id, doc.description ?? '', p.id);
-  if (doc.specs?.length) repo.setSpecs(p.modelId, doc.specs.map((s) => ({ ...s, sourceName: s.sourceName ?? doc.source?.name ?? null, sourceUrl: s.sourceUrl ?? doc.source?.url ?? null, sourceDate: s.sourceDate ?? doc.source?.date ?? null })));
-  if (doc.antutu && doc.source) repo.saveBenchmark(p.modelId, { ...doc.antutu, platform: doc.brand.toLowerCase() === 'apple' ? 'ios' : 'android',
+  // Si el modelo tiene ficha verificada, esa manda: los datos de la carga rápida no la pisan.
+  const verified = applyFichaFor(db, p.modelId, doc.brand, doc.model);
+  if (!verified && doc.specs?.length) repo.setSpecs(p.modelId, doc.specs.map((s) => ({ ...s, sourceName: s.sourceName ?? doc.source?.name ?? null, sourceUrl: s.sourceUrl ?? doc.source?.url ?? null, sourceDate: s.sourceDate ?? doc.source?.date ?? null })));
+  if (!verified && doc.antutu && doc.source) repo.saveBenchmark(p.modelId, { ...doc.antutu, platform: doc.brand.toLowerCase() === 'apple' ? 'ios' : 'android',
     sourceName: doc.source.name, sourceUrl: doc.source.url, measuredAt: doc.source.date, notes: 'Puntaje publicado por Nanoreview a partir de mediciones de usuarios.' });
   if (photo) {
     const dir = PHOTO_DIR(dataDir); fs.mkdirSync(dir, { recursive: true });

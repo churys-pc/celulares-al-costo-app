@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
-import { ANTUTU_VERSIONS, BENCH_SOURCES, type Benchmark, type CompareModel, type Settings } from '../../shared/types.ts';
+import { ANTUTU_VERSIONS, BENCH_SOURCES, type Benchmark, type CompareModel, type Settings, type SpecStatus } from '../../shared/types.ts';
 import { buildComparison } from '../../shared/compare.ts';
 import { api } from '../api.ts';
 import { money } from '../format.ts';
 import { Icon } from '../icons.tsx';
-import { SpecEditor, AllSpecs } from './ProductSheet.tsx';
+import { SpecEditor, AllSpecs, StatusTag } from './ProductSheet.tsx';
 import { useIsAdmin } from '../session.ts';
 import { iosSupport, IOS_SOURCE } from '../../shared/iosSupport.ts';
 
@@ -27,6 +27,13 @@ const sourceLinks = (m: { brand: string; model: string }) => {
 // Filas principales del comparador (diseño del cliente). Los valores salen de la ficha con fuente; nunca se estiman.
 const normKey = (k: string) => k.trim().toLowerCase();
 const specOf = (m: CompareModel, key: string) => m.specs.find((s) => normKey(s.key) === normKey(key))?.value ?? null;
+const ST_ORDER: SpecStatus[] = ['sin_confirmar', 'depende_variante', 'no_compatible', 'no_aplica'];
+/** Estado a mostrar en una fila que combina varios datos: el menos firme. */
+const statusOf = (m: CompareModel, keys: string[]): SpecStatus | null => {
+  const st = keys.map((k) => m.specs.find((s) => normKey(s.key) === normKey(k))).filter(Boolean).map((s) => s!.status ?? 'sin_confirmar');
+  if (!st.length) return null;
+  return ST_ORDER.find((x) => st.includes(x)) ?? 'verificado';
+};
 const numOf = (v: string | null, re: RegExp) => {
   const x = v?.replace(/(\d)\.(\d{3})/g, '$1$2').match(re);
   return x ? Number(x[1].replace(',', '.')) : null;
@@ -90,7 +97,8 @@ export function Compare({ settings }: { settings: Settings | null }) {
     const values = models.map(r.value);
     const nums = r.best ? values.map((v) => numOf(v, r.best!)) : [];
     const max = nums.length && nums.every((n) => n !== null) && new Set(nums).size > 1 ? Math.max(...(nums as number[])) : null;
-    return { ...r, values, subs: r.sub ? models.map(r.sub) : null, win: nums.map((n) => max !== null && n === max), diff: differs(values) };
+    const sts = models.map((m) => (r.label === 'Actualizaciones' && iosSupport(m.brand, m.model) ? 'verificado' : statusOf(m, r.keys)));
+    return { ...r, values, sts, subs: r.sub ? models.map(r.sub) : null, win: nums.map((n) => max !== null && n === max), diff: differs(values) };
   }).filter((r) => r.values.some(Boolean) && (!onlyDiff || r.diff));
   const otherRows = cmp.rows.filter((r) => !MAIN_KEYS.has(normKey(r.key)) && (!onlyDiff || r.differs));
   const cols = { gridTemplateColumns: `minmax(96px, .8fr) repeat(${Math.max(models.length, 1)}, minmax(110px, 1fr))` };
@@ -158,7 +166,7 @@ export function Compare({ settings }: { settings: Settings | null }) {
                     <b>{name(m)}</b>
                     {b ? <span className="muted small">
                       {[b.cpu && `CPU ${nf(b.cpu)}`, b.gpu && `GPU ${nf(b.gpu)}`, b.mem && `MEM ${nf(b.mem)}`, b.ux && `UX ${nf(b.ux)}`].filter(Boolean).join(' · ')}
-                      {' '}· {b.sourceUrl ? <a href={b.sourceUrl} target="_blank" rel="noreferrer">{b.sourceName}</a> : b.sourceName} · {b.measuredAt}{b.variant && ` · ${b.variant}`}
+                      {' '}· {b.sourceUrl ? <a href={b.sourceUrl} target="_blank" rel="noreferrer">{b.sourceName}</a> : b.sourceName} · {b.measuredAt}{b.variant && ` · ${b.variant}`}{b.sample && ` · ${b.sample === 'promedio' ? 'promedio' : 'medición individual'}`}
                     </span> : <span className="muted small">Sin puntaje cargado</span>}
                     {admin && <button className="link" onClick={() => setBenchFor(m)}>{b ? 'Editar' : 'Cargar'}</button>}
                   </div>);
@@ -177,18 +185,21 @@ export function Compare({ settings }: { settings: Settings | null }) {
               <div key={r.label} className="cmp2-tr" style={cols}>
                 <div className="cmp2-k">{r.label}</div>
                 {r.values.map((v, i) => (
-                  <div key={i} className={`${v ? '' : 'muted'} ${r.win[i] ? 'win' : ''}`}>{v ?? 'Sin datos'}
+                  <div key={i} className={`${v ? '' : 'muted'} ${r.win[i] ? 'win' : ''}`}>{v ?? 'Sin datos (pendiente)'}
+                    {v && r.sts[i] && r.sts[i] !== 'verificado' && <> <StatusTag status={r.sts[i]!} /></>}
                     {r.subs?.[i] && <small>{r.subs[i]}</small>}</div>))}
               </div>))}
             {showAll && otherRows.map((r) => (
               <div key={`${r.group}|${r.key}`} className="cmp2-tr" style={cols}>
                 <div className="cmp2-k">{r.key}</div>
-                {r.values.map((v, i) => <div key={i} className={v ? '' : 'muted'}>{v ?? 'Sin datos'}</div>)}
+                {r.values.map((v, i) => { const sp = models[i].specs.find((s) => normKey(s.key) === normKey(r.key));
+                  return <div key={i} className={v ? '' : 'muted'}>{v ?? 'Sin datos (pendiente)'}{sp && sp.status !== 'verificado' && <> <StatusTag status={sp.status} /></>}</div>; })}
               </div>))}
             {!mainRows.length && !(showAll && otherRows.length) && <p className="muted" style={{ padding: 14 }}>{onlyDiff ? 'No hay diferencias en estas características.' : 'Ningún modelo tiene ficha cargada. Usá «Ver ficha».'}</p>}
           </div>
           <div className="cmp2-foot">
             <span className="muted small">{fichas.length > 0 && <>Fuentes de las fichas: {fichas.map((x) => <a key={x.m.modelId} href={x.url!} target="_blank" rel="noreferrer">{name(x.m)}</a>)}</>}
+              <span className="cmp2-legend">Datos sin etiqueta = verificados · <StatusTag status="sin_confirmar" /> <StatusTag status="depende_variante" /> <StatusTag status="no_compatible" /> · «Sin datos» = pendiente de investigar</span><br />
               {models.some((m) => iosSupport(m.brand, m.model)) && <> · Actualizaciones: <a href={IOS_SOURCE.url} target="_blank" rel="noreferrer">{IOS_SOURCE.name}</a> (el «hasta» es estimado)</>}</span>
             {otherRows.length > 0 && <button className="link" onClick={() => setShowAll(!showAll)}>{showAll ? 'Ver menos' : `Ver todas (${otherRows.length} más)`}</button>}
           </div>

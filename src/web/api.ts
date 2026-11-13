@@ -24,6 +24,7 @@ export const api = {
   setupAdmin: (email: string, password: string) => call<AuthStatus>('POST', '/api/auth/setup', { email, password }),
   logout: () => call<AuthStatus>('POST', '/api/auth/logout'),
   changePassword: (current: string, password: string) => call<{ ok: boolean }>('POST', '/api/auth/password', { current, password }),
+  fichas: () => call<{ total: number; withFicha: number; items: { modelId: number; brand: string; model: string; inStock: boolean; specs: number; verified: number; ficha: { id: string; variant: string; reviewedAt: string; pending: { key: string; why: string }[] } | null }[] }>('GET', '/api/fichas'),
   users: () => call<UserInfo[]>('GET', '/api/users'),
   addUser: (email: string, password: string) => call<UserInfo[]>('POST', '/api/users', { email, password }),
   resetUserPassword: (email: string, password: string) => call<UserInfo[]>('PUT', `/api/users/${encodeURIComponent(email)}/password`, { password }),

@@ -1,0 +1,400 @@
+{
+ "id": "samsung-galaxy-a54-5g",
+ "brand": "Samsung",
+ "model": "Galaxy A54 5G",
+ "aliases": [
+  "Galaxy A54"
+ ],
+ "variant": "Galaxy A54 5G (SM-A546B global y SM-A546E con eSIM; otros códigos regionales sin eSIM). La unidad en stock no tiene código de modelo registrado.",
+ "reviewedAt": "2026-11-13",
+ "sources": {
+  "nano": {
+   "name": "Nanoreview — Samsung Galaxy A54 5G",
+   "url": "https://nanoreview.net/en/phone/samsung-galaxy-a54-5g",
+   "date": "2026-11-13",
+   "kind": "tecnica"
+  },
+  "comp": {
+   "name": "Comparigon — Samsung Galaxy A54 5G",
+   "url": "https://comparigon.com/phones/samsung-galaxy-a54-5g",
+   "date": "2026-11-13",
+   "kind": "tecnica"
+  }
+ },
+ "fields": [
+  {
+   "group": "Pantalla",
+   "key": "Tamaño y tipo",
+   "value": "6,4\" Super AMOLED",
+   "status": "verificado",
+   "sources": [
+    "nano",
+    "comp"
+   ]
+  },
+  {
+   "group": "Pantalla",
+   "key": "Resolución",
+   "value": "1080 x 2340",
+   "status": "verificado",
+   "sources": [
+    "nano",
+    "comp"
+   ]
+  },
+  {
+   "group": "Pantalla",
+   "key": "Frecuencia",
+   "value": "120 Hz",
+   "status": "verificado",
+   "sources": [
+    "nano",
+    "comp"
+   ]
+  },
+  {
+   "group": "Pantalla",
+   "key": "Brillo",
+   "value": "1000 nits (máximo declarado)",
+   "status": "verificado",
+   "sources": [
+    "nano",
+    "comp"
+   ],
+   "note": "Ninguna fuente separa brillo típico, HBM y pico; Nanoreview midió 983 nits."
+  },
+  {
+   "group": "Chip",
+   "key": "Procesador",
+   "value": "Samsung Exynos 1380",
+   "status": "verificado",
+   "sources": [
+    "nano",
+    "comp"
+   ]
+  },
+  {
+   "group": "Chip",
+   "key": "GPU",
+   "value": "Mali-G68 MP5",
+   "status": "verificado",
+   "sources": [
+    "nano",
+    "comp"
+   ]
+  },
+  {
+   "group": "Memoria",
+   "key": "RAM",
+   "value": "6 / 8 GB (según la configuración)",
+   "status": "sin_confirmar",
+   "sources": [
+    "comp",
+    "nano"
+   ],
+   "note": "Comparigon indica 4/6/8 GB y Nanoreview solo 4 GB: no coinciden. La unidad en stock es 8/256 según el inventario."
+  },
+  {
+   "group": "Memoria",
+   "key": "Almacenamiento",
+   "value": "128 / 256 GB",
+   "status": "sin_confirmar",
+   "sources": [
+    "comp",
+    "nano"
+   ],
+   "note": "Nanoreview solo lista 128 GB."
+  },
+  {
+   "group": "Memoria",
+   "key": "microSD",
+   "value": "Sí, hasta 1 TB (bandeja híbrida)",
+   "status": "sin_confirmar",
+   "sources": [
+    "nano"
+   ],
+   "note": "Comparigon no lo indica."
+  },
+  {
+   "group": "Batería y carga",
+   "key": "Batería",
+   "value": "5000 mAh",
+   "status": "verificado",
+   "sources": [
+    "nano",
+    "comp"
+   ]
+  },
+  {
+   "group": "Batería y carga",
+   "key": "Carga rápida",
+   "value": "25 W máx. por cable",
+   "status": "verificado",
+   "sources": [
+    "nano",
+    "comp"
+   ]
+  },
+  {
+   "group": "Batería y carga",
+   "key": "Carga inalámbrica",
+   "value": "No",
+   "status": "no_compatible",
+   "sources": [
+    "nano",
+    "comp"
+   ]
+  },
+  {
+   "group": "Conectividad",
+   "key": "Puerto",
+   "value": "USB-C 2.0",
+   "status": "verificado",
+   "sources": [
+    "nano",
+    "comp"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Cámara principal",
+   "value": "50 MP f/1.8 con estabilización óptica (OIS)",
+   "status": "verificado",
+   "sources": [
+    "nano",
+    "comp"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Gran angular",
+   "value": "12 MP ultra gran angular f/2.2",
+   "status": "verificado",
+   "sources": [
+    "nano",
+    "comp"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Macro",
+   "value": "5 MP f/2.4",
+   "status": "sin_confirmar",
+   "sources": [
+    "nano"
+   ],
+   "note": "Comparigon menciona triple cámara sin datos de la tercera."
+  },
+  {
+   "group": "Cámaras",
+   "key": "Zoom óptico",
+   "value": "No (solo digital)",
+   "status": "sin_confirmar",
+   "sources": [
+    "nano"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Cámara frontal",
+   "value": "32 MP f/2.2",
+   "status": "verificado",
+   "sources": [
+    "nano",
+    "comp"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Video",
+   "value": "4K a 30 fps; 1080p a 60 fps",
+   "status": "verificado",
+   "sources": [
+    "nano",
+    "comp"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Video frontal",
+   "value": "4K a 30 fps",
+   "status": "verificado",
+   "sources": [
+    "nano",
+    "comp"
+   ]
+  },
+  {
+   "group": "Conectividad",
+   "key": "5G",
+   "value": "Sí",
+   "status": "verificado",
+   "sources": [
+    "nano",
+    "comp"
+   ]
+  },
+  {
+   "group": "Conectividad",
+   "key": "Bandas",
+   "value": "Depende de la variante",
+   "status": "depende_variante",
+   "sources": [
+    "nano"
+   ],
+   "note": "Hace falta el código de modelo (SM-A546…) de la unidad."
+  },
+  {
+   "group": "Conectividad",
+   "key": "SIM",
+   "value": "2 nano-SIM; eSIM solo en SM-A546B y SM-A546E",
+   "status": "depende_variante",
+   "sources": [
+    "nano",
+    "comp"
+   ],
+   "note": "Para saber si tiene eSIM hace falta el código de modelo."
+  },
+  {
+   "group": "Conectividad",
+   "key": "NFC",
+   "value": "Sí",
+   "status": "verificado",
+   "sources": [
+    "nano",
+    "comp"
+   ]
+  },
+  {
+   "group": "Conectividad",
+   "key": "Wi-Fi",
+   "value": "Wi-Fi 6",
+   "status": "sin_confirmar",
+   "sources": [
+    "nano"
+   ],
+   "note": "Comparigon no indica el estándar."
+  },
+  {
+   "group": "Conectividad",
+   "key": "Bluetooth",
+   "value": "5.3",
+   "status": "sin_confirmar",
+   "sources": [
+    "nano"
+   ],
+   "note": "Hay datos contradictorios (comentarios citan 5.0 según Samsung); falta la ficha oficial."
+  },
+  {
+   "group": "Otros",
+   "key": "Lanzamiento",
+   "value": "Marzo de 2023",
+   "status": "verificado",
+   "sources": [
+    "nano",
+    "comp"
+   ]
+  },
+  {
+   "group": "Soporte",
+   "key": "Sistema operativo",
+   "value": "Android 13 de fábrica",
+   "status": "sin_confirmar",
+   "sources": [
+    "nano"
+   ]
+  },
+  {
+   "group": "Soporte",
+   "key": "Años de actualizaciones",
+   "value": "4 versiones de Android y 5 años de seguridad",
+   "status": "sin_confirmar",
+   "sources": [
+    "nano"
+   ],
+   "note": "Falta confirmarlo con la política oficial de Samsung."
+  },
+  {
+   "group": "Dimensiones",
+   "key": "Medidas",
+   "value": "158,2 x 76,7 x 8,2 mm",
+   "status": "verificado",
+   "sources": [
+    "nano",
+    "comp"
+   ]
+  },
+  {
+   "group": "Dimensiones",
+   "key": "Peso",
+   "value": "202 g",
+   "status": "verificado",
+   "sources": [
+    "nano",
+    "comp"
+   ]
+  },
+  {
+   "group": "Protección",
+   "key": "Resistencia",
+   "value": "IP67",
+   "status": "sin_confirmar",
+   "sources": [
+    "nano"
+   ],
+   "note": "Comparigon solo dice «resistente al agua»."
+  },
+  {
+   "group": "Protección",
+   "key": "Biometría",
+   "value": "Huella en pantalla",
+   "status": "sin_confirmar",
+   "sources": [
+    "nano"
+   ]
+  },
+  {
+   "group": "Otros",
+   "key": "Materiales",
+   "value": "Marco plástico, dorso de vidrio",
+   "status": "sin_confirmar",
+   "sources": [
+    "nano"
+   ]
+  },
+  {
+   "group": "Otros",
+   "key": "Audio",
+   "value": "Parlantes estéreo, sin conector de auriculares",
+   "status": "sin_confirmar",
+   "sources": [
+    "nano"
+   ]
+  }
+ ],
+ "antutu": {
+  "version": "v11",
+  "total": 778567,
+  "sample": "individual",
+  "source": "nano",
+  "note": "Medición individual publicada por Nanoreview. El valor de Comparigon (779.380) coincide con uno anterior de Nanoreview: no se cuenta como fuente independiente."
+ },
+ "pending": [
+  {
+   "key": "Combinaciones de RAM/almacenamiento",
+   "why": "Las dos fuentes técnicas no coinciden y no se pudo abrir la ficha oficial de Samsung (falta habilitar el sitio)."
+  },
+  {
+   "key": "Brillo típico / HBM / pico",
+   "why": "Ninguna fuente los separa."
+  },
+  {
+   "key": "Wi-Fi, Bluetooth, IP67, microSD, cámara macro",
+   "why": "Una sola fuente técnica o contradicciones; falta la ficha oficial de Samsung."
+  },
+  {
+   "key": "Bandas y eSIM de la unidad",
+   "why": "Falta el código de modelo (SM-A546…) en el inventario."
+  }
+ ]
+}

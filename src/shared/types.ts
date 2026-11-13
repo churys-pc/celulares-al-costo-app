@@ -32,6 +32,14 @@ export type SpecGroup = (typeof SPEC_GROUPS)[number];
 export interface Brand { id: number; name: string; isDemo: boolean }
 export interface PhoneModel { id: number; brandId: number; name: string; releaseYear: number | null; isDemo: boolean }
 
+/** Estado de verificación de cada dato de la ficha. */
+export const SPEC_STATUSES = ['verificado', 'sin_confirmar', 'depende_variante', 'no_compatible', 'no_aplica'] as const;
+export type SpecStatus = (typeof SPEC_STATUSES)[number];
+export const SPEC_STATUS_LABEL: Record<SpecStatus, string> = {
+  verificado: 'Verificado', sin_confirmar: 'Sin confirmar', depende_variante: 'Depende de la variante', no_compatible: 'No compatible', no_aplica: 'No aplica',
+};
+export interface SourceRef { name: string; url: string | null; date: string | null }
+
 export interface Spec {
   id?: number;
   group: SpecGroup;
@@ -43,6 +51,12 @@ export interface Spec {
   sourceUrl: string | null;
   /** Fecha ISO (YYYY-MM-DD) en que se consultó la fuente. */
   sourceDate: string | null;
+  /** Verificado = fuente oficial de la variante o dos fuentes técnicas independientes. */
+  status?: SpecStatus;
+  /** Aclaración: qué dato falta, contradicciones, condiciones de medición. */
+  note?: string | null;
+  /** Otras fuentes que respaldan el mismo dato. */
+  extraSources?: SourceRef[];
 }
 
 export interface Product {
@@ -187,6 +201,8 @@ export interface Benchmark {
   /** Fecha AAAA-MM-DD de la medición o de la consulta de la fuente. */
   measuredAt: string;
   notes: string;
+  /** promedio de la base o medición individual (null = la fuente no lo indica). */
+  sample?: 'promedio' | 'individual' | null;
 }
 
 export interface CompareModel {

@@ -3,7 +3,7 @@ import type { Db } from './db.ts';
 import { tx } from './db.ts';
 import {
   ANTUTU_VERSIONS, PLATFORMS, type Benchmark, type CompareModel,
-  type Stats, CONDITIONS, CURRENCIES, PRODUCT_STATUS, SPEC_GROUPS, USES, ValidationError,
+  type Stats, CONDITIONS, CURRENCIES, PRODUCT_STATUS, SPEC_GROUPS, SPEC_STATUSES, USES, ValidationError,
   type Brand, type CatalogExport, type PhoneModel, type Product, type ProductDetail,
   type ProductFilter, type ProductInput, type Spec,
 } from '../shared/types.ts';
@@ -80,6 +80,10 @@ export function validateSpecs(list: unknown): Spec[] {
     sourceName: text(s?.sourceName, 'fuente', 120),
     sourceUrl: url(s?.sourceUrl, 'URL de fuente'),
     sourceDate: isoDate(s?.sourceDate, 'fecha de fuente'),
+    status: SPEC_STATUSES.includes(s?.status) ? s.status : 'sin_confirmar',
+    note: text(s?.note, 'nota', 300),
+    extraSources: Array.isArray(s?.extraSources) ? s.extraSources.slice(0, 6).map((x: any) => ({
+      name: text(x?.name, 'fuente', 120, true)!, url: url(x?.url, 'URL de fuente'), date: isoDate(x?.date, 'fecha de fuente') })) : [],
   }));
 }
 
@@ -122,13 +126,14 @@ export function validateBenchmark(modelId: number, b: any): Omit<Benchmark, 'id'
     sourceName: text(b.sourceName, 'fuente', 120, true)!,
     sourceUrl: url(b.sourceUrl, 'URL de la fuente'),
     notes: text(b.notes, 'notas', 500) ?? '',
+    sample: b.sample === 'promedio' || b.sample === 'individual' ? b.sample : null,
   };
 }
 
 const mapBench = (r: any): Benchmark => ({
   id: Number(r.id), modelId: Number(r.model_id), version: r.version, platform: r.platform, total: Number(r.total),
   cpu: r.cpu ?? null, gpu: r.gpu ?? null, mem: r.mem ?? null, ux: r.ux ?? null, variant: r.variant ?? null,
-  sourceName: r.source_name, sourceUrl: r.source_url ?? null, measuredAt: r.measured_at, notes: r.notes,
+  sourceName: r.source_name, sourceUrl: r.source_url ?? null, measuredAt: r.measured_at, notes: r.notes, sample: r.sample ?? null,
 });
 
 export class CatalogRepo {
@@ -244,11 +249,12 @@ export class CatalogRepo {
   }
 
   getSpecs(modelId: number): Spec[] {
-    return this.db.prepare(`SELECT s.id, s.grp, s.key, s.value, s.highlight, so.name AS source_name,
+    return this.db.prepare(`SELECT s.id, s.grp, s.key, s.value, s.highlight, s.status, s.note, s.extra_sources, so.name AS source_name,
         so.url AS source_url, so.retrieved_at FROM specs s LEFT JOIN sources so ON so.id = s.source_id
       WHERE s.model_id = ? ORDER BY s.position, s.id`).all(modelId)
       .map((r) => ({ id: Number(r.id), group: r.grp, key: r.key, value: r.value, highlight: !!r.highlight,
-        sourceName: r.source_name ?? null, sourceUrl: r.source_url ?? null, sourceDate: r.retrieved_at ?? null }));
+        sourceName: r.source_name ?? null, sourceUrl: r.source_url ?? null, sourceDate: r.retrieved_at ?? null,
+        status: r.status ?? 'sin_confirmar', note: r.note ?? null, extraSources: r.extra_sources ? JSON.parse(r.extra_sources) : [] }));
   }
 
   /** Reemplaza la ficha técnica completa de un modelo. */
@@ -306,8 +312,9 @@ export class CatalogRepo {
         sourceId = Number(this.db.prepare(`SELECT id FROM sources WHERE name = ? AND url IS ? AND retrieved_at IS ?`)
           .get(s.sourceName, s.sourceUrl, s.sourceDate).id);
       }
-      this.db.prepare('INSERT INTO specs (model_id, grp, key, value, highlight, source_id, position) VALUES (?,?,?,?,?,?,?)')
-        .run(modelId, s.group, s.key, s.value, s.highlight ? 1 : 0, sourceId, pos);
+      this.db.prepare('INSERT INTO specs (model_id, grp, key, value, highlight, source_id, position, status, note, extra_sources) VALUES (?,?,?,?,?,?,?,?,?,?)')
+        .run(modelId, s.group, s.key, s.value, s.highlight ? 1 : 0, sourceId, pos, s.status ?? 'sin_confirmar', s.note ?? null,
+          s.extraSources?.length ? JSON.stringify(s.extraSources) : null);
     });
   }
 
@@ -325,11 +332,11 @@ export class CatalogRepo {
   saveBenchmark(modelId: number, input: unknown): Benchmark[] {
     if (!this.db.prepare('SELECT 1 FROM models WHERE id = ?').get(modelId)) throw new ValidationError('Modelo inexistente');
     const b = validateBenchmark(modelId, input);
-    this.db.prepare(`INSERT INTO benchmarks (model_id, version, platform, total, cpu, gpu, mem, ux, variant, source_name, source_url, measured_at, notes)
-      VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(model_id, kind, version) DO UPDATE SET platform=excluded.platform,
+    this.db.prepare(`INSERT INTO benchmarks (model_id, version, platform, total, cpu, gpu, mem, ux, variant, source_name, source_url, measured_at, notes, sample)
+      VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(model_id, kind, version) DO UPDATE SET platform=excluded.platform, sample=excluded.sample,
       total=excluded.total, cpu=excluded.cpu, gpu=excluded.gpu, mem=excluded.mem, ux=excluded.ux, variant=excluded.variant,
       source_name=excluded.source_name, source_url=excluded.source_url, measured_at=excluded.measured_at, notes=excluded.notes`)
-      .run(modelId, b.version, b.platform, b.total, b.cpu, b.gpu, b.mem, b.ux, b.variant, b.sourceName, b.sourceUrl, b.measuredAt, b.notes);
+      .run(modelId, b.version, b.platform, b.total, b.cpu, b.gpu, b.mem, b.ux, b.variant, b.sourceName, b.sourceUrl, b.measuredAt, b.notes, b.sample ?? null);
     return this.listBenchmarks(modelId);
   }
 
@@ -365,6 +372,11 @@ export class CatalogRepo {
         priceFrom: price ? { price: Number(price.price), currency: price.currency } : null, stock: Number(stock.s),
       };
     });
+  }
+
+  /** true si el modelo tiene ficha verificada: las importaciones automáticas no la pisan. */
+  hasFicha(modelId: number): boolean {
+    return !!this.db.prepare('SELECT ficha_id FROM models WHERE id = ?').get(modelId)?.ficha_id;
   }
 
   /** Crea un modelo sin productos (para cargar ficha y comparar antes de tener stock). */

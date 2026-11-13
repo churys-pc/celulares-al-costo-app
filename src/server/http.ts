@@ -11,6 +11,7 @@ import { deleteQuick, preview, saveQuick } from './quickProducts.ts';
 import { repoStatus, setRepoConfig, type Secret } from './repoSync.ts';
 import { Auth, AuthError } from './auth.ts';
 import { publishRate } from './sharedConfig.ts';
+import { fichasStatus } from './fichas.ts';
 import { ValidationError, type ProductFilter } from '../shared/types.ts';
 
 const MAX_BODY = 5 * 1024 * 1024;
@@ -115,6 +116,7 @@ export function createServer(db: Db, webRoot: string, dataDir: string, opts: { s
     ['GET', /^\/api\/catalog\/models\/(\d+)\/benchmarks$/, (m) => repo.listBenchmarks(idOf(m[1]))],
     ['POST', /^\/api\/catalog\/models\/(\d+)\/benchmarks$/, async (m, req) => repo.saveBenchmark(idOf(m[1]), await readJson(req))],
     ['DELETE', /^\/api\/benchmarks\/(\d+)$/, (m) => ({ deleted: repo.deleteBenchmark(idOf(m[1])) })],
+    ['GET', /^\/api\/fichas$/, () => fichasStatus(db)],
     ['GET', /^\/api\/stats$/, (_m, _r, u) => repo.stats(u.searchParams.get('includeDemo') !== '0')],
     ['GET', /^\/api\/catalog\/models\/(\d+)\/specs$/, (m) => repo.getSpecs(idOf(m[1]))],
     ['PUT', /^\/api\/catalog\/models\/(\d+)\/specs$/, async (m, req) => repo.setSpecs(idOf(m[1]), (await readJson(req)).specs)],

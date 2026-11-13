@@ -1,0 +1,343 @@
+{
+ "id": "apple-iphone-11",
+ "brand": "Apple",
+ "model": "iPhone 11",
+ "aliases": [],
+ "variant": "iPhone 11 (A2111 EE.UU./Canadá · A2221 global · A2223 China/Hong Kong). Mismas características salvo bandas celulares y eSIM según región.",
+ "reviewedAt": "2026-11-13",
+ "sources": {
+  "apple": {
+   "name": "Apple — iPhone 11: especificaciones técnicas",
+   "url": "https://support.apple.com/en-us/111865",
+   "date": "2026-11-13",
+   "kind": "oficial"
+  },
+  "nano": {
+   "name": "Nanoreview — Apple iPhone 11",
+   "url": "https://nanoreview.net/en/phone/apple-iphone-11",
+   "date": "2026-11-13",
+   "kind": "tecnica"
+  },
+  "comp": {
+   "name": "Comparigon — Apple iPhone 11",
+   "url": "https://comparigon.com/phones/apple-iphone-11",
+   "date": "2026-11-13",
+   "kind": "tecnica"
+  }
+ },
+ "fields": [
+  {
+   "group": "Pantalla",
+   "key": "Tamaño y tipo",
+   "value": "6,1\" LCD IPS (Liquid Retina HD)",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Pantalla",
+   "key": "Resolución",
+   "value": "1792 x 828 (326 ppi)",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Pantalla",
+   "key": "Brillo",
+   "value": "625 nits máximo típico",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ],
+   "note": "Apple publica el brillo máximo típico; no publica brillo pico."
+  },
+  {
+   "group": "Chip",
+   "key": "Procesador",
+   "value": "Apple A13 Bionic (CPU de 6 núcleos)",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Chip",
+   "key": "GPU",
+   "value": "GPU Apple de 4 núcleos",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Memoria",
+   "key": "RAM",
+   "value": "4 GB",
+   "status": "verificado",
+   "sources": [
+    "nano",
+    "comp"
+   ],
+   "note": "Apple no publica la RAM; coinciden dos fuentes técnicas."
+  },
+  {
+   "group": "Memoria",
+   "key": "Almacenamiento",
+   "value": "64 / 128 / 256 GB",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Batería y carga",
+   "key": "Batería",
+   "value": "3110 mAh",
+   "status": "verificado",
+   "sources": [
+    "nano",
+    "comp"
+   ],
+   "note": "Apple no publica los mAh (indica hasta 17 h de video); coinciden dos fuentes técnicas."
+  },
+  {
+   "group": "Batería y carga",
+   "key": "Carga rápida",
+   "value": "18 W máx. por cable (50% en 30 min con adaptador de 20 W o más)",
+   "status": "verificado",
+   "sources": [
+    "nano",
+    "comp",
+    "apple"
+   ],
+   "note": "La potencia la indican dos fuentes técnicas; el tiempo de carga es dato oficial."
+  },
+  {
+   "group": "Batería y carga",
+   "key": "Carga inalámbrica",
+   "value": "Sí, Qi",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Conectividad",
+   "key": "Puerto",
+   "value": "Lightning",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Cámara principal",
+   "value": "12 MP gran angular f/1.8 con estabilización óptica (OIS)",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Gran angular",
+   "value": "12 MP ultra gran angular f/2.4, 120°",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Zoom óptico",
+   "value": "2x de alejamiento (zoom digital hasta 5x)",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Cámara frontal",
+   "value": "12 MP f/2.2 (TrueDepth)",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Video",
+   "value": "4K a 24/25/30/60 fps; cámara lenta 1080p a 240 fps",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Video frontal",
+   "value": "4K hasta 60 fps",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Conectividad",
+   "key": "5G",
+   "value": "No",
+   "status": "no_compatible",
+   "sources": [
+    "apple"
+   ],
+   "note": "La ficha oficial lista solo LTE (4G)."
+  },
+  {
+   "group": "Conectividad",
+   "key": "Red",
+   "value": "4G LTE Gigabit con 2x2 MIMO",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Conectividad",
+   "key": "Bandas",
+   "value": "Depende del modelo (A2111 / A2221 / A2223)",
+   "status": "depende_variante",
+   "sources": [
+    "apple"
+   ],
+   "note": "Para identificarla hace falta el número de modelo (Ajustes > General > Información)."
+  },
+  {
+   "group": "Conectividad",
+   "key": "SIM",
+   "value": "Dual SIM: nano-SIM + eSIM (eSIM según región)",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Conectividad",
+   "key": "NFC",
+   "value": "Sí (con modo lector)",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Conectividad",
+   "key": "Wi-Fi",
+   "value": "Wi-Fi 6 (802.11ax) 2x2 MIMO",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Conectividad",
+   "key": "Bluetooth",
+   "value": "5.0",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Otros",
+   "key": "Lanzamiento",
+   "value": "Septiembre de 2019",
+   "status": "verificado",
+   "sources": [
+    "nano",
+    "comp"
+   ]
+  },
+  {
+   "group": "Soporte",
+   "key": "Sistema operativo",
+   "value": "iOS 13 de fábrica",
+   "status": "sin_confirmar",
+   "sources": [
+    "nano"
+   ],
+   "note": "Solo una fuente técnica lo indica; la ficha oficial no nombra la versión de lanzamiento."
+  },
+  {
+   "group": "Dimensiones",
+   "key": "Medidas",
+   "value": "150,9 x 75,7 x 8,3 mm",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Dimensiones",
+   "key": "Peso",
+   "value": "194 g",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Protección",
+   "key": "Resistencia",
+   "value": "IP68 (hasta 2 m durante 30 min, IEC 60529)",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Protección",
+   "key": "Biometría",
+   "value": "Face ID",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Otros",
+   "key": "En la caja",
+   "value": "iPhone, cable USB-C a Lightning y documentación (sin cargador ni auriculares)",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ],
+   "note": "Contenido de la caja según Apple para las unidades actuales."
+  }
+ ],
+ "antutu": {
+  "version": "v11",
+  "total": 1087108,
+  "sample": "individual",
+  "source": "nano",
+  "note": "Medición individual publicada por Nanoreview (no indica promedio). Comparigon muestra 1.091.336 en V11."
+ },
+ "pending": [
+  {
+   "key": "Frecuencia de pantalla",
+   "why": "Apple no la publica y no se confirmó con dos fuentes técnicas en esta revisión."
+  },
+  {
+   "key": "microSD",
+   "why": "No hay respaldo explícito en las fuentes consultadas (la ficha oficial no menciona ranura)."
+  },
+  {
+   "key": "Sistema operativo de fábrica",
+   "why": "Solo una fuente técnica (Nanoreview); falta una segunda o la nota oficial de lanzamiento."
+  }
+ ]
+}
