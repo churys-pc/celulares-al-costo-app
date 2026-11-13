@@ -5,6 +5,7 @@ import { useIsAdmin } from '../session.ts';
 import { iosSupport, IOS_SOURCE } from '../../shared/iosSupport.ts';
 import { Icon } from '../icons.tsx';
 import { useCovers } from '../covers.ts';
+import { keySpecValues, prioritySort } from '../../shared/keySpecs.ts';
 import { SPEC_TEMPLATE } from '../../shared/specTemplate.ts';
 import { converted, money, STATUS_LABEL, USE_LABEL, variantLabel } from '../format.ts';
 
@@ -17,7 +18,7 @@ export function ProductSheet({ product: p, settings, onClose, onEdit, onDelete, 
   const [showAll, setShowAll] = useState(true);
   const [editing, setEditing] = useState(false);
   const [specs, setSpecs] = useState<Spec[]>(p.specs);
-  const highlights = specs.filter((s) => s.highlight);
+  const highlights = keySpecValues(specs);
   const conv = converted(p, settings);
 
   async function remove() {
@@ -49,8 +50,8 @@ export function ProductSheet({ product: p, settings, onClose, onEdit, onDelete, 
 
         <h3 style={{ marginTop: 20 }}>Ficha técnica</h3>
         {highlights.length ? (
-          <div className="highlights">{highlights.map((s, i) => <div key={i} className="hl"><b>{s.key}</b>{s.value}</div>)}</div>
-        ) : <p className="muted small">Sin especificaciones destacadas. Cargalas con "Editar ficha" (con fuente y fecha).</p>}
+          <div className="highlights">{highlights.map((s) => <div key={s.label} className="hl"><b>{s.label}</b>{s.value}</div>)}</div>
+        ) : <p className="muted small">Sin especificaciones principales cargadas. Cargalas con "Editar ficha" (con fuente y fecha).</p>}
         {ios && <div className="ios-box">
           <span className="ios-ico"><Icon name="shield" size={18} /></span>
           <div><b>Actualizaciones de iOS</b><span>{ios.label}</span>
@@ -90,7 +91,7 @@ export function AllSpecs({ specs }: { specs: Spec[] }) {
     if (i < 0) { all.push({ name: n, url: u, date: d }); i = all.length - 1; }
     return i + 1;
   };
-  const rows = specs.map((s) => ({ s, refs: [refOf(s.sourceName, s.sourceUrl, s.sourceDate), ...(s.extraSources ?? []).map((x) => refOf(x.name, x.url, x.date))].filter(Boolean) }));
+  const rows = prioritySort(specs).map((s) => ({ s, refs: [refOf(s.sourceName, s.sourceUrl, s.sourceDate), ...(s.extraSources ?? []).map((x) => refOf(x.name, x.url, x.date))].filter(Boolean) }));
   return <>{SPEC_GROUPS.filter((g) => specs.some((s) => s.group === g)).map((g) => (
     <div key={g} className="spec-group"><h4>{g}</h4>
       <table className="specs"><tbody>{rows.filter((r) => r.s.group === g).map(({ s, refs }, i) => (

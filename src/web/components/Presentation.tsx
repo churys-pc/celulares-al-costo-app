@@ -5,9 +5,13 @@ import { api } from '../api.ts';
 import { converted, money, storageLabel, USE_LABEL } from '../format.ts';
 import { Icon, SPEC_ICON } from '../icons.tsx';
 import { useCovers } from '../covers.ts';
+import { keySpecValues } from '../../shared/keySpecs.ts';
 
 const AUTO_MS = 8000;
 const nf = (n: number) => n.toLocaleString('es-UY');
+
+const LABEL_GROUP: Record<string, string> = { Procesador: 'Chip', RAM: 'Memoria', Almacenamiento: 'Memoria', Pantalla: 'Pantalla',
+  'Cámara principal': 'Cámaras', 'Cámara frontal': 'Cámaras', Batería: 'Batería y carga', Carga: 'Batería y carga', 'Red móvil': 'Conectividad' };
 
 export function Presentation({ items, start = 0, settings, onClose }: { items: Product[]; start?: number; settings: Settings | null; onClose: () => void }) {
   const cover = useCovers();
@@ -40,10 +44,8 @@ export function Presentation({ items, start = 0, settings, onClose }: { items: P
   const p = detail && detail.id === list[i].id ? detail : null;
   const base = list[i];
   const conv = converted(base, settings);
-  // Destacadas primero; se completa hasta 6 con las de más interés para el cliente.
-  const PRIORITY = ['Batería', 'Carga rápida', 'Frecuencia', 'Cámara frontal', 'RAM', 'Resistencia', '5G'];
-  const highlights = p ? [...p.specs.filter((s) => s.highlight),
-    ...PRIORITY.map((k) => p.specs.find((s) => s.key === k && !s.highlight)).filter((s): s is NonNullable<typeof s> => !!s)].slice(0, 6) : [];
+  // Las 6 especificaciones más importantes (mismo orden que la ficha y el comparador).
+  const highlights = p ? keySpecValues(p.specs).map((s) => ({ key: s.label, value: s.value, group: LABEL_GROUP[s.label] ?? 'Otros' })).slice(0, 6) : [];
   const bench = p?.benchmarks.find((b) => b.version === 'v11') ?? p?.benchmarks[0];
   const coverSrc = cover(base.brand, base.model);
   const photos = [...(coverSrc ? [{ id: -1, url: coverSrc }] : []), ...(p?.photos ?? [])];

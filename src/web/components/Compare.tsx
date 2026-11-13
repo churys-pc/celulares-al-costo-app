@@ -42,16 +42,17 @@ const numOf = (v: string | null, re: RegExp) => {
 type MainRow = { label: string; keys: string[]; value: (m: CompareModel) => string | null; sub?: (m: CompareModel) => string | null; best?: RegExp };
 const MAIN_ROWS: MainRow[] = [
   { label: 'Procesador', keys: ['Procesador'], value: (m) => specOf(m, 'Procesador') },
+  { label: 'RAM', keys: ['RAM'], value: (m) => specOf(m, 'RAM') },
   { label: 'Pantalla', keys: ['Tamaño y tipo', 'Frecuencia', 'Resolución'],
     value: (m) => [specOf(m, 'Tamaño y tipo'), specOf(m, 'Frecuencia')].filter(Boolean).join(' · ') || null, sub: (m) => specOf(m, 'Resolución') },
-  { label: 'Batería', keys: ['Batería'], value: (m) => specOf(m, 'Batería'), best: /(\d+)\s*mah/i },
-  { label: 'Carga', keys: ['Carga rápida'], value: (m) => specOf(m, 'Carga rápida'), best: /(\d+(?:[.,]\d+)?)\s*w/i },
   { label: 'Cámara principal', keys: ['Cámara principal'], value: (m) => specOf(m, 'Cámara principal') },
-  { label: 'RAM', keys: ['RAM'], value: (m) => specOf(m, 'RAM') },
+  { label: 'Cámara frontal', keys: ['Cámara frontal'], value: (m) => specOf(m, 'Cámara frontal') },
+  { label: 'Batería', keys: ['Batería'], value: (m) => specOf(m, 'Batería'), best: /(\d+)\s*mah/i },
   { label: 'Almacenamiento', keys: ['Almacenamiento'], value: (m) => specOf(m, 'Almacenamiento') },
+  { label: 'Carga', keys: ['Carga rápida'], value: (m) => specOf(m, 'Carga rápida'), best: /(\d+(?:[.,]\d+)?)\s*w/i },
+  { label: 'Red móvil', keys: ['5G'], value: (m) => { const v = specOf(m, '5G'); return !v ? null : /^s[ií]/i.test(v) ? '5G' : /^no/i.test(v) ? '4G (sin 5G)' : v; } },
   { label: 'Actualizaciones', keys: ['Años de actualizaciones'],
     value: (m) => iosSupport(m.brand, m.model)?.label ?? specOf(m, 'Años de actualizaciones'), sub: (m) => iosSupport(m.brand, m.model)?.estimate ?? null },
-  { label: 'Red móvil', keys: ['5G'], value: (m) => { const v = specOf(m, '5G'); return !v ? null : /^s[ií]/i.test(v) ? '5G' : /^no/i.test(v) ? 'Sin 5G' : v; } },
 ];
 const MAIN_KEYS = new Set(MAIN_ROWS.flatMap((r) => r.keys.map(normKey)));
 const differs = (vals: (string | null)[]) => vals.some((v) => v === null) || new Set(vals.map((v) => v!.trim().toLowerCase())).size > 1;

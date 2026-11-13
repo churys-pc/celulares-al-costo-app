@@ -24,7 +24,7 @@ export const USES = ['gaming', 'fotos', 'redes', 'trabajo'] as const;
 export type Use = (typeof USES)[number];
 
 export const SPEC_GROUPS = [
-  'Chip', 'Pantalla', 'Batería y carga', 'Cámaras', 'Memoria', 'Conectividad',
+  'Chip', 'Memoria', 'Pantalla', 'Cámaras', 'Batería y carga', 'Conectividad',
   'Dimensiones', 'Protección', 'Soporte', 'Otros',
 ] as const;
 export type SpecGroup = (typeof SPEC_GROUPS)[number];
