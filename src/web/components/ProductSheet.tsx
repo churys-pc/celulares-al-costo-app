@@ -4,6 +4,7 @@ import { api, fileToDataUrl } from '../api.ts';
 import { useIsAdmin } from '../session.ts';
 import { iosSupport, IOS_SOURCE } from '../../shared/iosSupport.ts';
 import { Icon } from '../icons.tsx';
+import { useCovers } from '../covers.ts';
 import { SPEC_TEMPLATE } from '../../shared/specTemplate.ts';
 import { converted, money, STATUS_LABEL, USE_LABEL, variantLabel } from '../format.ts';
 
@@ -11,6 +12,7 @@ interface Props { product: ProductDetail; settings: Settings | null; onClose: ()
 
 export function ProductSheet({ product: p, settings, onClose, onEdit, onDelete, onChanged, onPresent }: Props) {
   const ios = iosSupport(p.brand, p.model);
+  const cover = useCovers();
   const admin = useIsAdmin();
   const [showAll, setShowAll] = useState(true);
   const [editing, setEditing] = useState(false);
@@ -34,7 +36,7 @@ export function ProductSheet({ product: p, settings, onClose, onEdit, onDelete, 
         </div>
         <h2 style={{ margin: '10px 0 2px' }}>{p.brand} {p.model}</h2>
         <div className="muted">{variantLabel(p) || 'Variante sin detallar'}</div>
-        <Gallery productId={p.id} initial={p.photos} onChanged={onChanged} readOnly={!!p.repoId || !admin} />
+        <Gallery productId={p.id} initial={p.photos} cover={cover(p.brand, p.model)} label={`${p.brand} ${p.model}`} onChanged={onChanged} readOnly={!!p.repoId || !admin} />
         <div className="row">
           <span className="price">{money(p.price, p.currency)}</span>
           {conv && <span className="muted small">≈ {conv} (cotización manual)</span>}
@@ -152,13 +154,16 @@ export function SpecEditor({ modelId, initial, onSaved }: { modelId: number; ini
   );
 }
 
-function Gallery({ productId, initial, onChanged, readOnly }: { productId: number; initial: Photo[]; onChanged: () => void; readOnly?: boolean }) {
+function Gallery({ productId, initial, cover, label, onChanged, readOnly }: { productId: number; initial: Photo[]; cover: string | null; label: string; onChanged: () => void; readOnly?: boolean }) {
   const [photos, setPhotos] = useState(initial);
-  const [sel, setSel] = useState(0);
+  // -1 = portada oficial del modelo; 0..n = fotos reales de la unidad.
+  const [sel, setSel] = useState(cover ? -1 : 0);
   const [license, setLicense] = useState<string>('');
   const [zoom, setZoom] = useState(false);
   const [error, setError] = useState('');
-  const cur = photos[Math.min(sel, photos.length - 1)];
+  const onCover = !!cover && (sel === -1 || !photos.length);
+  const cur = onCover ? null : photos[Math.min(Math.max(sel, 0), photos.length - 1)];
+  const mainSrc = onCover ? cover : cur?.url;
 
   async function upload(files: FileList | null) {
     setError('');
@@ -176,13 +181,15 @@ function Gallery({ productId, initial, onChanged, readOnly }: { productId: numbe
 
   return (
     <div className="gallery">
-      <div className="g-main" onClick={() => cur && setZoom(true)}>
-        {cur ? <img src={cur.url} alt="" /> : <div className="g-empty"><Icon name="image" size={40} /><span>Sin fotos cargadas</span></div>}
+      <div className="g-main" onClick={() => mainSrc && setZoom(true)}>
+        {mainSrc ? <img src={mainSrc} alt={label} className={onCover ? 'cover' : ''} /> : <div className="g-empty"><Icon name="image" size={40} /><span>Sin fotos cargadas</span></div>}
       </div>
-      {cur && <div className="muted small">Origen: {PHOTO_LICENSE_LABEL[cur.license]}</div>}
+      {onCover ? <div className="muted small">Portada oficial del modelo (imagen del fabricante){photos.length ? ' · las fotos de la unidad están abajo' : ''}</div>
+        : cur && <div className="muted small">Foto de la unidad · Origen: {PHOTO_LICENSE_LABEL[cur.license]}</div>}
       <div className="g-thumbs">
+        {cover && photos.length > 0 && <div className={`g-thumb cover ${onCover ? 'on' : ''}`} onClick={() => setSel(-1)} title="Portada oficial"><img src={cover} alt="" /></div>}
         {photos.map((ph, i) => (
-          <div key={ph.id} className={`g-thumb ${i === sel ? 'on' : ''}`} onClick={() => setSel(i)}>
+          <div key={ph.id} className={`g-thumb ${!onCover && i === sel ? 'on' : ''}`} onClick={() => setSel(i)}>
             <img src={ph.url} alt="" loading="lazy" />
             {!readOnly && <button className="g-del" onClick={(e) => { e.stopPropagation(); remove(ph); }} aria-label="Eliminar foto"><Icon name="x" size={12} /></button>}
           </div>))}
@@ -197,7 +204,7 @@ function Gallery({ productId, initial, onChanged, readOnly }: { productId: numbe
           </div>)}
       </div>
       {error && <p className="error">{error}</p>}
-      {zoom && cur && <div className="zoom" onClick={() => setZoom(false)}><img src={cur.url} alt="" /></div>}
+      {zoom && mainSrc && <div className="zoom" onClick={() => setZoom(false)}><img src={mainSrc} alt={label} /></div>}
     </div>
   );
 }

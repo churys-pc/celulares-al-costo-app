@@ -6,6 +6,7 @@ import type { Db } from './db.ts';
 import { CatalogRepo } from './catalog.ts';
 import { getSettings, updateSettings } from './settings.ts';
 import { PhotoRepo } from './photos.ts';
+import { CoverStore } from './covers.ts';
 import { importOnline, searchOnline } from './lookup.ts';
 import { deleteQuick, preview, saveQuick, updateQuick } from './quickProducts.ts';
 import { repoStatus, setRepoConfig, type Secret } from './repoSync.ts';
@@ -57,9 +58,12 @@ export function createServer(db: Db, webRoot: string, dataDir: string, opts: { s
   // Escrituras que también puede hacer un vendedor (el resto de las escrituras es solo del administrador).
   const SELLER_WRITES: [string, RegExp][] = [
     ['PUT', /^\/api\/catalog\/products\/\d+\/favorite$/], ['POST', /^\/api\/lookup$/], ['POST', /^\/api\/repo\/sync$/],
+    // Cualquier sesión puede generar la portada oficial que falta en esta PC.
+    ['POST', /^\/api\/covers\/[a-z0-9-]+$/],
   ];
   const repo = new CatalogRepo(db);
   const photos = new PhotoRepo(db, dataDir);
+  const covers = new CoverStore(dataDir);
   const idOf = (s: string) => { const n = Number(s); if (!Number.isInteger(n) || n <= 0) throw new HttpError(400, 'ID inválido'); return n; };
 
   type Handler = (m: RegExpMatchArray, req: http.IncomingMessage, url: URL) => Promise<unknown> | unknown;
@@ -104,6 +108,8 @@ export function createServer(db: Db, webRoot: string, dataDir: string, opts: { s
     ['GET', /^\/api\/lookup$/, (_m, _r, u) => searchOnline(u.searchParams.get('q'))],
     ['POST', /^\/api\/lookup$/, async (_m, req) => importOnline(db, (await readJson(req)).slug)],
     ['POST', /^\/api\/quick\/preview$/, async (_m, req) => { const b = await readJson(req); return preview(b.name, b.slug); }],
+    ['GET', /^\/api\/covers$/, () => covers.list()],
+    ['POST', /^\/api\/covers\/([a-z0-9-]+)$/, async (m, req) => covers.save(m[1], await readJson(req))],
     ['POST', /^\/api\/quick\/products$/, async (_m, req) => { const r = saveQuick(db, dataDir, await readJson(req)); kick(); return r; }],
     ['PATCH', /^\/api\/quick\/products\/([a-f0-9-]{36})$/, async (m, req) => { const r = updateQuick(db, dataDir, m[1], await readJson(req)); kick(); return r; }],
     ['DELETE', /^\/api\/quick\/products\/([a-f0-9-]{36})$/, (m) => { deleteQuick(db, dataDir, m[1]); kick(); return { ok: true }; }],
@@ -145,6 +151,20 @@ export function createServer(db: Db, webRoot: string, dataDir: string, opts: { s
         if (!f) throw new HttpError(404, 'Foto no encontrada');
         res.writeHead(200, { 'Content-Type': f.mime, 'Cache-Control': 'private, max-age=86400', ...SECURITY_HEADERS });
         return void fs.createReadStream(f.path).pipe(res);
+      }
+      const cover = req.method === 'GET' && url.pathname.match(/^\/api\/covers\/([a-z0-9-]+)\.webp$/);
+      if (cover) {
+        const f = covers.file(cover[1]);
+        if (!f) throw new HttpError(404, 'Portada no disponible');
+        res.writeHead(200, { 'Content-Type': 'image/webp', 'Cache-Control': 'private, max-age=604800', ...SECURITY_HEADERS });
+        return void fs.createReadStream(f).pipe(res);
+      }
+      const coverSrc = req.method === 'GET' && url.pathname.match(/^\/api\/covers\/([a-z0-9-]+)\/source$/);
+      if (coverSrc) {
+        auth.require();
+        const src = await covers.fetchSource(coverSrc[1]);
+        res.writeHead(200, { 'Content-Type': src.mime, 'Cache-Control': 'no-store', ...SECURITY_HEADERS });
+        return void res.end(src.buf);
       }
       if (url.pathname.startsWith('/api/')) {
         // Mitigación CSRF básica: las escrituras deben venir de la propia app.

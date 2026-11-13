@@ -1,0 +1,1181 @@
+{
+ "version": 1,
+ "checkedAt": "2026-11-13",
+ "covers": [
+  {
+   "key": "apple-iphone-8-plus",
+   "brand": "Apple",
+   "models": [
+    "iPhone 8 Plus"
+   ],
+   "url": "https://www.apple.com/v/iphone/compare/an/images/overview/compare_iphone8plus_spacegray__ex27235welkm_large_2x.jpg",
+   "page": "https://www.apple.com/iphone/compare/"
+  },
+  {
+   "key": "apple-iphone-11",
+   "brand": "Apple",
+   "models": [
+    "iPhone 11"
+   ],
+   "url": "https://www.apple.com/v/iphone/compare/an/images/overview/compare_iphone11_black__luskajpcyaaa_large_2x.jpg",
+   "page": "https://www.apple.com/iphone/compare/"
+  },
+  {
+   "key": "apple-iphone-12",
+   "brand": "Apple",
+   "models": [
+    "iPhone 12"
+   ],
+   "url": "https://www.apple.com/v/iphone/compare/an/images/overview/compare_iphone12_black__gj93q2eeofma_large_2x.jpg",
+   "page": "https://www.apple.com/iphone/compare/"
+  },
+  {
+   "key": "apple-iphone-13",
+   "brand": "Apple",
+   "models": [
+    "iPhone 13"
+   ],
+   "url": "https://www.apple.com/v/iphone/compare/an/images/overview/compare_iphone13_midnight__dc2w8cyhc9iu_large_2x.jpg",
+   "page": "https://www.apple.com/iphone/compare/"
+  },
+  {
+   "key": "apple-iphone-13-pro",
+   "brand": "Apple",
+   "models": [
+    "iPhone 13 Pro",
+    "iPhone 13 Pro Max"
+   ],
+   "url": "https://www.apple.com/v/iphone/compare/an/images/overview/compare_iphone13_pro_graphite__1v1ipyvu1eae_large_2x.jpg",
+   "page": "https://www.apple.com/iphone/compare/",
+   "note": "Apple usa la misma imagen para Pro y Pro Max (mismo diseño, cambia el tamaño)."
+  },
+  {
+   "key": "apple-iphone-14",
+   "brand": "Apple",
+   "models": [
+    "iPhone 14"
+   ],
+   "url": "https://www.apple.com/v/iphone/compare/an/images/overview/compare_iphone14_midnight__bvwj36frtody_large_2x.jpg",
+   "page": "https://www.apple.com/iphone/compare/"
+  },
+  {
+   "key": "apple-iphone-14-pro",
+   "brand": "Apple",
+   "models": [
+    "iPhone 14 Pro",
+    "iPhone 14 Pro Max"
+   ],
+   "url": "https://www.apple.com/v/iphone/compare/an/images/overview/compare_iphone14_pro_space_black__dym2kqku7n6u_large_2x.jpg",
+   "page": "https://www.apple.com/iphone/compare/",
+   "note": "Apple usa la misma imagen para Pro y Pro Max (mismo diseño, cambia el tamaño)."
+  },
+  {
+   "key": "apple-iphone-15",
+   "brand": "Apple",
+   "models": [
+    "iPhone 15"
+   ],
+   "url": "https://www.apple.com/v/iphone/compare/an/images/overview/compare_iphone15_black__eer8kwdkdjyq_large_2x.jpg",
+   "page": "https://www.apple.com/iphone/compare/"
+  },
+  {
+   "key": "apple-iphone-15-plus",
+   "brand": "Apple",
+   "models": [
+    "iPhone 15 Plus"
+   ],
+   "url": "https://www.apple.com/v/iphone/compare/an/images/overview/compare_iphone15_plus_black__chh9za6pd2vm_large_2x.jpg",
+   "page": "https://www.apple.com/iphone/compare/"
+  },
+  {
+   "key": "apple-iphone-15-pro",
+   "brand": "Apple",
+   "models": [
+    "iPhone 15 Pro",
+    "iPhone 15 Pro Max"
+   ],
+   "url": "https://www.apple.com/v/iphone/compare/an/images/overview/compare_iphone15_pro_black_titanium__etz96gq8ruoi_large_2x.jpg",
+   "page": "https://www.apple.com/iphone/compare/",
+   "note": "Apple usa la misma imagen para Pro y Pro Max (mismo diseño, cambia el tamaño)."
+  },
+  {
+   "key": "apple-iphone-16",
+   "brand": "Apple",
+   "models": [
+    "iPhone 16"
+   ],
+   "url": "https://www.apple.com/v/iphone/compare/an/images/overview/compare_iphone16_black__bedc0hlw316q_large_2x.jpg",
+   "page": "https://www.apple.com/iphone/compare/"
+  },
+  {
+   "key": "apple-iphone-16-plus",
+   "brand": "Apple",
+   "models": [
+    "iPhone 16 Plus"
+   ],
+   "url": "https://www.apple.com/v/iphone/compare/an/images/overview/compare_iphone16_plus_black__fzb15ieuikey_large_2x.jpg",
+   "page": "https://www.apple.com/iphone/compare/"
+  },
+  {
+   "key": "apple-iphone-16-pro",
+   "brand": "Apple",
+   "models": [
+    "iPhone 16 Pro",
+    "iPhone 16 Pro Max"
+   ],
+   "url": "https://www.apple.com/v/iphone/compare/an/images/overview/compare_iphone16_pro_black_titanium__c7t71uah5qky_large_2x.jpg",
+   "page": "https://www.apple.com/iphone/compare/",
+   "note": "Apple usa la misma imagen para Pro y Pro Max (mismo diseño, cambia el tamaño)."
+  },
+  {
+   "key": "apple-iphone-16e",
+   "brand": "Apple",
+   "models": [
+    "iPhone 16e"
+   ],
+   "url": "https://www.apple.com/v/iphone/compare/an/images/overview/compare_iphone16e_black__folwa2rvc3ma_large_2x.jpg",
+   "page": "https://www.apple.com/iphone/compare/"
+  },
+  {
+   "key": "apple-iphone-17",
+   "brand": "Apple",
+   "models": [
+    "iPhone 17"
+   ],
+   "url": "https://www.apple.com/v/iphone/compare/an/images/overview/compare_iphone17_black__epmfmcpap0sy_large_2x.jpg",
+   "page": "https://www.apple.com/iphone/compare/"
+  },
+  {
+   "key": "apple-iphone-air",
+   "brand": "Apple",
+   "models": [
+    "iPhone 17 Air",
+    "iPhone Air"
+   ],
+   "url": "https://www.apple.com/v/iphone/compare/an/images/overview/compare_iphone_air_space_black__erjeo9fa6oa6_large_2x.jpg",
+   "page": "https://www.apple.com/iphone/compare/"
+  },
+  {
+   "key": "apple-iphone-17-pro",
+   "brand": "Apple",
+   "models": [
+    "iPhone 17 Pro",
+    "iPhone 17 Pro Max"
+   ],
+   "url": "https://www.apple.com/v/iphone/compare/an/images/overview/compare_iphone17_pro_deep_blue__dz8sfcp4h742_large_2x.jpg",
+   "page": "https://www.apple.com/iphone/compare/",
+   "note": "Apple usa la misma imagen para Pro y Pro Max (mismo diseño, cambia el tamaño)."
+  },
+  {
+   "key": "apple-iphone-18-pro",
+   "brand": "Apple",
+   "models": [
+    "iPhone 18 Pro",
+    "iPhone 18 Pro Max"
+   ],
+   "url": "https://www.apple.com/v/iphone/compare/an/images/overview/compare_iphone_18_pro_black__f7t3q1k8wfiq_large_2x.jpg",
+   "page": "https://www.apple.com/iphone/compare/",
+   "note": "Apple usa la misma imagen para Pro y Pro Max (mismo diseño, cambia el tamaño)."
+  },
+  {
+   "key": "apple-iphone-se-3",
+   "brand": "Apple",
+   "models": [
+    "iPhone SE (2022)",
+    "iPhone SE 2022",
+    "iPhone SE (3rd generation)",
+    "iPhone SE 3"
+   ],
+   "url": "https://www.apple.com/v/iphone/compare/an/images/overview/compare_iphoneSE_3rd_gen_midnight__c57d9v9oipyu_large_2x.jpg",
+   "page": "https://www.apple.com/iphone/compare/"
+  },
+  {
+   "key": "samsung-galaxy-a27-5g",
+   "brand": "Samsung",
+   "models": [
+    "Galaxy A27 5G",
+    "Galaxy A27"
+   ],
+   "url": "https://images.samsung.com/is/image/samsung/p6pim/uy/sm-a276bzkqgto/gallery/uy-galaxy-a27-5g-sm-a276-sm-a276bzkqgto-thumb-553810692?$Q90_1248_936_F_PNG$",
+   "page": "https://www.samsung.com/uy/",
+   "code": "SM-A276BZKQGTO"
+  },
+  {
+   "key": "samsung-galaxy-a37-5g",
+   "brand": "Samsung",
+   "models": [
+    "Galaxy A37 5G",
+    "Galaxy A37"
+   ],
+   "url": "https://images.samsung.com/is/image/samsung/p6pim/uy/sm-a376bzajgto/gallery/uy-galaxy-a37-5g-sm-a376-587587-sm-a376bzajgto-thumb-552228485?$Q90_1248_936_F_PNG$",
+   "page": "https://www.samsung.com/uy/",
+   "code": "SM-A376BZAJGTO"
+  },
+  {
+   "key": "samsung-galaxy-a57-5g",
+   "brand": "Samsung",
+   "models": [
+    "Galaxy A57 5G",
+    "Galaxy A57"
+   ],
+   "url": "https://images.samsung.com/is/image/samsung/p6pim/uy/sm-a576bdbggto/gallery/uy-galaxy-a57-5g-sm-a576-sm-a576bdbggto-thumb-552105089?$Q90_1248_936_F_PNG$",
+   "page": "https://www.samsung.com/uy/",
+   "code": "SM-A576BDBGGTO"
+  },
+  {
+   "key": "samsung-galaxy-s26-ultra",
+   "brand": "Samsung",
+   "models": [
+    "Galaxy S26 Ultra",
+    "Galaxy S26 Ultra 5G"
+   ],
+   "url": "https://images.samsung.com/is/image/samsung/p6pim/uy/s2602/gallery/uy-galaxy-s26-ultra-s948-sm-s948bzkjgto-thumb-550805338?$Q90_1248_936_F_PNG$",
+   "page": "https://www.samsung.com/uy/",
+   "code": "SM-S948BZKJGTO",
+   "note": "La imagen oficial incluye el S Pen integrado del equipo."
+  },
+  {
+   "key": "samsung-galaxy-s26",
+   "brand": "Samsung",
+   "models": [
+    "Galaxy S26",
+    "Galaxy S26 5G"
+   ],
+   "url": "https://images.samsung.com/is/image/samsung/p6pim/uy/s2602/gallery/uy-galaxy-s26-s942-sm-s942bzkkgto-thumb-550886803?$Q90_1248_936_F_PNG$",
+   "page": "https://www.samsung.com/uy/",
+   "code": "SM-S942BZKKGTO"
+  },
+  {
+   "key": "samsung-galaxy-a07",
+   "brand": "Samsung",
+   "models": [
+    "Galaxy A07",
+    "Galaxy A07 4G",
+    "Galaxy A07 LTE"
+   ],
+   "url": "https://images.samsung.com/is/image/samsung/p6pim/uy/sm-a075mzkggto/gallery/uy-galaxy-a07-sm-a075-sm-a075mzkggto-thumb-548735903?$Q90_1248_936_F_PNG$",
+   "page": "https://www.samsung.com/uy/",
+   "code": "SM-A075MZKGGTO"
+  },
+  {
+   "key": "samsung-galaxy-a17-5g",
+   "brand": "Samsung",
+   "models": [
+    "Galaxy A17 5G"
+   ],
+   "url": "https://images.samsung.com/is/image/samsung/p6pim/uy/sm-a176bzkogto/gallery/uy-galaxy-a17-5g-sm-a176-sm-a176bzkogto-thumb-548804961?$Q90_1248_936_F_PNG$",
+   "page": "https://www.samsung.com/uy/",
+   "code": "SM-A176BZKOGTO"
+  },
+  {
+   "key": "samsung-galaxy-s25-fe",
+   "brand": "Samsung",
+   "models": [
+    "Galaxy S25 FE",
+    "Galaxy S25 FE 5G"
+   ],
+   "url": "https://images.samsung.com/is/image/samsung/p6pim/uy/sm-s731bzkkltu/gallery/uy-galaxy-s25-fe-sm-s731-sm-s731bzkkltu-thumb-549228687?$Q90_1248_936_F_PNG$",
+   "page": "https://www.samsung.com/uy/",
+   "code": "SM-S731BZKKLTU"
+  },
+  {
+   "key": "samsung-galaxy-z-flip7",
+   "brand": "Samsung",
+   "models": [
+    "Galaxy Z Flip7",
+    "Galaxy Z Flip 7"
+   ],
+   "url": "https://images.samsung.com/is/image/samsung/p6pim/uy/f2507/gallery/uy-galaxy-zflip7-f766-sm-f766bdbkgto-thumb-547738350?$Q90_1248_936_F_PNG$",
+   "page": "https://www.samsung.com/uy/",
+   "code": "SM-F766BDBKGTO"
+  },
+  {
+   "key": "samsung-galaxy-a26-5g",
+   "brand": "Samsung",
+   "models": [
+    "Galaxy A26 5G",
+    "Galaxy A26"
+   ],
+   "url": "https://images.samsung.com/is/image/samsung/p6pim/uy/sm-a266mzkdltu/gallery/uy-galaxy-a26-5g-sm-a266-sm-a266mzkdltu-thumb-545865155?$Q90_1248_936_F_PNG$",
+   "page": "https://www.samsung.com/uy/",
+   "code": "SM-A266MZKDLTU"
+  },
+  {
+   "key": "samsung-galaxy-a56-5g",
+   "brand": "Samsung",
+   "models": [
+    "Galaxy A56 5G",
+    "Galaxy A56"
+   ],
+   "url": "https://images.samsung.com/is/image/samsung/p6pim/uy/sm-a566ezkaltu/gallery/uy-galaxy-a56-5g-sm-a566-543695-sm-a566ezkaltu-thumb-545793579?$Q90_1248_936_F_PNG$",
+   "page": "https://www.samsung.com/uy/",
+   "code": "SM-A566EZKALTU"
+  },
+  {
+   "key": "samsung-galaxy-a36-5g",
+   "brand": "Samsung",
+   "models": [
+    "Galaxy A36 5G",
+    "Galaxy A36"
+   ],
+   "url": "https://images.samsung.com/is/image/samsung/p6pim/uy/sm-a366ezkdltu/gallery/uy-galaxy-a36-5g-sm-a366-543706-sm-a366ezkdltu-thumb-545795126?$Q90_1248_936_F_PNG$",
+   "page": "https://www.samsung.com/uy/",
+   "code": "SM-A366EZKDLTU"
+  },
+  {
+   "key": "samsung-galaxy-s25",
+   "brand": "Samsung",
+   "models": [
+    "Galaxy S25",
+    "Galaxy S25 5G"
+   ],
+   "url": "https://images.samsung.com/is/image/samsung/p6pim/uy/2501/gallery/uy-galaxy-s25-s931-sm-s931bdbkltu-thumb-544668083?$Q90_1248_936_F_PNG$",
+   "page": "https://www.samsung.com/uy/",
+   "code": "SM-S931BDBKLTU"
+  },
+  {
+   "key": "samsung-galaxy-s25-plus",
+   "brand": "Samsung",
+   "models": [
+    "Galaxy S25+",
+    "Galaxy S25+ 5G",
+    "Galaxy S25 Plus",
+    "Galaxy S25 Plus 5G"
+   ],
+   "url": "https://images.samsung.com/is/image/samsung/p6pim/uy/2501/gallery/uy-galaxy-s25-s936-sm-s936bdbkltu-thumb-544674412?$Q90_1248_936_F_PNG$",
+   "page": "https://www.samsung.com/uy/",
+   "code": "SM-S936BDBKLTU"
+  },
+  {
+   "key": "samsung-galaxy-s25-ultra",
+   "brand": "Samsung",
+   "models": [
+    "Galaxy S25 Ultra",
+    "Galaxy S25 Ultra 5G"
+   ],
+   "url": "https://images.samsung.com/is/image/samsung/p6pim/uy/2501/gallery/uy-galaxy-s25-s938-sm-s938bzkkltu-thumb-544711386?$Q90_1248_936_F_PNG$",
+   "page": "https://www.samsung.com/uy/",
+   "code": "SM-S938BZKKLTU",
+   "note": "La imagen oficial incluye el S Pen integrado del equipo."
+  },
+  {
+   "key": "samsung-galaxy-s24-fe",
+   "brand": "Samsung",
+   "models": [
+    "Galaxy S24 FE",
+    "Galaxy S24 FE 5G"
+   ],
+   "url": "https://images.samsung.com/is/image/samsung/p6pim/uy/sm-s721bzkkltu/gallery/uy-galaxy-s24-fe-s721-sm-s721bzkkltu-thumb-543925757?$Q90_1248_936_F_PNG$",
+   "page": "https://www.samsung.com/uy/",
+   "code": "SM-S721BZKKLTU"
+  },
+  {
+   "key": "samsung-galaxy-z-flip6",
+   "brand": "Samsung",
+   "models": [
+    "Galaxy Z Flip6",
+    "Galaxy Z Flip 6"
+   ],
+   "url": "https://images.samsung.com/is/image/samsung/p6pim/uy/sm-f741bzsjuyo/gallery/uy-galaxy-zflip6-f741-sm-f741bzsjuyo-thumb-543842994?$Q90_1248_936_F_PNG$",
+   "page": "https://www.samsung.com/uy/",
+   "code": "SM-F741BZSJUYO"
+  },
+  {
+   "key": "samsung-galaxy-z-fold6",
+   "brand": "Samsung",
+   "models": [
+    "Galaxy Z Fold6",
+    "Galaxy Z Fold 6"
+   ],
+   "url": "https://images.samsung.com/is/image/samsung/p6pim/uy/sm-f956bzskuyo/gallery/uy-galaxy-z-fold6-f956-sm-f956bzskuyo-thumb-543851575?$Q90_1248_936_F_PNG$",
+   "page": "https://www.samsung.com/uy/",
+   "code": "SM-F956BZSKUYO"
+  },
+  {
+   "key": "samsung-galaxy-s24-ultra",
+   "brand": "Samsung",
+   "models": [
+    "Galaxy S24 Ultra",
+    "Galaxy S24 Ultra 5G"
+   ],
+   "url": "https://images.samsung.com/is/image/samsung/p6pim/uy/2401/gallery/uy-galaxy-s24-s928-sm-s928bzkkltu-thumb-539309345?$Q90_1248_936_F_PNG$",
+   "page": "https://www.samsung.com/uy/",
+   "code": "SM-S928BZKKLTU",
+   "note": "La imagen oficial incluye el S Pen integrado del equipo."
+  },
+  {
+   "key": "samsung-galaxy-a17-lte",
+   "brand": "Samsung",
+   "models": [
+    "Galaxy A17 LTE",
+    "Galaxy A17 4G"
+   ],
+   "url": "https://images.samsung.com/is/image/samsung/p6pim/ar/sm-a175fzkraro/gallery/ar-galaxy-a17-sm-a175-582491-sm-a175fzkraro-thumb-551337044?$Q90_1248_936_F_PNG$",
+   "page": "https://www.samsung.com/ar/",
+   "code": "SM-A175FZKRARO"
+  },
+  {
+   "key": "samsung-galaxy-a16",
+   "brand": "Samsung",
+   "models": [
+    "Galaxy A16",
+    "Galaxy A16 4G",
+    "Galaxy A16 LTE"
+   ],
+   "url": "https://images.samsung.com/is/image/samsung/p6pim/ar/sm-a165mzkmaro/gallery/ar-galaxy-a16-sm-a165-582499-sm-a165mzkmaro-thumb-551338136?$Q90_1248_936_F_PNG$",
+   "page": "https://www.samsung.com/ar/",
+   "code": "SM-A165MZKMARO"
+  },
+  {
+   "key": "samsung-galaxy-a16-5g",
+   "brand": "Samsung",
+   "models": [
+    "Galaxy A16 5G"
+   ],
+   "url": "https://images.samsung.com/is/image/samsung/p6pim/ar/sm-a166mlgfaro/gallery/ar-galaxy-a16-5g-sm-a166-sm-a166mlgfaro-thumb-544452869?$Q90_1248_936_F_PNG$",
+   "page": "https://www.samsung.com/ar/",
+   "code": "SM-A166MLGFARO"
+  },
+  {
+   "key": "samsung-galaxy-a06",
+   "brand": "Samsung",
+   "models": [
+    "Galaxy A06"
+   ],
+   "url": "https://images.samsung.com/is/image/samsung/p6pim/ar/sm-a065mzkaaro/gallery/ar-galaxy-a06-sm-a065-sm-a065mzkaaro-thumb-543428048?$Q90_1248_936_F_PNG$",
+   "page": "https://www.samsung.com/ar/",
+   "code": "SM-A065MZKAARO"
+  },
+  {
+   "key": "samsung-galaxy-s24",
+   "brand": "Samsung",
+   "models": [
+    "Galaxy S24",
+    "Galaxy S24 5G"
+   ],
+   "url": "https://images.samsung.com/is/image/samsung/p6pim/ar/2401/gallery/ar-galaxy-s24-sm-s921bzklaro-thumb-539290512?$Q90_1248_936_F_PNG$",
+   "page": "https://www.samsung.com/ar/",
+   "code": "SM-S921BZKLARO"
+  },
+  {
+   "key": "samsung-galaxy-s24-plus",
+   "brand": "Samsung",
+   "models": [
+    "Galaxy S24+",
+    "Galaxy S24 Plus",
+    "Galaxy S24 Plus 5G",
+    "Galaxy S24+ 5G"
+   ],
+   "url": "https://images.samsung.com/is/image/samsung/p6pim/ar/2401/gallery/ar-galaxy-s24-plus-sm-s926bzklaro-thumb-539290892?$Q90_1248_936_F_PNG$",
+   "page": "https://www.samsung.com/ar/",
+   "code": "SM-S926BZKLARO"
+  },
+  {
+   "key": "samsung-galaxy-a35-5g",
+   "brand": "Samsung",
+   "models": [
+    "Galaxy A35 5G",
+    "Galaxy A35"
+   ],
+   "url": "https://images.samsung.com/is/image/samsung/p6pim/co/sm-a356ezkfcom/gallery/co-galaxy-a35-5g-sm-a356-540414-sm-a356ezkfcom-thumb-545366563?$Q90_1248_936_F_PNG$",
+   "page": "https://www.samsung.com/co/",
+   "code": "SM-A356EZKFCOM"
+  },
+  {
+   "key": "samsung-galaxy-a05s",
+   "brand": "Samsung",
+   "models": [
+    "Galaxy A05s"
+   ],
+   "url": "https://images.samsung.com/is/image/samsung/p6pim/co/sm-a057mzkhltc/gallery/co-galaxy-a05s-sm-a057-521215-sm-a057mzkhltc-thumb-543257161?$Q90_1248_936_F_PNG$",
+   "page": "https://www.samsung.com/co/",
+   "code": "SM-A057MZKHLTC"
+  },
+  {
+   "key": "samsung-galaxy-a55-5g",
+   "brand": "Samsung",
+   "models": [
+    "Galaxy A55 5G",
+    "Galaxy A55"
+   ],
+   "url": "https://images.samsung.com/is/image/samsung/p6pim/co/sm-a556ezkmltc/gallery/co-galaxy-a55-5g-sm-a556-sm-a556ezkmltc-thumb-540370840?$Q90_1248_936_F_PNG$",
+   "page": "https://www.samsung.com/co/",
+   "code": "SM-A556EZKMLTC"
+  },
+  {
+   "key": "samsung-galaxy-a25-5g",
+   "brand": "Samsung",
+   "models": [
+    "Galaxy A25 5G",
+    "Galaxy A25"
+   ],
+   "url": "https://images.samsung.com/is/image/samsung/p6pim/co/sm-a256ezkdltc/gallery/co-galaxy-a25-5g-sm-a256-sm-a256ezkdltc-thumb-539506037?$Q90_1248_936_F_PNG$",
+   "page": "https://www.samsung.com/co/",
+   "code": "SM-A256EZKDLTC"
+  },
+  {
+   "key": "samsung-galaxy-s23-fe",
+   "brand": "Samsung",
+   "models": [
+    "Galaxy S23 FE",
+    "Galaxy S23 FE 5G"
+   ],
+   "url": "https://images.samsung.com/is/image/samsung/p6pim/co/sm-s711bzajltc/gallery/co-galaxy-s23-fe-s711-483229-sm-s711bzajltc-thumb-538819874?$Q90_1248_936_F_PNG$",
+   "page": "https://www.samsung.com/co/",
+   "code": "SM-S711BZAJLTC"
+  },
+  {
+   "key": "samsung-galaxy-a34-5g",
+   "brand": "Samsung",
+   "models": [
+    "Galaxy A34 5G",
+    "Galaxy A34"
+   ],
+   "url": "https://images.samsung.com/is/image/samsung/p6pim/co/sm-a346mzsbcom/gallery/co-galaxy-a34-5g-sm-a346-454109-sm-a346mzsbcom-thumb-545365505?$Q90_1248_936_F_PNG$",
+   "page": "https://www.samsung.com/co/",
+   "code": "SM-A346MZSBCOM"
+  },
+  {
+   "key": "samsung-galaxy-s20-fe-5g",
+   "brand": "Samsung",
+   "models": [
+    "Galaxy S20 FE 5G"
+   ],
+   "url": "https://images.samsung.com/is/image/samsung/p6pim/co/sm-g781bzbjltc/gallery/co-galaxy-s20-fe-5g-g781-sm-g781bzbjltc-thumb-532304602?$Q90_1248_936_F_PNG$",
+   "page": "https://www.samsung.com/co/",
+   "code": "SM-G781BZBJLTC"
+  },
+  {
+   "key": "samsung-galaxy-a15-5g",
+   "brand": "Samsung",
+   "models": [
+    "Galaxy A15 5G"
+   ],
+   "url": "https://images.samsung.com/is/image/samsung/p6pim/mx/sm-a156mzkaltm/gallery/mx-galaxy-a15-5g-sm-a156-sm-a156mzkaltm-thumb-539933015?$Q90_1248_936_F_PNG$",
+   "page": "https://www.samsung.com/mx/",
+   "code": "SM-A156MZKALTM"
+  },
+  {
+   "key": "samsung-galaxy-a54-5g",
+   "brand": "Samsung",
+   "models": [
+    "Galaxy A54 5G",
+    "Galaxy A54"
+   ],
+   "url": "https://images.samsung.com/is/image/samsung/p6pim/mx/sm-a546ezkfltm/gallery/mx-galaxy-a54-5g-sm-a546-454405-sm-a546ezkfltm-thumb-536016711?$Q90_1248_936_F_PNG$",
+   "page": "https://www.samsung.com/mx/",
+   "code": "SM-A546EZKFLTM"
+  },
+  {
+   "key": "samsung-galaxy-s23",
+   "brand": "Samsung",
+   "models": [
+    "Galaxy S23",
+    "Galaxy S23 5G"
+   ],
+   "url": "https://images.samsung.com/is/image/samsung/p6pim/mx/sm-s911bzklltm/gallery/mx-galaxy-s23-s911-446666-sm-s911bzklltm-thumb-539855103?$Q90_1248_936_F_PNG$",
+   "page": "https://www.samsung.com/mx/",
+   "code": "SM-S911BZKLLTM"
+  },
+  {
+   "key": "samsung-galaxy-s23-ultra",
+   "brand": "Samsung",
+   "models": [
+    "Galaxy S23 Ultra",
+    "Galaxy S23 Ultra 5G"
+   ],
+   "url": "https://images.samsung.com/is/image/samsung/p6pim/mx/2302/gallery/mx-galaxy-s23-s918-sm-s918bzklltm-thumb-534854340?$Q90_1248_936_F_PNG$",
+   "page": "https://www.samsung.com/mx/",
+   "code": "SM-S918BZKLLTM",
+   "note": "La imagen oficial incluye el S Pen integrado del equipo."
+  },
+  {
+   "key": "xiaomi-17t",
+   "brand": "Xiaomi",
+   "models": [
+    "Mi 17T 5G",
+    "Xiaomi 17T",
+    "Mi 17T"
+   ],
+   "url": "https://i02.appmifile.com/198_operatorx_operatorx_opx/04/06/2026/0cb5863ee776589e933e2a3864d66dd9.png",
+   "page": "https://www.mi.com/global/product/xiaomi-17t/"
+  },
+  {
+   "key": "xiaomi-17t-pro",
+   "brand": "Xiaomi",
+   "models": [
+    "Mi 17T Pro 5G",
+    "Xiaomi 17T Pro",
+    "Mi 17T Pro"
+   ],
+   "url": "https://i02.appmifile.com/616_operatorx_operatorx_opx/04/06/2026/48bd65ec2fa8d6dcf4d306bbd80c884f.png",
+   "page": "https://www.mi.com/global/product/xiaomi-17t-pro/"
+  },
+  {
+   "key": "xiaomi-poco-c71",
+   "brand": "Xiaomi",
+   "models": [
+    "Poco C71"
+   ],
+   "url": "https://i02.appmifile.com/21_operatorx_operatorx_opx/23/04/2025/5dbab426107b30a306e318e9320956bf.png",
+   "page": "https://www.mi.com/global/product/poco-c71/"
+  },
+  {
+   "key": "xiaomi-poco-c75",
+   "brand": "Xiaomi",
+   "models": [
+    "Poco C75"
+   ],
+   "url": "https://i02.appmifile.com/898_operatorx_operatorx_opx/24/10/2024/3dc49b016011bc80b3f03c00a0d65f3a.png",
+   "page": "https://www.mi.com/global/product/poco-c75/"
+  },
+  {
+   "key": "xiaomi-poco-c81-pro",
+   "brand": "Xiaomi",
+   "models": [
+    "Poco C81 Pro"
+   ],
+   "url": "https://i02.appmifile.com/607_operatorx_operatorx_opx/14/04/2026/0e5b4a2a089f98487fe957bfb614c0cd.png",
+   "page": "https://www.mi.com/global/product/poco-c81-pro/"
+  },
+  {
+   "key": "xiaomi-poco-c85",
+   "brand": "Xiaomi",
+   "models": [
+    "Poco C85"
+   ],
+   "url": "https://i02.appmifile.com/872_operatorx_operatorx_opx/01/09/2025/4218764363094fcccaeb2e81a22cfea8.png",
+   "page": "https://www.mi.com/global/product/poco-c85/"
+  },
+  {
+   "key": "xiaomi-poco-m8-pro-5g",
+   "brand": "Xiaomi",
+   "models": [
+    "Poco M8 Pro 5G",
+    "Poco M8 Pro"
+   ],
+   "url": "https://i02.appmifile.com/64_operatorx_operatorx_opx/08/01/2026/acd70211ed67695de4ebb2ee5997d15a.png",
+   "page": "https://www.mi.com/global/product/poco-m8-pro-5g/"
+  },
+  {
+   "key": "xiaomi-poco-x7-pro",
+   "brand": "Xiaomi",
+   "models": [
+    "Poco X7 Pro 5G",
+    "Poco X7 Pro"
+   ],
+   "url": "https://i02.appmifile.com/251_operatorx_operatorx_opx/09/01/2025/d7110ed0232cacb6c01be82fc953bd49.png",
+   "page": "https://www.mi.com/global/product/poco-x7-pro/"
+  },
+  {
+   "key": "xiaomi-poco-x8-pro",
+   "brand": "Xiaomi",
+   "models": [
+    "Poco X8 Pro 5G",
+    "Poco X8 Pro"
+   ],
+   "url": "https://i02.appmifile.com/355_operatorx_operatorx_opx/16/03/2026/dd5dfd2ca5153cb14c6027e0a7fb5a13.png",
+   "page": "https://www.mi.com/global/product/poco-x8-pro/"
+  },
+  {
+   "key": "xiaomi-poco-f6",
+   "brand": "Xiaomi",
+   "models": [
+    "Poco F6"
+   ],
+   "url": "https://i02.appmifile.com/660_operatorx_operatorx_opx/24/05/2024/1e6bbc99cfa14f74419fd63b4e573f64.png",
+   "page": "https://www.mi.com/global/product/poco-f6/"
+  },
+  {
+   "key": "xiaomi-poco-f7",
+   "brand": "Xiaomi",
+   "models": [
+    "Poco F7"
+   ],
+   "url": "https://i02.appmifile.com/835_operatorx_operatorx_opx/23/06/2025/b047c6f3809144760b4e96af902cca83.png",
+   "page": "https://www.mi.com/global/product/poco-f7/"
+  },
+  {
+   "key": "xiaomi-poco-x6",
+   "brand": "Xiaomi",
+   "models": [
+    "Poco X6",
+    "Poco X6 5G"
+   ],
+   "url": "https://i02.appmifile.com/353_operatorx_operatorx_opx/09/01/2024/93fa26bc310c101aef06eed6f823190c.png",
+   "page": "https://www.mi.com/global/product/poco-x6/"
+  },
+  {
+   "key": "xiaomi-redmi-13",
+   "brand": "Xiaomi",
+   "models": [
+    "Redmi 13 LTE",
+    "Redmi 13",
+    "Redmi 13 4G"
+   ],
+   "url": "https://i02.appmifile.com/580_operatorx_operatorx_opx/05/06/2024/b6ab95ebbd9fb402b423ba9963522a80.png",
+   "page": "https://www.mi.com/global/product/redmi-13/"
+  },
+  {
+   "key": "xiaomi-redmi-13c",
+   "brand": "Xiaomi",
+   "models": [
+    "Redmi 13c",
+    "Redmi 13C 4G"
+   ],
+   "url": "https://i02.appmifile.com/477_operatorx_operatorx_opx/08/11/2023/a69b2ced4a4e2403fbfd446994c26a06.png",
+   "page": "https://www.mi.com/global/product/redmi-13c/"
+  },
+  {
+   "key": "xiaomi-redmi-13c-5g",
+   "brand": "Xiaomi",
+   "models": [
+    "Redmi 13c 5G"
+   ],
+   "url": "https://i02.appmifile.com/30_operatorx_operatorx_opx/24/06/2024/965dad479bbe458c5119d225cea6ba5e.png",
+   "page": "https://www.mi.com/global/product/redmi-13c-5g/"
+  },
+  {
+   "key": "xiaomi-redmi-13x",
+   "brand": "Xiaomi",
+   "models": [
+    "Redmi 13x LTE",
+    "Redmi 13x"
+   ],
+   "url": "https://i02.appmifile.com/424_operatorx_operatorx_opx/31/03/2025/3a7891f649c5398fc099271618f51c1d.png",
+   "page": "https://www.mi.com/global/product/redmi-13x/"
+  },
+  {
+   "key": "xiaomi-redmi-15",
+   "brand": "Xiaomi",
+   "models": [
+    "Redmi 15 LTE",
+    "Redmi 15",
+    "Redmi 15 4G"
+   ],
+   "url": "https://i02.appmifile.com/95_operatorx_operatorx_opx/29/08/2025/342ec816ede0b04b02c2f6b0ed8b269b.png",
+   "page": "https://www.mi.com/global/product/redmi-15/"
+  },
+  {
+   "key": "xiaomi-redmi-15-5g",
+   "brand": "Xiaomi",
+   "models": [
+    "Redmi 15 5G"
+   ],
+   "url": "https://i02.appmifile.com/932_operatorx_operatorx_opx/13/08/2025/14f80452c6d3bae80190dba0a184438f.png",
+   "page": "https://www.mi.com/global/product/redmi-15-5g/"
+  },
+  {
+   "key": "xiaomi-redmi-15c",
+   "brand": "Xiaomi",
+   "models": [
+    "Redmi 15c LTE",
+    "Redmi 15C",
+    "Redmi 15C 4G"
+   ],
+   "url": "https://i02.appmifile.com/541_operatorx_operatorx_opx/22/08/2025/c15b4756b67078d1129a0f13ecb9aff4.png",
+   "page": "https://www.mi.com/global/product/redmi-15c/"
+  },
+  {
+   "key": "xiaomi-redmi-15c-5g",
+   "brand": "Xiaomi",
+   "models": [
+    "Redmi 15c 5G"
+   ],
+   "url": "https://i02.appmifile.com/156_operatorx_operatorx_opx/15/09/2025/6f05aa362086f6b2a81c7d3e0c97237d.png",
+   "page": "https://www.mi.com/global/product/redmi-15c-5g/"
+  },
+  {
+   "key": "xiaomi-redmi-17",
+   "brand": "Xiaomi",
+   "models": [
+    "Redmi 17 4G",
+    "Redmi 17"
+   ],
+   "url": "https://i02.appmifile.com/257_operatorx_operatorx_opx/07/08/2026/230499b206c7e382e4e5fe92b0120aa3.png",
+   "page": "https://www.mi.com/global/product/redmi-17/"
+  },
+  {
+   "key": "xiaomi-redmi-17-5g",
+   "brand": "Xiaomi",
+   "models": [
+    "Redmi 17 5G"
+   ],
+   "url": "https://i02.appmifile.com/95_operatorx_operatorx_opx/07/08/2026/62872598a7659d56e19a35268e9391d0.png",
+   "page": "https://www.mi.com/global/product/redmi-17-5g/"
+  },
+  {
+   "key": "xiaomi-redmi-a3",
+   "brand": "Xiaomi",
+   "models": [
+    "Redmi A3"
+   ],
+   "url": "https://i02.appmifile.com/686_operatorx_operatorx_opx/23/02/2024/a13c444dfc0b5db4ecae1e9d0ba10326.png",
+   "page": "https://www.mi.com/global/product/redmi-a3/"
+  },
+  {
+   "key": "xiaomi-redmi-a5",
+   "brand": "Xiaomi",
+   "models": [
+    "Redmi A5",
+    "Redmi A5 4G"
+   ],
+   "url": "https://i02.appmifile.com/650_operatorx_operatorx_opx/02/04/2025/8875a4465264d80830719df35e732aea.png",
+   "page": "https://www.mi.com/global/product/redmi-a5/"
+  },
+  {
+   "key": "xiaomi-redmi-a7-pro",
+   "brand": "Xiaomi",
+   "models": [
+    "Redmi A7 Pro",
+    "Redmi A7 Pro 4G"
+   ],
+   "url": "https://i02.appmifile.com/276_operatorx_operatorx_opx/30/03/2026/e2f46cfb57ec4ea6d1b17a159ed462f9.png",
+   "page": "https://www.mi.com/global/product/redmi-a7-pro/"
+  },
+  {
+   "key": "xiaomi-redmi-note-13-5g",
+   "brand": "Xiaomi",
+   "models": [
+    "Redmi Note 13 5G"
+   ],
+   "url": "https://i02.appmifile.com/463_operatorx_operatorx_opx/11/01/2024/e02e51cd6efb5f2282e6921128b2618a.png",
+   "page": "https://www.mi.com/global/product/redmi-note-13-5g/"
+  },
+  {
+   "key": "xiaomi-redmi-note-13-pro",
+   "brand": "Xiaomi",
+   "models": [
+    "Redmi Note 13 Pro",
+    "Redmi Note 13 Pro 4G"
+   ],
+   "url": "https://i02.appmifile.com/13_operatorx_operatorx_opx/11/01/2024/25da829b5997ff8aea28af388df3b8df.png",
+   "page": "https://www.mi.com/global/product/redmi-note-13-pro/"
+  },
+  {
+   "key": "xiaomi-redmi-note-13-pro-plus-5g",
+   "brand": "Xiaomi",
+   "models": [
+    "Redmi Note 13 Pro+ 5G",
+    "Redmi Note 13 Pro+"
+   ],
+   "url": "https://i02.appmifile.com/861_operatorx_operatorx_opx/06/09/2024/81bc431668bddec2805ee43d10624180.png",
+   "page": "https://www.mi.com/global/product/redmi-note-13-pro-plus-5g/"
+  },
+  {
+   "key": "xiaomi-redmi-note-14",
+   "brand": "Xiaomi",
+   "models": [
+    "Redmi Note 14 LTE",
+    "Redmi Note 14",
+    "Redmi Note 14 4G"
+   ],
+   "url": "https://i02.appmifile.com/435_operatorx_operatorx_opx/03/03/2025/0c97b47c46fd8daf8eb3995840a2a0af.png",
+   "page": "https://www.mi.com/global/product/redmi-note-14/"
+  },
+  {
+   "key": "xiaomi-redmi-note-14-5g",
+   "brand": "Xiaomi",
+   "models": [
+    "Redmi Note 14 5G"
+   ],
+   "url": "https://i02.appmifile.com/613_operatorx_operatorx_opx/10/01/2025/7657db17736d4f4480de86d11341aabe.png",
+   "page": "https://www.mi.com/global/product/redmi-note-14-5g/"
+  },
+  {
+   "key": "xiaomi-redmi-note-14-pro",
+   "brand": "Xiaomi",
+   "models": [
+    "Redmi Note 14 Pro LTE",
+    "Redmi Note 14 Pro",
+    "Redmi Note 14 Pro 4G"
+   ],
+   "url": "https://i02.appmifile.com/145_operatorx_operatorx_opx/10/01/2025/b381ab467340baace69840496f8cdfd3.png",
+   "page": "https://www.mi.com/global/product/redmi-note-14-pro/"
+  },
+  {
+   "key": "xiaomi-redmi-note-14-pro-5g",
+   "brand": "Xiaomi",
+   "models": [
+    "Redmi Note 14 Pro 5G"
+   ],
+   "url": "https://i02.appmifile.com/177_operatorx_operatorx_opx/10/01/2025/9e49d2cf6f1afe7ab8255aef590af500.png",
+   "page": "https://www.mi.com/global/product/redmi-note-14-pro-5g/"
+  },
+  {
+   "key": "xiaomi-redmi-note-14-pro-plus-5g",
+   "brand": "Xiaomi",
+   "models": [
+    "Redmi Note 14 Pro+ 5G",
+    "Redmi Note 14 Pro+"
+   ],
+   "url": "https://i02.appmifile.com/212_operatorx_operatorx_opx/02/04/2025/8b179305518a376ee1ca5cdc22b5b554.png",
+   "page": "https://www.mi.com/global/product/redmi-note-14-pro-plus-5g/"
+  },
+  {
+   "key": "xiaomi-redmi-note-14s",
+   "brand": "Xiaomi",
+   "models": [
+    "Redmi Note 14s LTE",
+    "Redmi Note 14s"
+   ],
+   "url": "https://i02.appmifile.com/779_operatorx_operatorx_opx/20/03/2025/2e0ec67e782186d247ff702c84126950.png",
+   "page": "https://www.mi.com/global/product/redmi-note-14s/"
+  },
+  {
+   "key": "xiaomi-redmi-note-15",
+   "brand": "Xiaomi",
+   "models": [
+    "Redmi Note 15 LTE",
+    "Redmi Note 15",
+    "Redmi Note 15 4G"
+   ],
+   "url": "https://i02.appmifile.com/800_operatorx_operatorx_opx/08/01/2026/b79aa1573cae4278dd0c344f406337ce.png",
+   "page": "https://www.mi.com/global/product/redmi-note-15/"
+  },
+  {
+   "key": "xiaomi-redmi-note-15-5g",
+   "brand": "Xiaomi",
+   "models": [
+    "Redmi Note 15 5G"
+   ],
+   "url": "https://i02.appmifile.com/562_operatorx_operatorx_opx/08/01/2026/462e7dc1130b0653c346913b8d337501.png",
+   "page": "https://www.mi.com/global/product/redmi-note-15-5g/"
+  },
+  {
+   "key": "xiaomi-redmi-note-15-pro",
+   "brand": "Xiaomi",
+   "models": [
+    "Redmi Note 15 Pro LTE",
+    "Redmi Note 15 Pro",
+    "Redmi Note 15 Pro 4G"
+   ],
+   "url": "https://i02.appmifile.com/139_operatorx_operatorx_opx/08/01/2026/a277a33b5b40a10292c428d138853406.png",
+   "page": "https://www.mi.com/global/product/redmi-note-15-pro/"
+  },
+  {
+   "key": "xiaomi-redmi-note-15-pro-5g",
+   "brand": "Xiaomi",
+   "models": [
+    "Redmi Note 15 Pro 5G"
+   ],
+   "url": "https://i02.appmifile.com/223_operatorx_operatorx_opx/08/01/2026/4c093687512b2acfcdecca0f41d6c81c.png",
+   "page": "https://www.mi.com/global/product/redmi-note-15-pro-5g/"
+  },
+  {
+   "key": "xiaomi-redmi-note-15-pro-plus-5g",
+   "brand": "Xiaomi",
+   "models": [
+    "Redmi Note 15 Pro+ 5G",
+    "Redmi Note 15 Pro+"
+   ],
+   "url": "https://i02.appmifile.com/969_operatorx_operatorx_opx/08/01/2026/846cf46d605a9cee32cea412b301da00.png",
+   "page": "https://www.mi.com/global/product/redmi-note-15-pro-plus-5g/"
+  },
+  {
+   "key": "xiaomi-redmi-note-17",
+   "brand": "Xiaomi",
+   "models": [
+    "Redmi Note 17 4G",
+    "Redmi Note 17"
+   ],
+   "url": "https://i02.appmifile.com/878_operatorx_operatorx_opx/26/08/2026/e3e8a80adf93f829ea9ebb082641b231.png",
+   "page": "https://www.mi.com/global/product-list/phone/"
+  },
+  {
+   "key": "xiaomi-redmi-note-17-5g",
+   "brand": "Xiaomi",
+   "models": [
+    "Redmi Note 17 5G"
+   ],
+   "url": "https://i02.appmifile.com/184_operatorx_operatorx_opx/26/08/2026/db63dfe47bd14cea14f407c7f54c40d5.png",
+   "page": "https://www.mi.com/global/product-list/phone/"
+  },
+  {
+   "key": "xiaomi-redmi-note-17-pro-5g",
+   "brand": "Xiaomi",
+   "models": [
+    "Redmi Note 17 Pro 5G",
+    "Redmi Note 17 Pro"
+   ],
+   "url": "https://i02.appmifile.com/543_operatorx_operatorx_opx/26/08/2026/79577787d743ed875aed111471987f08.png",
+   "page": "https://www.mi.com/global/product-list/phone/"
+  },
+  {
+   "key": "xiaomi-redmi-note-17-pro-max-5g",
+   "brand": "Xiaomi",
+   "models": [
+    "Redmi Note 17 Pro Max 5G",
+    "Redmi Note 17 Pro Max"
+   ],
+   "url": "https://i02.appmifile.com/771_operatorx_operatorx_opx/26/08/2026/2982ca1cb661f42d7516a65059841dde.png",
+   "page": "https://www.mi.com/global/product-list/phone/"
+  },
+  {
+   "key": "xiaomi-15t",
+   "brand": "Xiaomi",
+   "models": [
+    "Xiaomi 15T",
+    "15T"
+   ],
+   "url": "https://i02.appmifile.com/982_operatorx_operatorx_opx/23/09/2025/114eaa3c703c5b5cd9ae491b74204914.png",
+   "page": "https://www.mi.com/global/product/xiaomi-15t/"
+  },
+  {
+   "key": "xiaomi-redmi-note-11",
+   "brand": "Xiaomi",
+   "models": [
+    "Redmi Note 11"
+   ],
+   "url": "https://i01.appmifile.com/v1/MI_18455B3E4DA706226CF7535A58E875F0267/pms_1666350199.33692514.png",
+   "page": "https://www.mi.com/global/product/redmi-note-11/"
+  }
+ ],
+ "pending": [
+  {
+   "brand": "Motorola",
+   "model": "Moto E14",
+   "why": "Los sitios oficiales de Motorola (Latinoamérica, Europa) respondieron error 500; sin imagen oficial verificable."
+  },
+  {
+   "brand": "Motorola",
+   "model": "Moto G06",
+   "why": "Los sitios oficiales de Motorola (Latinoamérica, Europa) respondieron error 500; sin imagen oficial verificable."
+  },
+  {
+   "brand": "Motorola",
+   "model": "Moto G24",
+   "why": "Los sitios oficiales de Motorola (Latinoamérica, Europa) respondieron error 500; sin imagen oficial verificable."
+  },
+  {
+   "brand": "Motorola",
+   "model": "Moto G35",
+   "why": "Los sitios oficiales de Motorola (Latinoamérica, Europa) respondieron error 500; sin imagen oficial verificable."
+  },
+  {
+   "brand": "Motorola",
+   "model": "Moto G55",
+   "why": "Los sitios oficiales de Motorola (Latinoamérica, Europa) respondieron error 500; sin imagen oficial verificable."
+  },
+  {
+   "brand": "Motorola",
+   "model": "Moto G75",
+   "why": "Los sitios oficiales de Motorola (Latinoamérica, Europa) respondieron error 500; sin imagen oficial verificable."
+  },
+  {
+   "brand": "Motorola",
+   "model": "Moto G85",
+   "why": "Los sitios oficiales de Motorola (Latinoamérica, Europa) respondieron error 500; sin imagen oficial verificable."
+  },
+  {
+   "brand": "Motorola",
+   "model": "Edge 50 Fusion",
+   "why": "Los sitios oficiales de Motorola (Latinoamérica, Europa) respondieron error 500; sin imagen oficial verificable."
+  },
+  {
+   "brand": "Motorola",
+   "model": "Edge 60 Fusion",
+   "why": "Los sitios oficiales de Motorola (Latinoamérica, Europa) respondieron error 500; sin imagen oficial verificable."
+  },
+  {
+   "brand": "Honor",
+   "model": "X7d LTE",
+   "why": "Pendiente de buscar en honor.com (no se llegó en esta tanda)."
+  },
+  {
+   "brand": "Honor",
+   "model": "X6b",
+   "why": "Pendiente de buscar en honor.com (no se llegó en esta tanda)."
+  },
+  {
+   "brand": "Honor",
+   "model": "X7c",
+   "why": "Pendiente de buscar en honor.com (no se llegó en esta tanda)."
+  },
+  {
+   "brand": "Honor",
+   "model": "X8b",
+   "why": "Pendiente de buscar en honor.com (no se llegó en esta tanda)."
+  },
+  {
+   "brand": "Honor",
+   "model": "X8c",
+   "why": "Pendiente de buscar en honor.com (no se llegó en esta tanda)."
+  },
+  {
+   "brand": "Honor",
+   "model": "400 Pro",
+   "why": "Pendiente de buscar en honor.com (no se llegó en esta tanda)."
+  },
+  {
+   "brand": "Honor",
+   "model": "400 Lite",
+   "why": "Pendiente de buscar en honor.com (no se llegó en esta tanda)."
+  },
+  {
+   "brand": "CAT",
+   "model": "S42 H+",
+   "why": "Equipo discontinuado; sin galería oficial vigente."
+  },
+  {
+   "brand": "Itel",
+   "model": "A100c",
+   "why": "Sin galería oficial encontrada."
+  },
+  {
+   "brand": "ZTE",
+   "model": "Blade A56",
+   "why": "Sin galería oficial encontrada."
+  },
+  {
+   "brand": "Xiaomi",
+   "model": "Poco C40",
+   "why": "La página oficial de mi.com no respondió (503/504) o no publica imagen del equipo."
+  },
+  {
+   "brand": "Xiaomi",
+   "model": "Poco C65",
+   "why": "La página oficial de mi.com no respondió (503/504) o no publica imagen del equipo."
+  },
+  {
+   "brand": "Xiaomi",
+   "model": "Poco M4 Pro 5G",
+   "why": "La página oficial de mi.com no respondió (503/504) o no publica imagen del equipo."
+  },
+  {
+   "brand": "Xiaomi",
+   "model": "Poco X6 Pro 5G",
+   "why": "La página oficial de mi.com no respondió (503/504) o no publica imagen del equipo."
+  },
+  {
+   "brand": "Xiaomi",
+   "model": "Poco X7 5G",
+   "why": "La página oficial de mi.com no respondió (503/504) o no publica imagen del equipo."
+  },
+  {
+   "brand": "Xiaomi",
+   "model": "Redmi Note 13 LTE",
+   "why": "La página oficial de mi.com no respondió (503/504) o no publica imagen del equipo."
+  },
+  {
+   "brand": "Xiaomi",
+   "model": "Redmi 14C",
+   "why": "La página oficial de mi.com no respondió (503/504) o no publica imagen del equipo."
+  },
+  {
+   "brand": "Xiaomi",
+   "model": "Poco M6 Pro",
+   "why": "La página oficial de mi.com no respondió (503/504) o no publica imagen del equipo."
+  },
+  {
+   "brand": "Xiaomi",
+   "model": "Redmi 13 5G",
+   "why": "La página oficial de mi.com no respondió (503/504) o no publica imagen del equipo."
+  },
+  {
+   "brand": "Xiaomi",
+   "model": "Xiaomi 14T",
+   "why": "La página oficial de mi.com no respondió (503/504) o no publica imagen del equipo."
+  }
+ ]
+}

@@ -157,7 +157,8 @@ table.specs td:first-child { color: var(--muted); width: 40%; }
 .gallery { margin: 14px 0; display: flex; flex-direction: column; gap: 8px; }
 .g-main { aspect-ratio: 16/10; border-radius: 14px; overflow: hidden; display: grid; place-items: center; cursor: zoom-in;
   background: radial-gradient(circle at 50% 40%, #1d3566, #0a1530 70%); border: 1px solid var(--line); }
-.g-main img { width: 100%; height: 100%; object-fit: contain; }
+.g-main { position: relative; }
+.g-main img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; object-position: center; }
 .g-empty { display: flex; flex-direction: column; align-items: center; gap: 8px; color: #5c7bb0; cursor: default; }
 .g-thumbs { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
 .g-thumb { position: relative; width: 64px; height: 64px; border-radius: 10px; overflow: hidden; border: 1px solid var(--line); cursor: pointer; background: #0a1530; }
@@ -477,3 +478,9 @@ table.specs td:first-child { color: var(--muted); width: 40%; }
 .cat2-star.del:hover { border-color: #ff7a7a; color: #ff9a9a; }
 .qa-search { margin-bottom: 10px; max-width: none; min-height: 44px; flex-shrink: 0; box-sizing: border-box; width: 100%; }
 @media (max-width: 760px) { .cat2-table.admin .cat2-tr { grid-template-columns: 1fr auto; } }
+
+/* Portadas oficiales por modelo: equipo entero, centrado y con margen (fondo transparente). */
+.cat2-img img, .cmp2-photo img, .qa-img img { padding: 4px; box-sizing: border-box; object-fit: contain; object-position: center; }
+.g-main img.cover { padding: 14px; box-sizing: border-box; object-fit: contain; filter: drop-shadow(0 10px 18px rgba(0, 0, 0, .35)); }
+.g-thumb.cover img { object-fit: contain; padding: 3px; box-sizing: border-box; }
+.zoom img { object-fit: contain; }

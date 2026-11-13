@@ -4,12 +4,14 @@ import type { Product, Settings } from '../../shared/types.ts';
 import { api, fileToDataUrl } from '../api.ts';
 import { money } from '../format.ts';
 import { Icon } from '../icons.tsx';
+import { useCovers } from '../covers.ts';
 
 type Match = { slug: string; name: string; brand: string; model: string; url: string; specs: { group: string; key: string; value: string; highlight: boolean }[];
   antutu: { version: string; total: number } | null; description: string };
 const EMPTY = { id: '', name: '', price: '', currency: 'USD', condition: 'nuevo', description: '' }; // El precio se carga siempre en dólares.
 
 export function QuickAdd({ settings }: { settings: Settings | null }) {
+  const cover = useCovers();
   const [f, setF] = useState<any>({ ...EMPTY });
   const [photo, setPhoto] = useState<string | null | undefined>(undefined); // undefined = sin cambios
   const [match, setMatch] = useState<Match | null>(null);
@@ -127,7 +129,7 @@ export function QuickAdd({ settings }: { settings: Settings | null }) {
           {list.length > 0 && !shown.length && <div className="empty small-empty">Ningún producto coincide con «{q}».</div>}
           {shown.map((p) => (
             <div key={p.id} className="qa-item">
-              <div className="qa-img">{p.photoUrl ? <img src={p.photoUrl} alt="" /> : <Icon name="phone" size={22} className="ph-icon" />}</div>
+              <div className="qa-img">{(cover(p.brand, p.model) ?? p.photoUrl) ? <img src={cover(p.brand, p.model) ?? p.photoUrl!} alt="" /> : <Icon name="phone" size={22} className="ph-icon" />}</div>
               <div className="qa-info"><b>{p.brand} {p.model}</b><span className="muted small">{[p.ramGb && `${p.ramGb} GB RAM`, p.storageGb && `${p.storageGb} GB`, p.condition === 'nuevo' ? 'Nuevo' : 'Usado'].filter(Boolean).join(' · ')}</span></div>
               <b className="qa-price">{money(p.price, p.currency)}{p.currency === 'USD' && settings?.usdRate ? <small className="muted"> · $ {Math.round(p.price * settings.usdRate).toLocaleString('es-UY')}</small> : null}</b>
               <button className="icon-btn" title="Editar" onClick={() => edit(p)}><Icon name="edit" size={16} /></button>

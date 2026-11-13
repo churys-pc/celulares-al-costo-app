@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { startCoverWorker } from './covers.ts';
 import type { AuthStatus, Settings } from '../shared/types.ts';
 import { api } from './api.ts';
 import { Icon } from './icons.tsx';
@@ -25,6 +26,7 @@ export function App() {
     return () => window.removeEventListener('auth:changed', check);
   }, []);
   useEffect(() => { if (user) api.settings().then(setSettings).catch(() => {}); }, [user?.email]);
+  useEffect(() => { if (user) void startCoverWorker(); }, [user?.email]);
   // La cotización y otros ajustes pueden llegar desde otra PC: se refrescan cada minuto.
   useEffect(() => { if (!user) return; const t = setInterval(() => api.settings().then(setSettings).catch(() => {}), 60_000); return () => clearInterval(t); }, [user?.email]);
   useEffect(() => { if (!isAdmin && section === 'cargar') setSection('catalogo'); }, [isAdmin, section]);

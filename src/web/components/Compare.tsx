@@ -4,6 +4,7 @@ import { buildComparison } from '../../shared/compare.ts';
 import { api } from '../api.ts';
 import { money } from '../format.ts';
 import { Icon } from '../icons.tsx';
+import { useCovers } from '../covers.ts';
 import { SpecEditor, AllSpecs, StatusTag } from './ProductSheet.tsx';
 import { useIsAdmin } from '../session.ts';
 import { iosSupport, IOS_SOURCE } from '../../shared/iosSupport.ts';
@@ -56,6 +57,7 @@ const MAIN_KEYS = new Set(MAIN_ROWS.flatMap((r) => r.keys.map(normKey)));
 const differs = (vals: (string | null)[]) => vals.some((v) => v === null) || new Set(vals.map((v) => v!.trim().toLowerCase())).size > 1;
 
 export function Compare({ settings }: { settings: Settings | null }) {
+  const cover = useCovers();
   const admin = useIsAdmin();
   const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [ids, setIds] = useState<number[]>(() => {
@@ -116,7 +118,7 @@ export function Compare({ settings }: { settings: Settings | null }) {
       <div className="cmp2-models">
         {models.map((m, i) => (
           <article key={m.modelId} className={`cmp2-model ${a.best === i ? 'on' : ''}`}>
-            <div className="cmp2-photo">{m.photoUrl ? <img src={m.photoUrl} alt="" /> : <Icon name="phone" size={34} />}</div>
+            <div className="cmp2-photo">{(cover(m.brand, m.model) ?? m.photoUrl) ? <img src={cover(m.brand, m.model) ?? m.photoUrl!} alt={`${m.brand} ${m.model}`} /> : <Icon name="phone" size={34} />}</div>
             <div className="cmp2-info">
               <h3>{name(m)}</h3>
               <div className={`cmp2-stock ${m.stock ? 'in' : ''}`}><i />{m.stock ? `En stock (${m.stock})` : 'Sin stock'}

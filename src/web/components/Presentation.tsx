@@ -4,11 +4,13 @@ import type { Product, ProductDetail, Settings } from '../../shared/types.ts';
 import { api } from '../api.ts';
 import { converted, money, storageLabel, USE_LABEL } from '../format.ts';
 import { Icon, SPEC_ICON } from '../icons.tsx';
+import { useCovers } from '../covers.ts';
 
 const AUTO_MS = 8000;
 const nf = (n: number) => n.toLocaleString('es-UY');
 
 export function Presentation({ items, start = 0, settings, onClose }: { items: Product[]; start?: number; settings: Settings | null; onClose: () => void }) {
+  const cover = useCovers();
   const list = items.filter((p) => p.status === 'disponible' && p.stock > 0);
   const [i, setI] = useState(() => Math.max(0, list.findIndex((p) => p.id === items[start]?.id)));
   const [detail, setDetail] = useState<ProductDetail | null>(null);
@@ -43,7 +45,8 @@ export function Presentation({ items, start = 0, settings, onClose }: { items: P
   const highlights = p ? [...p.specs.filter((s) => s.highlight),
     ...PRIORITY.map((k) => p.specs.find((s) => s.key === k && !s.highlight)).filter((s): s is NonNullable<typeof s> => !!s)].slice(0, 6) : [];
   const bench = p?.benchmarks.find((b) => b.version === 'v11') ?? p?.benchmarks[0];
-  const photos = p?.photos ?? [];
+  const coverSrc = cover(base.brand, base.model);
+  const photos = [...(coverSrc ? [{ id: -1, url: coverSrc }] : []), ...(p?.photos ?? [])];
 
   return (
     <div className="pres">

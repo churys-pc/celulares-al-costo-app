@@ -1,17 +1,19 @@
 import type { Product, Settings } from '../../shared/types.ts';
 import { converted, money, storageLabel } from '../format.ts';
 import { Icon } from '../icons.tsx';
+import { useCovers } from '../covers.ts';
 
 interface Props { p: Product; settings: Settings | null; onOpen: () => void; onFavorite?: () => void }
 
 /** Tarjeta de catálogo: foto, modelo y precio. El detalle completo está en la ficha. */
 export function ProductCard({ p, settings, onOpen, onFavorite }: Props) {
+  const cover = useCovers();
   const conv = converted(p, settings);
   const sub = [p.ramGb && p.storageGb ? `${p.ramGb}/${p.storageGb} GB` : storageLabel(p.storageGb), p.color].filter(Boolean).join(' · ');
   return (
     <article className="pcard simple" onClick={onOpen} tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && onOpen()}>
       <div className="pcard-img">
-        {p.photoUrl ? <img src={p.photoUrl} alt={`${p.brand} ${p.model}`} loading="lazy" /> : <Icon name="phone" size={54} className="ph-icon" />}
+        {(cover(p.brand, p.model) ?? p.photoUrl) ? <img src={cover(p.brand, p.model) ?? p.photoUrl!} alt={`${p.brand} ${p.model}`} loading="lazy" /> : <Icon name="phone" size={54} className="ph-icon" />}
         <div className="pcard-tags">
           <span className={`tag ${p.condition}`}>{p.condition === 'nuevo' ? 'Nuevo' : 'Usado'}</span>
         </div>

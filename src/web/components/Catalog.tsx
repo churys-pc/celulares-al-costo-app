@@ -8,8 +8,10 @@ import { ProductForm } from './ProductForm.tsx';
 import { ProductSheet } from './ProductSheet.tsx';
 import { EditProduct } from './EditProduct.tsx';
 import { useIsAdmin } from '../session.ts';
+import { useCovers } from '../covers.ts';
 
 export function Catalog({ settings, initialQuery = '', onNew }: { settings: Settings | null; initialQuery?: string; onNew?: () => void }) {
+  const cover = useCovers();
   const [items, setItems] = useState<Product[]>([]);
   const [brands, setBrands] = useState<Brand[]>([]);
   const [q, setQ] = useState(initialQuery);
@@ -95,7 +97,7 @@ export function Catalog({ settings, initialQuery = '', onNew }: { settings: Sett
             return (
               <div key={p.id} className="cat2-tr" onClick={() => openProduct(p.id)}>
                 <div className="cat2-eq">
-                  <div className="cat2-img">{p.photoUrl ? <img src={p.photoUrl} alt="" loading="lazy" /> : <Icon name="phone" size={28} />}</div>
+                  <div className="cat2-img">{(cover(p.brand, p.model) ?? p.photoUrl) ? <img src={cover(p.brand, p.model) ?? p.photoUrl!} alt={`${p.brand} ${p.model}`} loading="lazy" /> : <Icon name="phone" size={28} />}</div>
                   <div><h3>{p.model}</h3>
                     <span className="muted small">{sub}</span></div>
                 </div>
