@@ -75,9 +75,10 @@ export function ProductSheet({ product: p, settings, onClose, onEdit, onDelete, 
   );
 }
 
-export function StatusTag({ status }: { status?: SpecStatus }) {
-  const st = status ?? 'sin_confirmar';
-  return <span className={`vtag v-${st}`}>{SPEC_STATUS_LABEL[st]}</span>;
+/** Las etiquetas de estado (Verificado / Sin confirmar / No compatible…) no se muestran (pedido del usuario);
+ *  el estado sigue guardado en cada dato y se edita en «Editar ficha». */
+export function StatusTag(_: { status?: SpecStatus }) {
+  return null;
 }
 
 export function AllSpecs({ specs }: { specs: Spec[] }) {

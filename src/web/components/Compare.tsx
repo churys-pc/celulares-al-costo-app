@@ -187,7 +187,7 @@ export function Compare({ settings }: { settings: Settings | null }) {
               <div key={r.label} className="cmp2-tr" style={cols}>
                 <div className="cmp2-k">{r.label}</div>
                 {r.values.map((v, i) => (
-                  <div key={i} className={`${v ? '' : 'muted'} ${r.win[i] ? 'win' : ''}`}>{v ?? 'Sin datos (pendiente)'}
+                  <div key={i} className={`${v ? '' : 'muted'} ${r.win[i] ? 'win' : ''}`}>{v ?? 'Sin datos'}
                     {v && r.sts[i] && r.sts[i] !== 'verificado' && <> <StatusTag status={r.sts[i]!} /></>}
                     {r.subs?.[i] && <small>{r.subs[i]}</small>}</div>))}
               </div>))}
@@ -195,13 +195,12 @@ export function Compare({ settings }: { settings: Settings | null }) {
               <div key={`${r.group}|${r.key}`} className="cmp2-tr" style={cols}>
                 <div className="cmp2-k">{r.key}</div>
                 {r.values.map((v, i) => { const sp = models[i].specs.find((s) => normKey(s.key) === normKey(r.key));
-                  return <div key={i} className={v ? '' : 'muted'}>{v ?? 'Sin datos (pendiente)'}{sp && sp.status !== 'verificado' && <> <StatusTag status={sp.status} /></>}</div>; })}
+                  return <div key={i} className={v ? '' : 'muted'}>{v ?? 'Sin datos'}{sp && sp.status !== 'verificado' && <> <StatusTag status={sp.status} /></>}</div>; })}
               </div>))}
             {!mainRows.length && !(showAll && otherRows.length) && <p className="muted" style={{ padding: 14 }}>{onlyDiff ? 'No hay diferencias en estas características.' : 'Ningún modelo tiene ficha cargada. Usá «Ver ficha».'}</p>}
           </div>
           <div className="cmp2-foot">
             <span className="muted small">{fichas.length > 0 && <>Fuentes de las fichas: {fichas.map((x) => <a key={x.m.modelId} href={x.url!} target="_blank" rel="noreferrer">{name(x.m)}</a>)}</>}
-              <span className="cmp2-legend">Datos sin etiqueta = verificados · <StatusTag status="sin_confirmar" /> <StatusTag status="depende_variante" /> <StatusTag status="no_compatible" /> · «Sin datos» = pendiente de investigar</span><br />
               {models.some((m) => iosSupport(m.brand, m.model)) && <> · Actualizaciones: <a href={IOS_SOURCE.url} target="_blank" rel="noreferrer">{IOS_SOURCE.name}</a> (el «hasta» es estimado)</>}</span>
             {otherRows.length > 0 && <button className="link" onClick={() => setShowAll(!showAll)}>{showAll ? 'Ver menos' : `Ver todas (${otherRows.length} más)`}</button>}
           </div>
