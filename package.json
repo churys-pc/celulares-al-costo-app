@@ -1,0 +1,74 @@
+{
+  "name": "celulares-al-costo-app",
+  "version": "0.12.3",
+  "private": true,
+  "description": "App Windows + web móvil para local de celulares: catálogo, comparador, diagnóstico iPhone y tasación.",
+  "main": "dist/electron.cjs",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "start": "npm run build && electron .",
+    "server": "npm run build && node dist/server.cjs",
+    "dev": "node scripts/build.mjs --watch",
+    "test": "node --import tsx --test tests/*.test.ts",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "dist:win": "npm run build && electron-builder --win --x64 --publish never",
+    "release": "npm run build && electron-builder --win --x64 --publish always"
+  },
+  "dependencies": {
+    "electron-updater": "^6.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "electron": "^38.0.0",
+    "electron-builder": "^26.0.0",
+    "esbuild": "^0.25.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "build": {
+    "appId": "uy.celularesalcosto.app",
+    "productName": "Celulares al Costo",
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "dist/**",
+      "!dist/**/*.map",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "build/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Celulares al Costo",
+      "artifactName": "CelularesAlCosto-Setup-${version}.${ext}",
+      "runAfterFinish": true
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "churys-pc",
+        "repo": "celulares-al-costo-releases",
+        "releaseType": "release"
+      }
+    ]
+  },
+  "author": "Celulares al Costo",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/churys-pc/celulares-al-costo-app.git"
+  }
+}
