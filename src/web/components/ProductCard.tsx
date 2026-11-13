@@ -15,7 +15,7 @@ export function ProductCard({ p, settings, onOpen, onFavorite }: Props) {
       <div className="pcard-img">
         {(cover(p.brand, p.model, p.coverKey) ?? p.photoUrl) ? <img src={cover(p.brand, p.model, p.coverKey) ?? p.photoUrl!} alt={`${p.brand} ${p.model}`} loading="lazy" /> : <Icon name="phone" size={54} className="ph-icon" />}
         <div className="pcard-tags">
-          <span className={`tag ${p.condition}`}>{p.condition === 'nuevo' ? 'Nuevo' : 'Usado'}</span>
+          <span className={`tag ${p.condition}`}>{p.condition === 'nuevo' ? 'Nuevo' : 'CPO'}</span>
         </div>
         {onFavorite && <button className={`fav ${p.favorite ? 'on' : ''}`} aria-label="Favorito"
           onClick={(e) => { e.stopPropagation(); onFavorite(); }}><Icon name="star" size={16} /></button>}

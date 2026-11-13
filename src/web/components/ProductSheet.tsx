@@ -30,7 +30,7 @@ export function ProductSheet({ product: p, settings, onClose, onEdit, onDelete, 
     <div className="overlay" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
       <aside className="drawer">
         <div className="row">
-          <span className={`badge ${p.condition}`}>{p.condition === 'nuevo' ? 'Nuevo' : 'Usado'}</span>
+          <span className={`badge ${p.condition}`}>{p.condition === 'nuevo' ? 'Nuevo' : 'CPO'}</span>
           <span className="badge">{STATUS_LABEL[p.status]}</span>
           <span className="spacer" />
           <button className="icon-btn" onClick={onClose} aria-label="Cerrar">✕</button>

@@ -135,7 +135,7 @@ export function updateQuick(db: Db, dataDir: string, id: string, body: any): { i
   const photoBuf = body?.photo ? decodeImage(body.photo).buf : null;
   const hadPhoto = !!cur.photos.length;
   const doc: ProductDoc = {
-    id, name: `${cur.brand} ${cur.model}${mem ? ` ${mem}` : ''}${condition === 'usado' ? ' (usado)' : ''}`, brand: cur.brand, model: cur.model,
+    id, name: `${cur.brand} ${cur.model}${mem ? ` ${mem}` : ''}${condition === 'usado' ? ' (CPO)' : ''}`, brand: cur.brand, model: cur.model,
     price, currency: cur.currency, condition, storageGb, ramGb, color, description: cur.description ?? '', specs,
     antutu: b ? { version: b.version, total: b.total, cpu: b.cpu, gpu: b.gpu, mem: b.mem, ux: b.ux } : null,
     source: b ? { name: b.sourceName, url: b.sourceUrl ?? '', date: b.measuredAt } : null,

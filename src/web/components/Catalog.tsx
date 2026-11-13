@@ -80,7 +80,7 @@ export function Catalog({ settings, initialQuery = '', onNew }: { settings: Sett
       <div className="cat2-filters">
         <div className="cat2-seg">
           {(['', 'nuevo', 'usado'] as const).map((c) => (
-            <button key={c} className={condition === c ? 'on' : ''} onClick={() => setCondition(c)}>{c === '' ? 'Todos' : c === 'nuevo' ? 'Nuevos' : 'Usados'}</button>))}
+            <button key={c} className={condition === c ? 'on' : ''} onClick={() => setCondition(c)}>{c === '' ? 'Todos' : c === 'nuevo' ? 'Nuevos' : 'CPO'}</button>))}
         </div>
         {USES.map((u) => <button key={u} className={`cat2-use ${use === u ? 'on' : ''}`} onClick={() => setUse(use === u ? '' : u)}><Icon name={USE_ICON[u]} size={16} /> {USE_LABEL[u]}</button>)}
         <button className={`cat2-fav ${favorite ? 'on' : ''}`} onClick={() => setFavorite(!favorite)}><Icon name="star" size={16} /> Favoritos</button>
@@ -101,7 +101,7 @@ export function Catalog({ settings, initialQuery = '', onNew }: { settings: Sett
                   <div><h3>{p.model}</h3>
                     <span className="muted small">{sub}</span></div>
                 </div>
-                <div><span className={`cat2-pill ${p.condition}`}><i />{p.condition === 'nuevo' ? 'Nuevo' : 'Usado'}</span></div>
+                <div><span className={`cat2-pill ${p.condition}`}><i />{p.condition === 'nuevo' ? 'Nuevo' : 'CPO'}</span></div>
                 <div className="r cat2-price">
                   {pr.usd === null && pr.uyu === null ? <span className="muted small">Sin precio</span> : <>
                     {pr.usd !== null && <b><small>USD</small> {num(pr.usd)}</b>}

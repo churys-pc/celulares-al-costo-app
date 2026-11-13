@@ -29,7 +29,7 @@ export function EditProduct({ p, settings, onClose, onSaved }: { p: Product; set
           <label>Precio en dólares (USD) *<input className="input" type="number" min={1} step="any" required value={f.price} onChange={(e) => setF({ ...f, price: e.target.value })} />
             {rate && Number(f.price) > 0 && <span className="muted small">$ {Math.round(Number(f.price) * rate).toLocaleString('es-UY')} con la cotización actual</span>}</label>
           <label>Estado<select className="input" value={f.condition} onChange={(e) => setF({ ...f, condition: e.target.value as Product['condition'] })}>
-            <option value="nuevo">Nuevo</option><option value="usado">Usado / CPO</option></select></label>
+            <option value="nuevo">Nuevo</option><option value="usado">CPO</option></select></label>
           <label>RAM (GB)<input className="input" type="number" min={1} value={f.ramGb} onChange={(e) => setF({ ...f, ramGb: e.target.value })} /></label>
           <label>Almacenamiento (GB)<input className="input" type="number" min={1} value={f.storageGb} onChange={(e) => setF({ ...f, storageGb: e.target.value })} /></label>
           <label className="full">Color<input className="input" maxLength={40} value={f.color} onChange={(e) => setF({ ...f, color: e.target.value })} /></label>

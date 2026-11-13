@@ -91,7 +91,7 @@ export function QuickAdd({ settings }: { settings: Settings | null }) {
             <div className="qa-uyu"><span className="muted small">En pesos (catálogo)</span>
               <b>{settings?.usdRate ? (Number(f.price) > 0 ? `$ ${Math.round(Number(f.price) * settings.usdRate).toLocaleString('es-UY')}` : '—') : 'Falta la cotización en Ajustes'}</b>
               {settings?.usdRate ? <span className="muted small">Cotización: $ {settings.usdRate.toLocaleString('es-UY')}</span> : null}</div>
-            <label>Condición<select className="input" value={f.condition} onChange={(e) => setF({ ...f, condition: e.target.value })}><option value="nuevo">Nuevo</option><option value="usado">Usado / CPO</option></select></label>
+            <label>Condición<select className="input" value={f.condition} onChange={(e) => setF({ ...f, condition: e.target.value })}><option value="nuevo">Nuevo</option><option value="usado">CPO</option></select></label>
             <label>Foto (opcional)
               <div className="row tight">
                 <label className="btn"><Icon name="image" size={14} /> {photo ? 'Cambiar' : 'Elegir foto'}
@@ -130,7 +130,7 @@ export function QuickAdd({ settings }: { settings: Settings | null }) {
           {shown.map((p) => (
             <div key={p.id} className="qa-item">
               <div className="qa-img">{(cover(p.brand, p.model, p.coverKey) ?? p.photoUrl) ? <img src={cover(p.brand, p.model, p.coverKey) ?? p.photoUrl!} alt="" /> : <Icon name="phone" size={22} className="ph-icon" />}</div>
-              <div className="qa-info"><b>{p.brand} {p.model}</b><span className="muted small">{[p.ramGb && `${p.ramGb} GB RAM`, p.storageGb && `${p.storageGb} GB`, p.condition === 'nuevo' ? 'Nuevo' : 'Usado'].filter(Boolean).join(' · ')}</span></div>
+              <div className="qa-info"><b>{p.brand} {p.model}</b><span className="muted small">{[p.ramGb && `${p.ramGb} GB RAM`, p.storageGb && `${p.storageGb} GB`, p.condition === 'nuevo' ? 'Nuevo' : 'CPO'].filter(Boolean).join(' · ')}</span></div>
               <b className="qa-price">{money(p.price, p.currency)}{p.currency === 'USD' && settings?.usdRate ? <small className="muted"> · $ {Math.round(p.price * settings.usdRate).toLocaleString('es-UY')}</small> : null}</b>
               <button className="icon-btn" title="Editar" onClick={() => edit(p)}><Icon name="edit" size={16} /></button>
               <button className="icon-btn" title="Eliminar" onClick={() => remove(p)}><Icon name="trash" size={16} /></button>

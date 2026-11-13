@@ -68,7 +68,7 @@ export function Presentation({ items, start = 0, settings, onClose }: { items: P
         </div>
         <div className="pres-info">
           <div className="row tight">
-            <span className={`tag ${base.condition}`}>{base.condition === 'nuevo' ? 'Nuevo' : /CPO/.test(base.notes) ? 'CPO · Reacondicionado' : 'Usado'}</span>
+            <span className={`tag ${base.condition}`}>{base.condition === 'nuevo' ? 'Nuevo' : 'CPO'}</span>
             {base.warrantyMonths > 0 && <span className="tag outline">Garantía {base.warrantyMonths} meses</span>}
           </div>
           <h1>{base.brand === 'Apple' ? base.model : `${base.brand} ${base.model}`}</h1>

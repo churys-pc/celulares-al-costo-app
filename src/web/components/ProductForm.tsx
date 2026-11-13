@@ -37,7 +37,7 @@ export function ProductForm({ product: p, brands, settings, onClose, onSaved }: 
           <label>Color<input className="input" value={f.color} onChange={set('color')} maxLength={40} /></label>
           <label>Región / modelo regional<input className="input" value={f.region} onChange={set('region')} maxLength={40} placeholder="Ej.: LL/A, global" /></label>
           <label>Condición<select className="input" value={f.condition} onChange={set('condition')}>
-            {CONDITIONS.map((c) => <option key={c} value={c}>{c === 'nuevo' ? 'Nuevo' : 'Usado'}</option>)}</select></label>
+            {CONDITIONS.map((c) => <option key={c} value={c}>{c === 'nuevo' ? 'Nuevo' : 'CPO'}</option>)}</select></label>
           <label>Estado<select className="input" value={f.status} onChange={set('status')}>
             {PRODUCT_STATUS.map((s) => <option key={s} value={s}>{STATUS_LABEL[s]}</option>)}</select></label>
           <label>Precio de venta *<input className="input" type="number" min={0} step="any" value={f.price} onChange={set('price')} required /></label>
