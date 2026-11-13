@@ -41,9 +41,9 @@ export function Home({ settings, go }: { settings: Settings | null } & Nav) {
       <section className="home-tools">
         <div className="sec-head"><h2><Icon name="layers" size={20} className="accent" />Herramientas</h2></div>
         <div className="tools">
-          {(['comparador', 'identificar', 'diagnostico', 'imei'] as const).map((id) => {
+          {(['comparador', 'diagnostico', 'imei'] as const).map((id) => {
             const s = SECTIONS.find((x) => x.id === id)!;
-            const title = { comparador: 'Comparador avanzado', identificar: 'Identificación visual', diagnostico: 'Diagnóstico iPhone (vía QR)', imei: 'Verificación de IMEI' }[id];
+            const title = { comparador: 'Comparador avanzado', diagnostico: 'Diagnóstico iPhone (vía QR)', imei: 'Verificación de IMEI' }[id];
             return (
               <button key={id} className="tool" onClick={() => go(id)}>
                 <Icon name={id === 'diagnostico' ? 'qr' : s.icon} size={30} className="accent" />

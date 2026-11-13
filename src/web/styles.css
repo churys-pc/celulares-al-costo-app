@@ -550,7 +550,7 @@ table.specs td:first-child { color: var(--muted); width: 40%; }
 .news-src { display: inline-flex; align-items: center; gap: 4px; color: var(--accent-2); text-decoration: none; }
 .news-src:hover { text-decoration: underline; }
 .spin { animation: spin 1s linear infinite; } @keyframes spin { to { transform: rotate(360deg); } }
-.home-tools .tools { grid-template-columns: repeat(4, 1fr); }
+.home-tools .tools { grid-template-columns: repeat(3, 1fr); }
 
 @media (max-width: 980px) { .home-cols { grid-template-columns: minmax(0, 1fr); } .home-tools .tools { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 640px) {

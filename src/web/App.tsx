@@ -14,7 +14,11 @@ import { Login } from './components/Login.tsx';
 import { SessionContext } from './session.ts';
 
 export function App() {
-  const [section, setSection] = useState(() => location.hash.slice(1).split('?')[0] || 'inicio');
+  const [section, setSection] = useState(() => {
+    // Secciones quitadas (Identificar, Tasación, Historial) u otras desconocidas vuelven a Inicio.
+    const h = location.hash.slice(1).split('?')[0];
+    return SECTIONS.some((x) => x.id === h) ? h : 'inicio';
+  });
   const [query, setQuery] = useState('');
   const [settings, setSettings] = useState<Settings | null>(null);
   const [auth, setAuth] = useState<AuthStatus | null>(null);
@@ -33,7 +37,7 @@ export function App() {
   useEffect(() => { history.replaceState(null, '', '#' + section); }, [section]);
   useEffect(() => { if (settings) document.documentElement.style.setProperty('--accent', settings.primaryColor); }, [settings]);
 
-  const go: Nav['go'] = (s, q) => { setQuery(q ?? ''); setSection(s); };
+  const go: Nav['go'] = (s, q) => { setQuery(q ?? ''); setSection(SECTIONS.some((x) => x.id === s) ? s : 'inicio'); };
   const current = SECTIONS.find((s) => s.id === section) ?? SECTIONS[0];
   const visible = SECTIONS.filter((s) => isAdmin || !s.adminOnly);
 
