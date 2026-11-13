@@ -1,0 +1,339 @@
+{
+ "id": "samsung-galaxy-a57-5g",
+ "brand": "Samsung",
+ "model": "Galaxy A57 5G",
+ "aliases": [
+  "Galaxy A57"
+ ],
+ "variant": "Galaxy A57 5G.",
+ "reviewedAt": "2026-11-13d",
+ "sources": {
+  "gsm": {
+   "name": "GSMArena — Samsung Galaxy A57 5G",
+   "url": "https://www.gsmarena.com/samsung_galaxy_a57-review-2950.php",
+   "date": "2026-11-13",
+   "kind": "tecnica"
+  },
+  "nano": {
+   "name": "Nanoreview — Samsung Galaxy A57 5G",
+   "url": "https://nanoreview.net/en/phone/samsung-galaxy-a57-5g",
+   "date": "2026-11-13",
+   "kind": "tecnica"
+  }
+ },
+ "fields": [
+  {
+   "group": "Pantalla",
+   "key": "Tamaño y tipo",
+   "value": "6,7\" Super AMOLED+",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Pantalla",
+   "key": "Resolución",
+   "value": "2340 x 1080 (FHD+)",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Pantalla",
+   "key": "Frecuencia",
+   "value": "120 Hz",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Pantalla",
+   "key": "Brillo",
+   "value": "Unos 1900 nits pico",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Chip",
+   "key": "Procesador",
+   "value": "Samsung Exynos 1680 (4 nm, 8 núcleos)",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Chip",
+   "key": "GPU",
+   "value": "Xclipse 550",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Una sola fuente técnica."
+  },
+  {
+   "group": "Memoria",
+   "key": "RAM",
+   "value": "8 / 12 GB según versión",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Nanoreview solo muestra 8 GB."
+  },
+  {
+   "group": "Memoria",
+   "key": "Almacenamiento",
+   "value": "128 / 256 / 512 GB según versión",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Nanoreview solo muestra 128 GB."
+  },
+  {
+   "group": "Memoria",
+   "key": "microSD",
+   "value": "No",
+   "status": "no_compatible",
+   "sources": [
+    "nano"
+   ],
+   "note": "Nanoreview: sin ranura de memoria."
+  },
+  {
+   "group": "Batería y carga",
+   "key": "Batería",
+   "value": "5000 mAh",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Batería y carga",
+   "key": "Carga rápida",
+   "value": "45 W por cable",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Batería y carga",
+   "key": "Carga inalámbrica",
+   "value": "No",
+   "status": "no_compatible",
+   "sources": [
+    "nano"
+   ],
+   "note": "Nanoreview indica que no tiene."
+  },
+  {
+   "group": "Cámaras",
+   "key": "Cámara principal",
+   "value": "50 MP f/1.8 con OIS",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Gran angular",
+   "value": "12 MP ultra gran angular, 123°",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Macro",
+   "value": "5 MP",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Cámara frontal",
+   "value": "12 MP f/2.2",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Video",
+   "value": "4K a 30 fps; frontal 4K a 30 fps",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Una sola fuente técnica."
+  },
+  {
+   "group": "Conectividad",
+   "key": "5G",
+   "value": "Sí",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Conectividad",
+   "key": "SIM",
+   "value": "Dual nano-SIM y/o eSIM según mercado",
+   "status": "depende_variante",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Conectividad",
+   "key": "NFC",
+   "value": "Sí",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Conectividad",
+   "key": "Wi-Fi",
+   "value": "Wi-Fi 6E",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Conectividad",
+   "key": "Bluetooth",
+   "value": "6.0",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Dimensiones",
+   "key": "Medidas",
+   "value": "161,5 x 76,8 x 6,9 mm",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Dimensiones",
+   "key": "Peso",
+   "value": "179 g",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Protección",
+   "key": "Resistencia",
+   "value": "IP68 (hasta 1,5 m durante 30 min)",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Protección",
+   "key": "Materiales",
+   "value": "Vidrio Gorilla Glass Victus+ adelante y atrás, marco de aluminio",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Una sola fuente técnica."
+  },
+  {
+   "group": "Protección",
+   "key": "Biometría",
+   "value": "Lector de huellas óptico bajo la pantalla",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Una sola fuente técnica."
+  },
+  {
+   "group": "Soporte",
+   "key": "Sistema operativo",
+   "value": "Android 16 de fábrica (One UI 8.5)",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Soporte",
+   "key": "Años de actualizaciones",
+   "value": "Hasta 6 actualizaciones de Android",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Una sola fuente técnica."
+  },
+  {
+   "group": "Otros",
+   "key": "Lanzamiento",
+   "value": "Marzo–abril de 2026",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  }
+ ],
+ "pending": [
+  {
+   "key": "RAM / almacenamiento",
+   "why": "Nanoreview solo publica la versión base."
+  }
+ ],
+ "antutu": {
+  "version": "v11",
+  "total": 1390055,
+  "sample": "individual",
+  "source": "nano",
+  "note": "Medición individual publicada por Nanoreview (AnTuTu 11)."
+ }
+}

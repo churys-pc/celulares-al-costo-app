@@ -1,0 +1,324 @@
+{
+ "id": "samsung-galaxy-s20-fe-5g",
+ "brand": "Samsung",
+ "model": "Galaxy S20 FE 5G",
+ "aliases": [
+  "Galaxy S20 FE"
+ ],
+ "variant": "Galaxy S20 FE 5G (SM-G781B, Snapdragon 865). El S20 FE 4G (SM-G780F/G) usa Exynos 990 u 865 según año: es otro equipo.",
+ "reviewedAt": "2026-11-13d",
+ "sources": {
+  "gsm": {
+   "name": "GSMArena — Samsung Galaxy S20 FE 5G",
+   "url": "https://www.gsmarena.com/samsung_galaxy_s20_fe_5g-10377.php",
+   "date": "2026-11-13",
+   "kind": "tecnica"
+  },
+  "nano": {
+   "name": "Nanoreview — Samsung Galaxy S20 FE 5G",
+   "url": "https://nanoreview.net/en/phone/samsung-galaxy-s20-fe-5g",
+   "date": "2026-11-13",
+   "kind": "tecnica"
+  }
+ },
+ "fields": [
+  {
+   "group": "Pantalla",
+   "key": "Tamaño y tipo",
+   "value": "6,5\" Super AMOLED",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Pantalla",
+   "key": "Resolución",
+   "value": "2400 x 1080 (FHD+)",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Pantalla",
+   "key": "Frecuencia",
+   "value": "120 Hz",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Chip",
+   "key": "Procesador",
+   "value": "Qualcomm Snapdragon 865 5G (7 nm, 8 núcleos)",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Chip",
+   "key": "GPU",
+   "value": "Adreno 650",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Una sola fuente técnica."
+  },
+  {
+   "group": "Memoria",
+   "key": "RAM",
+   "value": "6 / 8 GB según versión",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Nanoreview solo muestra 6 GB."
+  },
+  {
+   "group": "Memoria",
+   "key": "Almacenamiento",
+   "value": "128 / 256 GB según versión (UFS 3.1)",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Nanoreview solo muestra 128 GB."
+  },
+  {
+   "group": "Memoria",
+   "key": "microSD",
+   "value": "Sí (comparte bandeja con la SIM)",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Batería y carga",
+   "key": "Batería",
+   "value": "4500 mAh",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Batería y carga",
+   "key": "Carga rápida",
+   "value": "25 W por cable",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Batería y carga",
+   "key": "Carga inalámbrica",
+   "value": "Sí, 15 W (y 4,5 W inversa)",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Cámara principal",
+   "value": "12 MP f/1.8 con OIS",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Gran angular",
+   "value": "12 MP ultra gran angular f/2.2, 123°",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Teleobjetivo",
+   "value": "8 MP f/2.4 con OIS, zoom óptico 3x",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Cámara frontal",
+   "value": "32 MP f/2.2",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Video",
+   "value": "4K a 30/60 fps",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Una sola fuente técnica."
+  },
+  {
+   "group": "Conectividad",
+   "key": "5G",
+   "value": "Sí",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Conectividad",
+   "key": "SIM",
+   "value": "Dual nano-SIM (híbrida con microSD)",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Conectividad",
+   "key": "NFC",
+   "value": "Sí",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Una sola fuente técnica."
+  },
+  {
+   "group": "Conectividad",
+   "key": "Wi-Fi",
+   "value": "Wi-Fi 6 (802.11ax)",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Conectividad",
+   "key": "Bluetooth",
+   "value": "5.0",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Conectividad",
+   "key": "Puerto",
+   "value": "USB-C 3.2",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Una sola fuente técnica."
+  },
+  {
+   "group": "Dimensiones",
+   "key": "Medidas",
+   "value": "159,8 x 74,5 x 8,4 mm",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Dimensiones",
+   "key": "Peso",
+   "value": "190 g",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Protección",
+   "key": "Resistencia",
+   "value": "IP68 (hasta 1,5 m durante 30 min)",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Protección",
+   "key": "Materiales",
+   "value": "Frente Gorilla Glass 3, dorso plástico, marco de aluminio",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Una sola fuente técnica."
+  },
+  {
+   "group": "Soporte",
+   "key": "Sistema operativo",
+   "value": "Android 10 de fábrica (llegó hasta Android 13)",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Soporte",
+   "key": "Años de actualizaciones",
+   "value": "Sin más actualizaciones (Samsung terminó el soporte en 2025)",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "GSMArena: actualizable hasta Android 13; fin de soporte informado en 2025."
+  },
+  {
+   "group": "Otros",
+   "key": "Lanzamiento",
+   "value": "Octubre de 2020",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  }
+ ],
+ "pending": [],
+ "antutu": {
+  "version": "v11",
+  "total": 976177,
+  "sample": "individual",
+  "source": "nano",
+  "note": "Medición individual publicada por Nanoreview (AnTuTu 11)."
+ }
+}

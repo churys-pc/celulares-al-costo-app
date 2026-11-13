@@ -1,0 +1,325 @@
+{
+ "id": "samsung-galaxy-s26",
+ "brand": "Samsung",
+ "model": "Galaxy S26 5G",
+ "aliases": [
+  "Galaxy S26"
+ ],
+ "variant": "Galaxy S26: Exynos 2600 fuera de EE.UU./Canadá/China; Snapdragon 8 Elite Gen 5 for Galaxy en esos mercados.",
+ "reviewedAt": "2026-11-13d",
+ "sources": {
+  "gsm": {
+   "name": "GSMArena — Samsung Galaxy S26",
+   "url": "https://www.gsmarena.com/samsung_galaxy_s26-review-2942.php",
+   "date": "2026-11-13",
+   "kind": "tecnica"
+  },
+  "comp": {
+   "name": "Comparigon — Samsung Galaxy S26",
+   "url": "https://comparigon.com/phones/samsung-galaxy-s26",
+   "date": "2026-11-13",
+   "kind": "tecnica"
+  }
+ },
+ "fields": [
+  {
+   "group": "Pantalla",
+   "key": "Tamaño y tipo",
+   "value": "6,3\" Dynamic LTPO AMOLED 2X",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "comp"
+   ]
+  },
+  {
+   "group": "Pantalla",
+   "key": "Resolución",
+   "value": "2340 x 1080 (FHD+)",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "comp"
+   ]
+  },
+  {
+   "group": "Pantalla",
+   "key": "Frecuencia",
+   "value": "1–120 Hz (LTPO)",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "comp"
+   ]
+  },
+  {
+   "group": "Pantalla",
+   "key": "Brillo",
+   "value": "2600 nits pico",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "comp"
+   ]
+  },
+  {
+   "group": "Chip",
+   "key": "Procesador",
+   "value": "Exynos 2600 (2 nm, 10 núcleos) fuera de EE.UU./Canadá/China; Snapdragon 8 Elite Gen 5 en esos mercados",
+   "status": "depende_variante",
+   "sources": [
+    "gsm",
+    "comp"
+   ],
+   "note": "GSMArena: Exynos 2600 en el resto del mundo. Comparigon describe la versión Snapdragon."
+  },
+  {
+   "group": "Memoria",
+   "key": "RAM",
+   "value": "12 GB",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "comp"
+   ]
+  },
+  {
+   "group": "Memoria",
+   "key": "Almacenamiento",
+   "value": "256 / 512 GB según versión",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "comp"
+   ]
+  },
+  {
+   "group": "Memoria",
+   "key": "microSD",
+   "value": "No",
+   "status": "no_compatible",
+   "sources": [
+    "gsm"
+   ]
+  },
+  {
+   "group": "Batería y carga",
+   "key": "Batería",
+   "value": "4300 mAh",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "comp"
+   ]
+  },
+  {
+   "group": "Batería y carga",
+   "key": "Carga rápida",
+   "value": "25 W por cable (55% en 30 min)",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "comp"
+   ]
+  },
+  {
+   "group": "Batería y carga",
+   "key": "Carga inalámbrica",
+   "value": "Sí, 15 W (Qi2 Ready) y 4,5 W inversa",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Comparigon confirma carga inalámbrica sin indicar potencia."
+  },
+  {
+   "group": "Cámaras",
+   "key": "Cámara principal",
+   "value": "50 MP f/1.8 con OIS",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "comp"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Gran angular",
+   "value": "12 MP ultra gran angular f/2.2, 120°",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "comp"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Teleobjetivo",
+   "value": "10 MP f/2.4 con OIS, zoom óptico 3x",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "comp"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Cámara frontal",
+   "value": "12 MP f/2.2",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "comp"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Video",
+   "value": "8K a 24/30 fps; 4K a 60 fps",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Una sola fuente técnica."
+  },
+  {
+   "group": "Conectividad",
+   "key": "5G",
+   "value": "Sí",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "comp"
+   ]
+  },
+  {
+   "group": "Conectividad",
+   "key": "SIM",
+   "value": "Nano-SIM + eSIM (configuración según región)",
+   "status": "depende_variante",
+   "sources": [
+    "gsm"
+   ]
+  },
+  {
+   "group": "Conectividad",
+   "key": "NFC",
+   "value": "Sí",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Una sola fuente técnica."
+  },
+  {
+   "group": "Conectividad",
+   "key": "Wi-Fi",
+   "value": "Wi-Fi 7",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Una sola fuente técnica."
+  },
+  {
+   "group": "Conectividad",
+   "key": "Bluetooth",
+   "value": "5.4",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Una sola fuente técnica."
+  },
+  {
+   "group": "Dimensiones",
+   "key": "Medidas",
+   "value": "149,6 x 71,7 x 7,2 mm",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Una sola fuente técnica."
+  },
+  {
+   "group": "Dimensiones",
+   "key": "Peso",
+   "value": "167 g",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "comp"
+   ]
+  },
+  {
+   "group": "Protección",
+   "key": "Resistencia",
+   "value": "IP68 (hasta 1,5 m durante 30 min)",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Una sola fuente técnica."
+  },
+  {
+   "group": "Protección",
+   "key": "Materiales",
+   "value": "Gorilla Glass Victus 2 adelante y atrás, marco de aluminio",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Una sola fuente técnica."
+  },
+  {
+   "group": "Protección",
+   "key": "Biometría",
+   "value": "Lector de huellas ultrasónico bajo la pantalla",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Una sola fuente técnica."
+  },
+  {
+   "group": "Soporte",
+   "key": "Sistema operativo",
+   "value": "Android 16 de fábrica (One UI 8.5)",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "comp"
+   ]
+  },
+  {
+   "group": "Soporte",
+   "key": "Años de actualizaciones",
+   "value": "Hasta 7 actualizaciones de Android",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Una sola fuente técnica."
+  },
+  {
+   "group": "Otros",
+   "key": "Lanzamiento",
+   "value": "Marzo de 2026",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "comp"
+   ]
+  }
+ ],
+ "pending": [
+  {
+   "key": "AnTuTu",
+   "why": "Comparigon publica 2.993.684 (v11) de la versión Snapdragon; fuera de EE.UU. se vende con Exynos 2600. No se carga."
+  },
+  {
+   "key": "Medidas / Wi-Fi / Bluetooth",
+   "why": "Nanoreview no respondió; una sola fuente (GSMArena)."
+  }
+ ]
+}

@@ -1,0 +1,333 @@
+{
+ "id": "samsung-galaxy-s25",
+ "brand": "Samsung",
+ "model": "Galaxy S25 5G",
+ "aliases": [
+  "Galaxy S25"
+ ],
+ "variant": "Galaxy S25 (SM-S93xB/E/U). Snapdragon 8 Elite for Galaxy en todas las regiones.",
+ "reviewedAt": "2026-11-13d",
+ "sources": {
+  "gsm": {
+   "name": "GSMArena — Samsung Galaxy S25",
+   "url": "https://www.gsmarena.com/samsung_galaxy_s25-13610.php",
+   "date": "2026-11-13",
+   "kind": "tecnica"
+  },
+  "nano": {
+   "name": "Nanoreview — Samsung Galaxy S25",
+   "url": "https://nanoreview.net/en/phone/samsung-galaxy-s25",
+   "date": "2026-11-13",
+   "kind": "tecnica"
+  }
+ },
+ "fields": [
+  {
+   "group": "Pantalla",
+   "key": "Tamaño y tipo",
+   "value": "6,2\" Dynamic LTPO AMOLED 2X",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Pantalla",
+   "key": "Resolución",
+   "value": "2340 x 1080 (FHD+)",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Pantalla",
+   "key": "Frecuencia",
+   "value": "1–120 Hz (LTPO)",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Pantalla",
+   "key": "Brillo",
+   "value": "2600 nits pico",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Chip",
+   "key": "Procesador",
+   "value": "Qualcomm Snapdragon 8 Elite for Galaxy (3 nm, 8 núcleos)",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Chip",
+   "key": "GPU",
+   "value": "Adreno 830",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Una sola fuente técnica."
+  },
+  {
+   "group": "Memoria",
+   "key": "RAM",
+   "value": "12 GB",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Memoria",
+   "key": "Almacenamiento",
+   "value": "128 / 256 / 512 GB según versión",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Nanoreview solo muestra 128 GB."
+  },
+  {
+   "group": "Memoria",
+   "key": "microSD",
+   "value": "No",
+   "status": "no_compatible",
+   "sources": [
+    "gsm"
+   ]
+  },
+  {
+   "group": "Batería y carga",
+   "key": "Batería",
+   "value": "4000 mAh",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Batería y carga",
+   "key": "Carga rápida",
+   "value": "25 W por cable (50% en 30 min)",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Batería y carga",
+   "key": "Carga inalámbrica",
+   "value": "Sí, 15 W (Qi2 Ready) y 4,5 W inversa",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Cámara principal",
+   "value": "50 MP f/1.8 con OIS",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Gran angular",
+   "value": "12 MP ultra gran angular f/2.2, 120°",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Teleobjetivo",
+   "value": "10 MP f/2.4 con OIS, zoom óptico 3x",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Cámara frontal",
+   "value": "12 MP f/2.2",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Video",
+   "value": "8K a 24/30 fps; 4K a 60 fps",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Una sola fuente técnica."
+  },
+  {
+   "group": "Conectividad",
+   "key": "5G",
+   "value": "Sí",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Conectividad",
+   "key": "SIM",
+   "value": "Versión internacional: dos nano-SIM y eSIM (máx. 2 a la vez); EE.UU.: nano-SIM + eSIM",
+   "status": "depende_variante",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Conectividad",
+   "key": "NFC",
+   "value": "Sí",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Una sola fuente técnica."
+  },
+  {
+   "group": "Conectividad",
+   "key": "Wi-Fi",
+   "value": "Wi-Fi 7",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Conectividad",
+   "key": "Bluetooth",
+   "value": "5.4",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Conectividad",
+   "key": "Puerto",
+   "value": "USB-C 3.2 con DisplayPort",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Una sola fuente técnica."
+  },
+  {
+   "group": "Dimensiones",
+   "key": "Medidas",
+   "value": "146,9 x 70,5 x 7,2 mm",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Dimensiones",
+   "key": "Peso",
+   "value": "162 g",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Protección",
+   "key": "Resistencia",
+   "value": "IP68 (hasta 1,5 m durante 30 min)",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Protección",
+   "key": "Materiales",
+   "value": "Gorilla Glass Victus 2 adelante y atrás, marco de aluminio",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Una sola fuente técnica."
+  },
+  {
+   "group": "Soporte",
+   "key": "Sistema operativo",
+   "value": "Android 15 de fábrica",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Soporte",
+   "key": "Años de actualizaciones",
+   "value": "Hasta 7 actualizaciones de Android",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Una sola fuente técnica."
+  },
+  {
+   "group": "Otros",
+   "key": "Lanzamiento",
+   "value": "Febrero de 2025",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  }
+ ],
+ "pending": [],
+ "antutu": {
+  "version": "v11",
+  "total": 2920032,
+  "sample": "individual",
+  "source": "nano",
+  "note": "Medición individual publicada por Nanoreview (AnTuTu 11)."
+ }
+}

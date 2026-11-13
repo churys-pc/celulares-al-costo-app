@@ -80,6 +80,33 @@ Fuentes nuevas: MacRumors y PhoneArena (baterías 18 Pro según Apple / base ene
 - GSMArena (vista previa): iPhone 18 Pro Max «12GB RAM» en todas las capacidades. No se abrió (dominio sin aprobar).
 - Rumores previos al lanzamiento (Macworld, Notebookcheck, HotHardware): 18 Pro Max 5235/5425 mAh. Descartados: el dato confirmado es 5391 mAh (versión con bandeja SIM).
 
+## Lote 3 — 2026-11-13 (Samsung en stock, 20 fichas)
+Verificados: 380 de 582 campos (65%) · Sin confirmar 157 · Depende de la variante 26 · No compatible 19.
+Fuentes: GSMArena (ficha o «specs at a glance» de la review) + Nanoreview; Comparigon donde Nanoreview no respondió (S25 Ultra, S26, S26 Ultra).
+Las páginas oficiales de samsung.com no cargan desde la herramienta (son dinámicas): ningún dato es oficial en este lote.
+
+| Ficha | Verificados | Observaciones |
+|---|---|---|
+| Galaxy A07 (4G) | 15/26 | Se asumió 4G (SM-A075); el A07 5G es otro equipo. Alto según fuente (167,4 vs 164,4 mm) |
+| Galaxy A17 5G / A17 LTE | 18/30 · 19/29 | |
+| Galaxy A26 5G | 18/27 | **Chip depende de la región**: Exynos 1380 global / Exynos 1280 Latinoamérica (SM-A266M) |
+| Galaxy A27 5G | 15/28 | NFC sin confirmar; frontal 12 MP con una sola fuente |
+| Galaxy A34 / A35 / A37 / A57 | 23 · 20 · 20 · 20 | RAM/almacenamiento: Nanoreview solo publica la versión base |
+| Galaxy S20 FE 5G | 21/29 | Snapdragon 865 (SM-G781) |
+| Galaxy S23 / S23 FE | 19/30 · 21/29 | S23 FE: Exynos 2200 fuera de EE.UU. |
+| Galaxy S24 / S24+ | 19/29 · 20/29 | Exynos 2400 fuera de EE.UU./Canadá/China |
+| Galaxy S25 / S25+ / S25 Ultra / S25 FE | 21 · 22 · 17 · 19 /30 | |
+| Galaxy S26 / S26 Ultra | 16/29 · 17/30 | S26: Exynos 2600 fuera de EE.UU./Canadá/China |
+
+AnTuTu: **no se cargó** en S23 FE, S24, S24+ y S26 porque los puntajes publicados son de la versión Snapdragon y en Uruguay se vende la Exynos.
+Campos que quedan con una sola fuente casi siempre: GPU, video, materiales, puerto USB, años de actualizaciones (solo GSMArena).
+
+### Pendiente lote 3
+- Probar samsung.com con el navegador (las fichas oficiales confirmarían la mayoría de los «Sin confirmar»).
+- Galaxy A07: confirmar en la caja si es SM-A075 (4G) o SM-A076 (5G).
+- Galaxy A26: confirmar modelo SM-A266M (Exynos 1280) en las unidades del local.
+- AnTuTu v11 de las versiones Exynos (S23 FE, S24, S24+, S26).
+
 ## Próximos lotes (orden)
 1. ~~Lote 2: iPhone en stock~~ (hecho, ver arriba).
 2. Modelos de los lotes precargados (Apple, Samsung, Xiaomi, varios): ~49 modelos con datos de una sola fuente.

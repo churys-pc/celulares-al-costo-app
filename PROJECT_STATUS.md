@@ -58,6 +58,7 @@
 - [x] v0.12.0: el admin edita (precio USD, estado, RAM, almacenamiento, color, foto) y elimina productos desde el Catálogo (botones en la fila y en «Ver equipo»; `PATCH /api/quick/products/:id` → `updateQuick`, conserva marca/modelo/descripción/ficha y lo sube al repo). Buscador en la lista de «Cargar productos».
 - [x] v0.12.1: fichas lote 1b — se reabrieron los «Sin confirmar» con fuentes oficiales (Apple Newsroom, Samsung Newsroom global/UK/AR, Samsung HK/CO/LB). iPhone 11 30/33, A54 5G 30/35, A16 5G 23/31, A16 4G 23/32 verificados. Pendientes y consultas listas en `fichas/AVANCE.md`.
 - [x] v0.12.2: fichas lote 2 — 16 iPhone en stock (8 Plus a 18 Pro Max). 436/481 campos verificados (91%); batería de 17 Pro/Pro Max y 18 Pro/Pro Max y SIM desde el 14 quedan «Depende de la variante». Pendientes en `fichas/AVANCE.md`.
+- [x] v0.12.3: fichas lote 3 — 20 Samsung en stock (serie A y S) con GSMArena + Nanoreview/Comparigon. 380/582 campos verificados (65%). Chip por región marcado «Depende de la variante» (A26, S23 FE, S24, S24+, S26); AnTuTu omitido donde el puntaje publicado es de otro chip. samsung.com no carga desde la herramienta.
 - [ ] Fase 1 (bloque 3): import/export CSV.
 - [ ] Luego: versión móvil (Safari) con el diseño del mockup.
 - [ ] Fases 2-6 según prompt original.

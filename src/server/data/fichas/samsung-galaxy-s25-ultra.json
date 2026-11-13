@@ -1,0 +1,338 @@
+{
+ "id": "samsung-galaxy-s25-ultra",
+ "brand": "Samsung",
+ "model": "Galaxy S25 Ultra 5G",
+ "aliases": [
+  "Galaxy S25 Ultra"
+ ],
+ "variant": "Galaxy S25 Ultra (SM-S938B/E/U). Snapdragon 8 Elite for Galaxy en todas las regiones.",
+ "reviewedAt": "2026-11-13d",
+ "sources": {
+  "gsm": {
+   "name": "GSMArena — Samsung Galaxy S25 Ultra",
+   "url": "https://www.gsmarena.com/samsung_galaxy_s25_ultra-review-2793.php",
+   "date": "2026-11-13",
+   "kind": "tecnica"
+  },
+  "comp": {
+   "name": "Comparigon — Samsung Galaxy S25 Ultra",
+   "url": "https://comparigon.com/phones/samsung-galaxy-s25-ultra",
+   "date": "2026-11-13",
+   "kind": "tecnica"
+  }
+ },
+ "fields": [
+  {
+   "group": "Pantalla",
+   "key": "Tamaño y tipo",
+   "value": "6,9\" Dynamic LTPO AMOLED 2X",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "comp"
+   ]
+  },
+  {
+   "group": "Pantalla",
+   "key": "Resolución",
+   "value": "3120 x 1440 (QHD+)",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "comp"
+   ]
+  },
+  {
+   "group": "Pantalla",
+   "key": "Frecuencia",
+   "value": "1–120 Hz (LTPO)",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "comp"
+   ]
+  },
+  {
+   "group": "Pantalla",
+   "key": "Brillo",
+   "value": "2600 nits pico",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "comp"
+   ]
+  },
+  {
+   "group": "Chip",
+   "key": "Procesador",
+   "value": "Qualcomm Snapdragon 8 Elite for Galaxy (3 nm, 8 núcleos)",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "comp"
+   ]
+  },
+  {
+   "group": "Chip",
+   "key": "GPU",
+   "value": "Adreno 830",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Una sola fuente técnica."
+  },
+  {
+   "group": "Memoria",
+   "key": "RAM",
+   "value": "12 GB (16 GB en la versión de 1 TB)",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "comp"
+   ]
+  },
+  {
+   "group": "Memoria",
+   "key": "Almacenamiento",
+   "value": "256 / 512 GB / 1 TB según versión",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "comp"
+   ]
+  },
+  {
+   "group": "Batería y carga",
+   "key": "Batería",
+   "value": "5000 mAh",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "comp"
+   ]
+  },
+  {
+   "group": "Batería y carga",
+   "key": "Carga rápida",
+   "value": "45 W por cable (65% en 30 min)",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "comp"
+   ]
+  },
+  {
+   "group": "Batería y carga",
+   "key": "Carga inalámbrica",
+   "value": "Sí, 25 W (Qi2) y 4,5 W inversa",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "GSMArena indica 25 W; Comparigon confirma carga inalámbrica sin indicar potencia."
+  },
+  {
+   "group": "Cámaras",
+   "key": "Cámara principal",
+   "value": "200 MP f/1.7 con OIS",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "comp"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Gran angular",
+   "value": "50 MP ultra gran angular f/1.9, 120°",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "comp"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Teleobjetivo",
+   "value": "10 MP f/2.4 zoom óptico 3x + 50 MP f/3.4 periscopio zoom óptico 5x, ambos con OIS",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "comp"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Cámara frontal",
+   "value": "12 MP f/2.2",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "comp"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Video",
+   "value": "8K a 24/30 fps; 4K a 120 fps",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Una sola fuente técnica."
+  },
+  {
+   "group": "Conectividad",
+   "key": "5G",
+   "value": "Sí",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "comp"
+   ]
+  },
+  {
+   "group": "Conectividad",
+   "key": "SIM",
+   "value": "Nano-SIM + eSIM (configuración según región)",
+   "status": "depende_variante",
+   "sources": [
+    "gsm"
+   ]
+  },
+  {
+   "group": "Conectividad",
+   "key": "NFC",
+   "value": "Sí",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Una sola fuente técnica."
+  },
+  {
+   "group": "Conectividad",
+   "key": "Wi-Fi",
+   "value": "Wi-Fi 7",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Una sola fuente técnica."
+  },
+  {
+   "group": "Conectividad",
+   "key": "Bluetooth",
+   "value": "5.4",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Una sola fuente técnica."
+  },
+  {
+   "group": "Dimensiones",
+   "key": "Medidas",
+   "value": "162,8 x 77,6 x 8,2 mm",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Una sola fuente técnica."
+  },
+  {
+   "group": "Dimensiones",
+   "key": "Peso",
+   "value": "218 g",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "comp"
+   ]
+  },
+  {
+   "group": "Protección",
+   "key": "Resistencia",
+   "value": "IP68 (hasta 1,5 m durante 30 min)",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Una sola fuente técnica."
+  },
+  {
+   "group": "Protección",
+   "key": "Materiales",
+   "value": "Frente Gorilla Armor 2, dorso Victus 2, marco de titanio",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Una sola fuente técnica."
+  },
+  {
+   "group": "Protección",
+   "key": "Biometría",
+   "value": "Lector de huellas ultrasónico bajo la pantalla",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Una sola fuente técnica."
+  },
+  {
+   "group": "Otros",
+   "key": "S Pen",
+   "value": "Incluido (lápiz integrado)",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Una sola fuente técnica."
+  },
+  {
+   "group": "Soporte",
+   "key": "Sistema operativo",
+   "value": "Android 15 de fábrica",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "comp"
+   ]
+  },
+  {
+   "group": "Soporte",
+   "key": "Años de actualizaciones",
+   "value": "Hasta 7 actualizaciones de Android",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Una sola fuente técnica."
+  },
+  {
+   "group": "Otros",
+   "key": "Lanzamiento",
+   "value": "Febrero de 2025",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "comp"
+   ]
+  }
+ ],
+ "pending": [
+  {
+   "key": "Medidas / Wi-Fi / Bluetooth",
+   "why": "Nanoreview no respondió y Comparigon no publica esos datos: quedan con una sola fuente."
+  }
+ ],
+ "antutu": {
+  "version": "v11",
+  "total": 3326148,
+  "sample": "individual",
+  "source": "comp",
+  "note": "Medición individual publicada por Comparigon (AnTuTu 11)."
+ }
+}

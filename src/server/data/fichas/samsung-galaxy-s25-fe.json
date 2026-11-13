@@ -1,0 +1,334 @@
+{
+ "id": "samsung-galaxy-s25-fe",
+ "brand": "Samsung",
+ "model": "Galaxy S25 FE 5G",
+ "aliases": [
+  "Galaxy S25 FE"
+ ],
+ "variant": "Galaxy S25 FE (SM-S731B). Exynos 2400.",
+ "reviewedAt": "2026-11-13d",
+ "sources": {
+  "gsm": {
+   "name": "GSMArena — Samsung Galaxy S25 FE",
+   "url": "https://www.gsmarena.com/samsung_galaxy_s25_fe_5g-14042.php",
+   "date": "2026-11-13",
+   "kind": "tecnica"
+  },
+  "nano": {
+   "name": "Nanoreview — Samsung Galaxy S25 FE",
+   "url": "https://nanoreview.net/en/phone/samsung-galaxy-s25-fe",
+   "date": "2026-11-13",
+   "kind": "tecnica"
+  }
+ },
+ "fields": [
+  {
+   "group": "Pantalla",
+   "key": "Tamaño y tipo",
+   "value": "6,7\" Dynamic LTPO AMOLED 2X",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Pantalla",
+   "key": "Resolución",
+   "value": "2340 x 1080 (FHD+)",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Pantalla",
+   "key": "Frecuencia",
+   "value": "120 Hz",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Pantalla",
+   "key": "Brillo",
+   "value": "1900 nits pico",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "GSMArena indica 1900 nits pico; Nanoreview 1300 nits."
+  },
+  {
+   "group": "Chip",
+   "key": "Procesador",
+   "value": "Samsung Exynos 2400 (4 nm, 10 núcleos)",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Chip",
+   "key": "GPU",
+   "value": "Xclipse 940",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Una sola fuente técnica."
+  },
+  {
+   "group": "Memoria",
+   "key": "RAM",
+   "value": "8 GB",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Memoria",
+   "key": "Almacenamiento",
+   "value": "128 / 256 / 512 GB según versión (UFS 4.0)",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Nanoreview solo muestra 128 GB."
+  },
+  {
+   "group": "Memoria",
+   "key": "microSD",
+   "value": "No",
+   "status": "no_compatible",
+   "sources": [
+    "gsm"
+   ]
+  },
+  {
+   "group": "Batería y carga",
+   "key": "Batería",
+   "value": "4900 mAh",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Batería y carga",
+   "key": "Carga rápida",
+   "value": "45 W por cable (65% en 30 min)",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Batería y carga",
+   "key": "Carga inalámbrica",
+   "value": "Sí (15–25 W según la fuente; compatible Qi2)",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm",
+    "nano"
+   ],
+   "note": "GSMArena indica 15 W; Nanoreview 25 W."
+  },
+  {
+   "group": "Cámaras",
+   "key": "Cámara principal",
+   "value": "50 MP f/1.8 con OIS",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Gran angular",
+   "value": "12 MP ultra gran angular f/2.2, 123°",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Teleobjetivo",
+   "value": "8 MP f/2.4 con OIS, zoom óptico 3x",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Cámara frontal",
+   "value": "12 MP f/2.2",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Video",
+   "value": "8K a 24/30 fps; 4K a 120 fps",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Una sola fuente técnica."
+  },
+  {
+   "group": "Conectividad",
+   "key": "5G",
+   "value": "Sí",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Conectividad",
+   "key": "SIM",
+   "value": "Nano-SIM y/o eSIM según mercado",
+   "status": "depende_variante",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Conectividad",
+   "key": "NFC",
+   "value": "Sí",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Una sola fuente técnica."
+  },
+  {
+   "group": "Conectividad",
+   "key": "Wi-Fi",
+   "value": "Wi-Fi 6E",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Conectividad",
+   "key": "Bluetooth",
+   "value": "5.4",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Conectividad",
+   "key": "Puerto",
+   "value": "USB-C 3.2",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Una sola fuente técnica."
+  },
+  {
+   "group": "Dimensiones",
+   "key": "Medidas",
+   "value": "161,3 x 76,6 x 7,4 mm",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Dimensiones",
+   "key": "Peso",
+   "value": "190 g",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Protección",
+   "key": "Resistencia",
+   "value": "IP68 (hasta 1,5 m durante 30 min)",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Protección",
+   "key": "Materiales",
+   "value": "Gorilla Glass Victus+ adelante y atrás, marco de aluminio",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Una sola fuente técnica."
+  },
+  {
+   "group": "Soporte",
+   "key": "Sistema operativo",
+   "value": "Android 16 de fábrica (One UI 8)",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Soporte",
+   "key": "Años de actualizaciones",
+   "value": "Hasta 7 actualizaciones de Android",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Una sola fuente técnica."
+  },
+  {
+   "group": "Otros",
+   "key": "Lanzamiento",
+   "value": "Septiembre de 2025",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  }
+ ],
+ "pending": [],
+ "antutu": {
+  "version": "v11",
+  "total": 2063253,
+  "sample": "individual",
+  "source": "nano",
+  "note": "Medición individual publicada por Nanoreview (AnTuTu 11)."
+ }
+}

@@ -1,0 +1,319 @@
+{
+ "id": "samsung-galaxy-a27-5g",
+ "brand": "Samsung",
+ "model": "Galaxy A27 5G",
+ "aliases": [
+  "Galaxy A27"
+ ],
+ "variant": "Galaxy A27 5G (SM-A276B / SM-A276E / SM-A276U).",
+ "reviewedAt": "2026-11-13d",
+ "sources": {
+  "gsm": {
+   "name": "GSMArena — Samsung Galaxy A27 5G",
+   "url": "https://www.gsmarena.com/samsung_galaxy_a27_5g-14606.php",
+   "date": "2026-11-13",
+   "kind": "tecnica"
+  },
+  "nano": {
+   "name": "Nanoreview — Samsung Galaxy A27 5G",
+   "url": "https://nanoreview.net/en/phone/samsung-galaxy-a27-5g",
+   "date": "2026-11-13",
+   "kind": "tecnica"
+  }
+ },
+ "fields": [
+  {
+   "group": "Pantalla",
+   "key": "Tamaño y tipo",
+   "value": "6,7\" Super AMOLED",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Pantalla",
+   "key": "Resolución",
+   "value": "2340 x 1080 (FHD+)",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Pantalla",
+   "key": "Frecuencia",
+   "value": "120 Hz",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Pantalla",
+   "key": "Brillo",
+   "value": "800 nits",
+   "status": "sin_confirmar",
+   "sources": [
+    "nano"
+   ],
+   "note": "Una sola fuente técnica."
+  },
+  {
+   "group": "Chip",
+   "key": "Procesador",
+   "value": "Qualcomm Snapdragon 6 Gen 3 (4 nm, 8 núcleos)",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Chip",
+   "key": "GPU",
+   "value": "Adreno 710",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Una sola fuente técnica."
+  },
+  {
+   "group": "Memoria",
+   "key": "RAM",
+   "value": "6 / 8 GB según versión",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Nanoreview solo muestra 6 GB."
+  },
+  {
+   "group": "Memoria",
+   "key": "Almacenamiento",
+   "value": "128 / 256 GB según versión",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Nanoreview solo muestra 128 GB."
+  },
+  {
+   "group": "Memoria",
+   "key": "microSD",
+   "value": "Sí (comparte bandeja con la SIM)",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Batería y carga",
+   "key": "Batería",
+   "value": "5000 mAh",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Batería y carga",
+   "key": "Carga rápida",
+   "value": "25 W por cable",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Batería y carga",
+   "key": "Carga inalámbrica",
+   "value": "No",
+   "status": "no_compatible",
+   "sources": [
+    "nano"
+   ],
+   "note": "Nanoreview indica que no tiene; GSMArena no la lista."
+  },
+  {
+   "group": "Cámaras",
+   "key": "Cámara principal",
+   "value": "50 MP f/1.8 con OIS",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Gran angular",
+   "value": "5 MP ultra gran angular f/2.2",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Una sola fuente técnica."
+  },
+  {
+   "group": "Cámaras",
+   "key": "Macro",
+   "value": "2 MP",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Una sola fuente técnica."
+  },
+  {
+   "group": "Cámaras",
+   "key": "Cámara frontal",
+   "value": "12 MP f/2.2 con autofoco",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "GSMArena indica 12 MP; Nanoreview no identifica claramente la frontal."
+  },
+  {
+   "group": "Cámaras",
+   "key": "Video",
+   "value": "4K a 30 fps",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Una sola fuente técnica."
+  },
+  {
+   "group": "Conectividad",
+   "key": "5G",
+   "value": "Sí",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Conectividad",
+   "key": "SIM",
+   "value": "Dual nano-SIM o nano-SIM + eSIM según región",
+   "status": "depende_variante",
+   "sources": [
+    "gsm"
+   ]
+  },
+  {
+   "group": "Conectividad",
+   "key": "Wi-Fi",
+   "value": "Wi-Fi 5 (802.11ac), doble banda",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Conectividad",
+   "key": "Bluetooth",
+   "value": "5.1",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Conectividad",
+   "key": "Puerto",
+   "value": "USB-C 2.0",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Una sola fuente técnica."
+  },
+  {
+   "group": "Dimensiones",
+   "key": "Medidas",
+   "value": "162,4 x 78,2 x 7,8 mm",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Dimensiones",
+   "key": "Peso",
+   "value": "200 g",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Protección",
+   "key": "Resistencia",
+   "value": "IP64 (polvo y salpicaduras)",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Soporte",
+   "key": "Sistema operativo",
+   "value": "Android 16 de fábrica (One UI 8.5)",
+   "status": "verificado",
+   "sources": [
+    "gsm",
+    "nano"
+   ]
+  },
+  {
+   "group": "Soporte",
+   "key": "Años de actualizaciones",
+   "value": "Hasta 6 actualizaciones de Android",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm"
+   ],
+   "note": "Una sola fuente técnica."
+  },
+  {
+   "group": "Otros",
+   "key": "Lanzamiento",
+   "value": "Junio–julio de 2026",
+   "status": "sin_confirmar",
+   "sources": [
+    "gsm",
+    "nano"
+   ],
+   "note": "Nanoreview indica junio de 2026; GSMArena, salida el 03/07/2026."
+  }
+ ],
+ "pending": [
+  {
+   "key": "NFC",
+   "why": "Ninguna fuente lo confirma (GSMArena: «Unspecified»)."
+  }
+ ],
+ "antutu": {
+  "version": "v11",
+  "total": 728519,
+  "sample": "individual",
+  "source": "nano",
+  "note": "Medición individual publicada por Nanoreview (AnTuTu 11)."
+ }
+}
