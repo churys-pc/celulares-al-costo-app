@@ -41,8 +41,12 @@ test('fichas: iPhone, par 4G/5G y modelo sin stock usan la misma ficha en catál
   assert.equal(spec(repo, id('Galaxy A16'), '5G')!.status, 'no_compatible');
   assert.equal(spec(repo, id('Galaxy A16'), 'Carga inalámbrica')!.status, 'sin_confirmar');
   assert.equal(spec(repo, id('Galaxy A16 5G'), 'Carga inalámbrica')!.status, 'no_compatible');
+  // Lote 2 (iPhone): el nombre del catálogo y el oficial apuntan a la misma ficha; batería por variante.
+  assert.equal(findFicha('Apple', 'iPhone Air')!.id, findFicha('Apple', 'iPhone 17 Air')!.id);
+  assert.equal(spec(repo, id('iPhone 17 Pro Max'), 'Batería')!.status, 'depende_variante');
+  assert.equal(spec(repo, id('iPhone 8 Plus'), '5G')!.status, 'no_compatible');
   const st = fichasStatus(db);
-  assert.equal(st.withFicha, 4);
+  assert.equal(st.withFicha, FICHAS.length);
 });
 
 test('fichas: la sincronización de un producto no pisa la ficha verificada', () => {

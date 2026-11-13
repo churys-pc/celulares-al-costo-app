@@ -1,0 +1,327 @@
+{
+ "id": "apple-iphone-17-pro",
+ "brand": "Apple",
+ "model": "iPhone 17 Pro",
+ "aliases": [],
+ "variant": "iPhone 17 Pro. La página oficial de Australia lista nano-SIM + eSIM; los de EE.UU. son solo eSIM y llevan batería más grande.",
+ "reviewedAt": "2026-11-13c",
+ "sources": {
+  "apple": {
+   "name": "Apple — iPhone 17 Pro: especificaciones técnicas",
+   "url": "https://support.apple.com/en-au/125090",
+   "date": "2026-11-13",
+   "kind": "oficial"
+  },
+  "comp": {
+   "name": "Comparigon — Apple iPhone 17 Pro",
+   "url": "https://comparigon.com/phones/iphone-17-pro",
+   "date": "2026-11-13",
+   "kind": "tecnica"
+  },
+  "pa18": {
+   "name": "PhoneArena — Batería del iPhone 18 Pro según la base de datos energética de la UE",
+   "url": "https://www.phonearena.com/news/iphone-18-pro-battery-capacity-longevity-revealed_id183418",
+   "date": "2026-11-13",
+   "kind": "tecnica"
+  },
+  "mr18": {
+   "name": "MacRumors — iPhone 18 Pro: capacidades de batería y RAM (10/09/2026)",
+   "url": "https://www.macrumors.com/2026/09/10/iphone-18-pro-max-battery-capacities-ram/",
+   "date": "2026-11-13",
+   "kind": "tecnica"
+  }
+ },
+ "fields": [
+  {
+   "group": "Pantalla",
+   "key": "Tamaño y tipo",
+   "value": "6,3\" OLED (Super Retina XDR con ProMotion, siempre activa)",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Pantalla",
+   "key": "Resolución",
+   "value": "2622 x 1206 (460 ppi)",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Pantalla",
+   "key": "Brillo",
+   "value": "1000 nits típico; 1600 nits pico (HDR); 3000 nits pico (exterior)",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Pantalla",
+   "key": "Frecuencia",
+   "value": "Hasta 120 Hz (ProMotion)",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Chip",
+   "key": "Procesador",
+   "value": "Apple A19 Pro (CPU de 6 núcleos)",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Chip",
+   "key": "GPU",
+   "value": "GPU Apple de 6 núcleos",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Memoria",
+   "key": "RAM",
+   "value": "12 GB",
+   "status": "verificado",
+   "sources": [
+    "comp",
+    "mr18"
+   ],
+   "note": "Apple no publica la RAM; Comparigon y MacRumors (verificado en Xcode) coinciden."
+  },
+  {
+   "group": "Memoria",
+   "key": "Almacenamiento",
+   "value": "256 / 512 GB / 1 TB",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Memoria",
+   "key": "microSD",
+   "value": "No",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ],
+   "note": "Apple solo ofrece capacidades internas fijas; Nanoreview indica «Memory card: No»."
+  },
+  {
+   "group": "Batería y carga",
+   "key": "Batería",
+   "value": "3988 mAh con bandeja nano-SIM (versión solo eSIM más grande, sin confirmar)",
+   "status": "depende_variante",
+   "sources": [
+    "comp",
+    "pa18"
+   ],
+   "note": "Comparigon y PhoneArena indican 3988 mAh para la versión global con bandeja SIM. MacRumors cita 4252 mAh para la de EE.UU. (solo eSIM) en una nota de rumores."
+  },
+  {
+   "group": "Batería y carga",
+   "key": "Carga rápida",
+   "value": "40 W máx. por cable (50% en 20 min con adaptador de 40 W)",
+   "status": "verificado",
+   "sources": [
+    "apple",
+    "comp"
+   ]
+  },
+  {
+   "group": "Batería y carga",
+   "key": "Carga inalámbrica",
+   "value": "MagSafe y Qi2 hasta 25 W",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Conectividad",
+   "key": "Puerto",
+   "value": "USB-C (USB 3, hasta 10 Gb/s)",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Cámara principal",
+   "value": "48 MP Fusion f/1.78 con estabilización por desplazamiento del sensor (2.ª gen.)",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Gran angular",
+   "value": "48 MP Fusion ultra gran angular f/2.2",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Teleobjetivo",
+   "value": "48 MP f/2.8, zoom 4x, estabilización 3D por desplazamiento del sensor",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Zoom óptico",
+   "value": "Hasta 8x de calidad óptica",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Cámara frontal",
+   "value": "18 MP Center Stage f/1.9",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Video",
+   "value": "4K hasta 120 fps con Dolby Vision; ProRes RAW",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Conectividad",
+   "key": "5G",
+   "value": "Sí",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Conectividad",
+   "key": "SIM",
+   "value": "Depende del modelo: con bandeja nano-SIM + eSIM, o solo eSIM (modelos de EE.UU.)",
+   "status": "depende_variante",
+   "sources": [
+    "apple"
+   ],
+   "note": "Los equipos de EE.UU. son solo eSIM; los de otras regiones tienen bandeja nano-SIM. Verificar el número de modelo."
+  },
+  {
+   "group": "Conectividad",
+   "key": "NFC",
+   "value": "Sí (Apple Pay)",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Conectividad",
+   "key": "Wi-Fi",
+   "value": "Wi-Fi 7",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Conectividad",
+   "key": "Bluetooth",
+   "value": "6.0",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Dimensiones",
+   "key": "Medidas",
+   "value": "150,0 x 71,9 x 8,75 mm",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Dimensiones",
+   "key": "Peso",
+   "value": "204 g",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Protección",
+   "key": "Resistencia",
+   "value": "IP68 (IEC 60529)",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Protección",
+   "key": "Biometría",
+   "value": "Face ID",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Protección",
+   "key": "Materiales",
+   "value": "Unibody de aluminio, frente Ceramic Shield 2",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Otros",
+   "key": "Lanzamiento",
+   "value": "19/09/2025",
+   "status": "sin_confirmar",
+   "sources": [
+    "comp"
+   ],
+   "note": "Fecha publicada por una sola fuente técnica."
+  }
+ ],
+ "pending": [
+  {
+   "key": "Batería",
+   "why": "Varía según versión (bandeja SIM vs solo eSIM); para el equipo exacto hace falta el número de modelo."
+  }
+ ],
+ "antutu": {
+  "version": "v11",
+  "total": 2399976,
+  "sample": "individual",
+  "source": "comp",
+  "note": "Medición individual publicada por Comparigon (V11). La página de Nanoreview no respondió."
+ }
+}

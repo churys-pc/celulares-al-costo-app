@@ -1,0 +1,321 @@
+{
+ "id": "apple-iphone-14",
+ "brand": "Apple",
+ "model": "iPhone 14",
+ "aliases": [],
+ "variant": "iPhone 14 (A2649 EE.UU., solo eSIM · A2881 global · A2884 China · A2882 Canadá/Japón).",
+ "reviewedAt": "2026-11-13c",
+ "sources": {
+  "apple": {
+   "name": "Apple — iPhone 14: especificaciones técnicas",
+   "url": "https://support.apple.com/en-us/111850",
+   "date": "2026-11-13",
+   "kind": "oficial"
+  },
+  "nano": {
+   "name": "Nanoreview — Apple iPhone 14",
+   "url": "https://nanoreview.net/en/phone/apple-iphone-14",
+   "date": "2026-11-13",
+   "kind": "tecnica"
+  },
+  "comp": {
+   "name": "Comparigon — Apple iPhone 14",
+   "url": "https://comparigon.com/phones/apple-iphone-14",
+   "date": "2026-11-13",
+   "kind": "tecnica"
+  }
+ },
+ "fields": [
+  {
+   "group": "Pantalla",
+   "key": "Tamaño y tipo",
+   "value": "6,1\" OLED (Super Retina XDR)",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Pantalla",
+   "key": "Resolución",
+   "value": "2532 x 1170 (460 ppi)",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Pantalla",
+   "key": "Brillo",
+   "value": "800 nits típico; 1200 nits pico (HDR)",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Pantalla",
+   "key": "Frecuencia",
+   "value": "60 Hz",
+   "status": "verificado",
+   "sources": [
+    "nano",
+    "comp"
+   ],
+   "note": "Apple no la publica; coinciden dos fuentes técnicas."
+  },
+  {
+   "group": "Chip",
+   "key": "Procesador",
+   "value": "Apple A15 Bionic (CPU de 6 núcleos)",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Chip",
+   "key": "GPU",
+   "value": "GPU Apple de 5 núcleos",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Memoria",
+   "key": "RAM",
+   "value": "6 GB",
+   "status": "verificado",
+   "sources": [
+    "nano",
+    "comp"
+   ],
+   "note": "Apple no publica la RAM; coinciden dos fuentes técnicas."
+  },
+  {
+   "group": "Memoria",
+   "key": "Almacenamiento",
+   "value": "128 / 256 / 512 GB",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Memoria",
+   "key": "microSD",
+   "value": "No",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ],
+   "note": "Apple solo ofrece capacidades internas fijas; Nanoreview indica «Memory card: No»."
+  },
+  {
+   "group": "Batería y carga",
+   "key": "Batería",
+   "value": "3279 mAh",
+   "status": "verificado",
+   "sources": [
+    "nano",
+    "comp"
+   ],
+   "note": "Apple no publica los mAh; coinciden dos fuentes técnicas."
+  },
+  {
+   "group": "Batería y carga",
+   "key": "Carga rápida",
+   "value": "20 W máx. por cable (50% en 30 min con adaptador de 20 W)",
+   "status": "verificado",
+   "sources": [
+    "nano",
+    "comp",
+    "apple"
+   ],
+   "note": "La potencia máxima la indican dos fuentes técnicas; el tiempo de carga es dato oficial."
+  },
+  {
+   "group": "Batería y carga",
+   "key": "Carga inalámbrica",
+   "value": "MagSafe hasta 15 W; Qi hasta 7,5 W",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Conectividad",
+   "key": "Puerto",
+   "value": "Lightning",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Cámara principal",
+   "value": "12 MP gran angular f/1.5 con estabilización por desplazamiento del sensor",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Gran angular",
+   "value": "12 MP ultra gran angular f/2.4",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Zoom óptico",
+   "value": "2x de alejamiento",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Cámara frontal",
+   "value": "12 MP f/1.9 (TrueDepth)",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Video",
+   "value": "4K hasta 60 fps; HDR Dolby Vision hasta 60 fps",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Conectividad",
+   "key": "5G",
+   "value": "Sí",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Conectividad",
+   "key": "SIM",
+   "value": "Depende del modelo: con bandeja nano-SIM + eSIM, o solo eSIM (modelos de EE.UU.)",
+   "status": "depende_variante",
+   "sources": [
+    "apple"
+   ],
+   "note": "Los equipos de EE.UU. son solo eSIM; los de otras regiones tienen bandeja nano-SIM. Verificar el número de modelo."
+  },
+  {
+   "group": "Conectividad",
+   "key": "NFC",
+   "value": "Sí (Apple Pay)",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Conectividad",
+   "key": "Wi-Fi",
+   "value": "Wi-Fi 6 (802.11ax)",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Conectividad",
+   "key": "Bluetooth",
+   "value": "5.3",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Dimensiones",
+   "key": "Medidas",
+   "value": "146,7 x 71,5 x 7,80 mm",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Dimensiones",
+   "key": "Peso",
+   "value": "172 g",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Protección",
+   "key": "Resistencia",
+   "value": "IP68 (hasta 6 m durante 30 min, IEC 60529)",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Protección",
+   "key": "Biometría",
+   "value": "Face ID",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Protección",
+   "key": "Materiales",
+   "value": "Frente Ceramic Shield, marco de aluminio",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Soporte",
+   "key": "Sistema operativo",
+   "value": "iOS 16 de fábrica",
+   "status": "sin_confirmar",
+   "sources": [
+    "nano"
+   ],
+   "note": "Una sola fuente técnica para el sistema de fábrica."
+  },
+  {
+   "group": "Otros",
+   "key": "Lanzamiento",
+   "value": "16/09/2022",
+   "status": "sin_confirmar",
+   "sources": [
+    "comp"
+   ],
+   "note": "Fecha publicada por una sola fuente técnica."
+  }
+ ],
+ "pending": [],
+ "antutu": {
+  "version": "v11",
+  "total": 1550077,
+  "sample": "individual",
+  "source": "comp",
+  "note": "Medición individual publicada por Comparigon (V11). Nanoreview indica 1.550.000 (redondeado)."
+ }
+}

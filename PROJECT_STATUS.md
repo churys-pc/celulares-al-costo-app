@@ -57,6 +57,7 @@
 - [x] v0.11.2: se quitó la sección «Fichas técnicas» de Ajustes (pedido del usuario). El avance de fichas sigue en `server/data/fichas/AVANCE.md` y en `GET /api/fichas`.
 - [x] v0.12.0: el admin edita (precio USD, estado, RAM, almacenamiento, color, foto) y elimina productos desde el Catálogo (botones en la fila y en «Ver equipo»; `PATCH /api/quick/products/:id` → `updateQuick`, conserva marca/modelo/descripción/ficha y lo sube al repo). Buscador en la lista de «Cargar productos».
 - [x] v0.12.1: fichas lote 1b — se reabrieron los «Sin confirmar» con fuentes oficiales (Apple Newsroom, Samsung Newsroom global/UK/AR, Samsung HK/CO/LB). iPhone 11 30/33, A54 5G 30/35, A16 5G 23/31, A16 4G 23/32 verificados. Pendientes y consultas listas en `fichas/AVANCE.md`.
+- [x] v0.12.2: fichas lote 2 — 16 iPhone en stock (8 Plus a 18 Pro Max). 436/481 campos verificados (91%); batería de 17 Pro/Pro Max y 18 Pro/Pro Max y SIM desde el 14 quedan «Depende de la variante». Pendientes en `fichas/AVANCE.md`.
 - [ ] Fase 1 (bloque 3): import/export CSV.
 - [ ] Luego: versión móvil (Safari) con el diseño del mockup.
 - [ ] Fases 2-6 según prompt original.

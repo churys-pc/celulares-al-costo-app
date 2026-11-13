@@ -1,0 +1,318 @@
+{
+ "id": "apple-iphone-14-pro",
+ "brand": "Apple",
+ "model": "iPhone 14 Pro",
+ "aliases": [],
+ "variant": "iPhone 14 Pro (A2650 EE.UU. · A2890 global · A2892 China). Los de EE.UU. son solo eSIM.",
+ "reviewedAt": "2026-11-13c",
+ "sources": {
+  "apple": {
+   "name": "Apple — iPhone 14 Pro: especificaciones técnicas",
+   "url": "https://support.apple.com/en-us/111849",
+   "date": "2026-11-13",
+   "kind": "oficial"
+  },
+  "nano": {
+   "name": "Nanoreview — Apple iPhone 14 Pro",
+   "url": "https://nanoreview.net/en/phone/apple-iphone-14-pro",
+   "date": "2026-11-13",
+   "kind": "tecnica"
+  },
+  "comp": {
+   "name": "Comparigon — Apple iPhone 14 Pro",
+   "url": "https://comparigon.com/phones/apple-iphone-14-pro",
+   "date": "2026-11-13",
+   "kind": "tecnica"
+  }
+ },
+ "fields": [
+  {
+   "group": "Pantalla",
+   "key": "Tamaño y tipo",
+   "value": "6,1\" OLED (Super Retina XDR con ProMotion, siempre activa)",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Pantalla",
+   "key": "Resolución",
+   "value": "2556 x 1179 (460 ppi)",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Pantalla",
+   "key": "Brillo",
+   "value": "1000 nits típico; 1600 nits pico (HDR); 2000 nits pico (exterior)",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Pantalla",
+   "key": "Frecuencia",
+   "value": "Hasta 120 Hz (ProMotion)",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Chip",
+   "key": "Procesador",
+   "value": "Apple A16 Bionic (CPU de 6 núcleos)",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Chip",
+   "key": "GPU",
+   "value": "GPU Apple de 5 núcleos",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Memoria",
+   "key": "RAM",
+   "value": "6 GB",
+   "status": "verificado",
+   "sources": [
+    "nano",
+    "comp"
+   ],
+   "note": "Apple no publica la RAM; coinciden dos fuentes técnicas."
+  },
+  {
+   "group": "Memoria",
+   "key": "Almacenamiento",
+   "value": "128 / 256 / 512 GB / 1 TB",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Memoria",
+   "key": "microSD",
+   "value": "No",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ],
+   "note": "Apple solo ofrece capacidades internas fijas; Nanoreview indica «Memory card: No»."
+  },
+  {
+   "group": "Batería y carga",
+   "key": "Batería",
+   "value": "3200 mAh",
+   "status": "verificado",
+   "sources": [
+    "nano",
+    "comp"
+   ],
+   "note": "Apple no publica los mAh; coinciden dos fuentes técnicas."
+  },
+  {
+   "group": "Batería y carga",
+   "key": "Carga rápida",
+   "value": "23 W máx. por cable (50% en 30 min con adaptador de 20 W)",
+   "status": "verificado",
+   "sources": [
+    "nano",
+    "comp",
+    "apple"
+   ],
+   "note": "La potencia máxima la indican dos fuentes técnicas; el tiempo de carga es dato oficial."
+  },
+  {
+   "group": "Batería y carga",
+   "key": "Carga inalámbrica",
+   "value": "MagSafe hasta 15 W; Qi hasta 7,5 W",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Conectividad",
+   "key": "Puerto",
+   "value": "Lightning",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Cámara principal",
+   "value": "48 MP gran angular f/1.78 con estabilización por desplazamiento del sensor (2.ª gen.)",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Gran angular",
+   "value": "12 MP ultra gran angular f/2.2",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Teleobjetivo",
+   "value": "12 MP f/2.8 con OIS, zoom óptico 3x",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Zoom óptico",
+   "value": "0,5x / 1x / 2x / 3x (rango óptico 6x)",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Cámara frontal",
+   "value": "12 MP f/1.9 (TrueDepth)",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Cámaras",
+   "key": "Video",
+   "value": "4K hasta 60 fps con Dolby Vision; ProRes hasta 4K a 30 fps",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Conectividad",
+   "key": "5G",
+   "value": "Sí",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Conectividad",
+   "key": "SIM",
+   "value": "Depende del modelo: con bandeja nano-SIM + eSIM, o solo eSIM (modelos de EE.UU.)",
+   "status": "depende_variante",
+   "sources": [
+    "apple"
+   ],
+   "note": "Los equipos de EE.UU. son solo eSIM; los de otras regiones tienen bandeja nano-SIM. Verificar el número de modelo."
+  },
+  {
+   "group": "Conectividad",
+   "key": "NFC",
+   "value": "Sí (Apple Pay)",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Conectividad",
+   "key": "Wi-Fi",
+   "value": "Wi-Fi 6 (802.11ax)",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Conectividad",
+   "key": "Bluetooth",
+   "value": "5.3",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Dimensiones",
+   "key": "Medidas",
+   "value": "147,5 x 71,5 x 7,85 mm",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Dimensiones",
+   "key": "Peso",
+   "value": "206 g",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Protección",
+   "key": "Resistencia",
+   "value": "IP68 (hasta 6 m durante 30 min, IEC 60529)",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Protección",
+   "key": "Biometría",
+   "value": "Face ID",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Protección",
+   "key": "Materiales",
+   "value": "Frente Ceramic Shield, marco de acero inoxidable",
+   "status": "verificado",
+   "sources": [
+    "apple"
+   ]
+  },
+  {
+   "group": "Soporte",
+   "key": "Sistema operativo",
+   "value": "iOS 16 de fábrica",
+   "status": "sin_confirmar",
+   "sources": [
+    "nano"
+   ],
+   "note": "Una sola fuente técnica para el sistema de fábrica."
+  }
+ ],
+ "pending": [],
+ "antutu": {
+  "version": "v11",
+  "total": 1498174,
+  "sample": "individual",
+  "source": "comp",
+  "note": "Medición individual publicada por Comparigon (V11). Nanoreview muestra el mismo número (copia; cuenta como una fuente)."
+ }
+}
