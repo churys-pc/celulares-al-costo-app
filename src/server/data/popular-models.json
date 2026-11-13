@@ -1,0 +1,348 @@
+{
+"version": 1,
+"date": "2026-11-13",
+"items": [
+{
+"slug": "apple-iphone-13-pro",
+"brand": "Apple",
+"model": "iPhone 13 Pro"
+},
+{
+"slug": "apple-iphone-air",
+"brand": "Apple",
+"model": "iPhone 17 Air"
+},
+{
+"slug": "apple-iphone-17-pro",
+"brand": "Apple",
+"model": "iPhone 17 Pro"
+},
+{
+"slug": "apple-iphone-18-pro",
+"brand": "Apple",
+"model": "iPhone 18 Pro"
+},
+{
+"slug": "apple-iphone-8-plus",
+"brand": "Apple",
+"model": "iPhone 8 Plus"
+},
+{
+"slug": "motorola-moto-e14",
+"brand": "Motorola",
+"model": "Moto E14"
+},
+{
+"slug": "samsung-galaxy-a07-4g",
+"brand": "Samsung",
+"model": "Galaxy A07"
+},
+{
+"slug": "samsung-galaxy-a16-4g",
+"brand": "Samsung",
+"model": "Galaxy A16"
+},
+{
+"slug": "samsung-galaxy-a17-4g",
+"brand": "Samsung",
+"model": "Galaxy A17 LTE"
+},
+{
+"slug": "samsung-galaxy-a27-5g",
+"brand": "Samsung",
+"model": "Galaxy A27 5G"
+},
+{
+"slug": "samsung-galaxy-a37-5g",
+"brand": "Samsung",
+"model": "Galaxy A37 5G"
+},
+{
+"slug": "samsung-galaxy-s20-fe-5g",
+"brand": "Samsung",
+"model": "Galaxy S20 FE 5G"
+},
+{
+"slug": "xiaomi-poco-c40",
+"brand": "Xiaomi",
+"model": "Poco C40"
+},
+{
+"slug": "xiaomi-poco-c65",
+"brand": "Xiaomi",
+"model": "Poco C65"
+},
+{
+"slug": "xiaomi-poco-c71",
+"brand": "Xiaomi",
+"model": "Poco C71"
+},
+{
+"slug": "xiaomi-poco-c75",
+"brand": "Xiaomi",
+"model": "Poco C75"
+},
+{
+"slug": "xiaomi-poco-c81-pro",
+"brand": "Xiaomi",
+"model": "Poco C81 Pro"
+},
+{
+"slug": "xiaomi-poco-c85",
+"brand": "Xiaomi",
+"model": "Poco C85"
+},
+{
+"slug": "xiaomi-poco-m4-pro-5g",
+"brand": "Xiaomi",
+"model": "Poco M4 Pro 5G"
+},
+{
+"slug": "xiaomi-poco-m8-pro-5g",
+"brand": "Xiaomi",
+"model": "Poco M8 Pro 5G"
+},
+{
+"slug": "xiaomi-poco-x8-pro",
+"brand": "Xiaomi",
+"model": "Poco X8 Pro 5G"
+},
+{
+"slug": "xiaomi-redmi-13-4g",
+"brand": "Xiaomi",
+"model": "Redmi 13 LTE"
+},
+{
+"slug": "xiaomi-redmi-13c",
+"brand": "Xiaomi",
+"model": "Redmi 13c"
+},
+{
+"slug": "xiaomi-redmi-13x",
+"brand": "Xiaomi",
+"model": "Redmi 13x LTE"
+},
+{
+"slug": "xiaomi-redmi-15-4g",
+"brand": "Xiaomi",
+"model": "Redmi 15 LTE"
+},
+{
+"slug": "xiaomi-redmi-15c-5g",
+"brand": "Xiaomi",
+"model": "Redmi 15c 5G"
+},
+{
+"slug": "xiaomi-redmi-15c-4g",
+"brand": "Xiaomi",
+"model": "Redmi 15c LTE"
+},
+{
+"slug": "xiaomi-redmi-17-4g",
+"brand": "Xiaomi",
+"model": "Redmi 17 4G"
+},
+{
+"slug": "xiaomi-redmi-17-5g",
+"brand": "Xiaomi",
+"model": "Redmi 17 5G"
+},
+{
+"slug": "xiaomi-redmi-a5-4g",
+"brand": "Xiaomi",
+"model": "Redmi A5"
+},
+{
+"slug": "xiaomi-redmi-a7-pro",
+"brand": "Xiaomi",
+"model": "Redmi A7 Pro"
+},
+{
+"slug": "xiaomi-redmi-note-11",
+"brand": "Xiaomi",
+"model": "Redmi Note 11"
+},
+{
+"slug": "xiaomi-redmi-note-13-4g",
+"brand": "Xiaomi",
+"model": "Redmi Note 13 LTE"
+},
+{
+"slug": "xiaomi-redmi-note-14-4g",
+"brand": "Xiaomi",
+"model": "Redmi Note 14 LTE"
+},
+{
+"slug": "xiaomi-redmi-note-14-pro-4g",
+"brand": "Xiaomi",
+"model": "Redmi Note 14 Pro LTE"
+},
+{
+"slug": "xiaomi-redmi-note-14s",
+"brand": "Xiaomi",
+"model": "Redmi Note 14s LTE"
+},
+{
+"slug": "xiaomi-redmi-note-15-5g",
+"brand": "Xiaomi",
+"model": "Redmi Note 15 5G"
+},
+{
+"slug": "xiaomi-redmi-note-15-4g",
+"brand": "Xiaomi",
+"model": "Redmi Note 15 LTE"
+},
+{
+"slug": "xiaomi-redmi-note-15-pro-5g",
+"brand": "Xiaomi",
+"model": "Redmi Note 15 Pro 5G"
+},
+{
+"slug": "xiaomi-redmi-note-15-pro-4g",
+"brand": "Xiaomi",
+"model": "Redmi Note 15 Pro LTE"
+},
+{
+"slug": "xiaomi-redmi-note-15-pro-plus-5g",
+"brand": "Xiaomi",
+"model": "Redmi Note 15 Pro+ 5G"
+},
+{
+"slug": "xiaomi-redmi-note-17-4g",
+"brand": "Xiaomi",
+"model": "Redmi Note 17 4G"
+},
+{
+"slug": "xiaomi-redmi-note-17",
+"brand": "Xiaomi",
+"model": "Redmi Note 17 5G"
+},
+{
+"slug": "xiaomi-redmi-note-17-pro",
+"brand": "Xiaomi",
+"model": "Redmi Note 17 Pro 5G"
+},
+{
+"slug": "xiaomi-redmi-note-17-pro-max",
+"brand": "Xiaomi",
+"model": "Redmi Note 17 Pro Max 5G"
+},
+{
+"slug": "samsung-galaxy-a05s"
+},
+{
+"slug": "samsung-galaxy-a15-5g"
+},
+{
+"slug": "samsung-galaxy-a25"
+},
+{
+"slug": "samsung-galaxy-a55"
+},
+{
+"slug": "samsung-galaxy-s23-ultra"
+},
+{
+"slug": "samsung-galaxy-s24-ultra"
+},
+{
+"slug": "samsung-galaxy-z-flip-6"
+},
+{
+"slug": "samsung-galaxy-z-fold-6"
+},
+{
+"slug": "samsung-galaxy-z-flip-7"
+},
+{
+"slug": "apple-iphone-15-pro"
+},
+{
+"slug": "apple-iphone-15-pro-max"
+},
+{
+"slug": "apple-iphone-16-plus"
+},
+{
+"slug": "apple-iphone-16-pro"
+},
+{
+"slug": "apple-iphone-16-pro-max"
+},
+{
+"slug": "apple-iphone-16e"
+},
+{
+"slug": "apple-iphone-se-2022"
+},
+{
+"slug": "xiaomi-redmi-14c"
+},
+{
+"slug": "xiaomi-redmi-note-13-pro"
+},
+{
+"slug": "xiaomi-poco-f6"
+},
+{
+"slug": "xiaomi-poco-f7"
+},
+{
+"slug": "xiaomi-poco-x6"
+},
+{
+"slug": "xiaomi-poco-m6-pro-4g"
+},
+{
+"slug": "xiaomi-redmi-a3"
+},
+{
+"slug": "xiaomi-redmi-13-5g"
+},
+{
+"slug": "xiaomi-14t"
+},
+{
+"slug": "xiaomi-15t"
+},
+{
+"slug": "motorola-moto-g24"
+},
+{
+"slug": "motorola-moto-g35"
+},
+{
+"slug": "motorola-moto-g55"
+},
+{
+"slug": "motorola-moto-g75"
+},
+{
+"slug": "motorola-moto-g85"
+},
+{
+"slug": "motorola-edge-50-fusion"
+},
+{
+"slug": "motorola-edge-60-fusion"
+},
+{
+"slug": "honor-x6b"
+},
+{
+"slug": "honor-x7c"
+},
+{
+"slug": "honor-x8b"
+},
+{
+"slug": "honor-x8c"
+},
+{
+"slug": "honor-400-pro"
+},
+{
+"slug": "honor-400-lite"
+}
+]
+}

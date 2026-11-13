@@ -1,0 +1,30 @@
+// Características principales estándar: así las fichas de distintos modelos quedan alineadas en el comparador.
+import type { SpecGroup } from './types.ts';
+
+export const SPEC_TEMPLATE: { group: SpecGroup; key: string; highlight?: boolean; hint: string }[] = [
+  { group: 'Chip', key: 'Procesador', highlight: true, hint: 'Ej.: Snapdragon 8 Gen 3, A17 Pro' },
+  { group: 'Chip', key: 'GPU', hint: 'Ej.: Adreno 750' },
+  { group: 'Memoria', key: 'RAM', hint: 'Ej.: 8 GB' },
+  { group: 'Memoria', key: 'Almacenamiento', highlight: true, hint: 'Ej.: 256 GB' },
+  { group: 'Pantalla', key: 'Tamaño y tipo', highlight: true, hint: 'Ej.: 6,7" AMOLED' },
+  { group: 'Pantalla', key: 'Resolución', hint: 'Ej.: 2796 x 1290' },
+  { group: 'Pantalla', key: 'Frecuencia', hint: 'Ej.: 120 Hz' },
+  { group: 'Pantalla', key: 'Brillo máximo', hint: 'Ej.: 2000 nits' },
+  { group: 'Cámaras', key: 'Cámara principal', highlight: true, hint: 'Ej.: 48 MP f/1.8 OIS' },
+  { group: 'Cámaras', key: 'Gran angular', hint: 'Ej.: 12 MP' },
+  { group: 'Cámaras', key: 'Teleobjetivo', hint: 'Ej.: 12 MP 3x' },
+  { group: 'Cámaras', key: 'Cámara frontal', hint: 'Ej.: 12 MP' },
+  { group: 'Cámaras', key: 'Video', hint: 'Ej.: 4K 60 fps' },
+  { group: 'Batería y carga', key: 'Batería', hint: 'Ej.: 5000 mAh' },
+  { group: 'Batería y carga', key: 'Carga rápida', hint: 'Ej.: 45 W' },
+  { group: 'Batería y carga', key: 'Carga inalámbrica', hint: 'Ej.: 15 W / No' },
+  { group: 'Conectividad', key: '5G', hint: 'Sí / No' },
+  { group: 'Conectividad', key: 'NFC', hint: 'Sí / No' },
+  { group: 'Conectividad', key: 'eSIM', hint: 'Sí / No' },
+  { group: 'Conectividad', key: 'Puerto', hint: 'Ej.: USB-C 3.2' },
+  { group: 'Dimensiones', key: 'Peso', hint: 'Ej.: 187 g' },
+  { group: 'Dimensiones', key: 'Medidas', hint: 'Ej.: 159,9 x 76,7 x 8,3 mm' },
+  { group: 'Protección', key: 'Resistencia', hint: 'Ej.: IP68' },
+  { group: 'Soporte', key: 'Sistema operativo', hint: 'Ej.: Android 15 / iOS 18' },
+  { group: 'Soporte', key: 'Años de actualizaciones', hint: 'Ej.: 7 años (según fabricante)' },
+];

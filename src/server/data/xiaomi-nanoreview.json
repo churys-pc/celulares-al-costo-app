@@ -1,0 +1,174 @@
+{
+ "batch": "xiaomi-nanoreview-2026-11-13",
+ "date": "2026-11-13",
+ "sourceName": "Nanoreview",
+ "note": "AnTuTu publicado por Nanoreview a partir de mediciones de usuarios; puede variar entre pruebas.",
+ "models": [
+  {
+   "model": "Redmi Note 14 5G",
+   "url": "https://nanoreview.net/en/phone/xiaomi-redmi-note-14-5g",
+   "specs": {
+    "Procesador": "Dimensity 7025 Ultra",
+    "Tamaño y tipo": "6,67\" AMOLED",
+    "Frecuencia": "120 Hz",
+    "Batería": "5110 mAh",
+    "Carga rápida": "45 W",
+    "Cámara principal": "108 MP",
+    "Peso": "190 g"
+   },
+   "antutu": {
+    "total": 676648,
+    "cpu": 260476,
+    "gpu": 52729,
+    "mem": 161417,
+    "ux": 202026
+   }
+  },
+  {
+   "model": "Redmi Note 14 Pro 5G",
+   "url": "https://nanoreview.net/en/phone/xiaomi-redmi-note-14-pro-5g",
+   "specs": {
+    "Procesador": "Dimensity 7300 Ultra",
+    "Tamaño y tipo": "6,67\" AMOLED",
+    "Frecuencia": "120 Hz",
+    "Batería": "5110 mAh",
+    "Carga rápida": "45 W",
+    "Cámara principal": "200 MP",
+    "Peso": "190 g"
+   },
+   "antutu": {
+    "total": 855596,
+    "cpu": 303029,
+    "gpu": 125087,
+    "mem": 162500,
+    "ux": 264980
+   }
+  },
+  {
+   "model": "Redmi Note 13 5G",
+   "url": "https://nanoreview.net/en/phone/xiaomi-redmi-note-13",
+   "specs": {
+    "Procesador": "Dimensity 6080",
+    "Tamaño y tipo": "6,67\" AMOLED",
+    "Frecuencia": "120 Hz",
+    "Batería": "5000 mAh",
+    "Carga rápida": "33 W",
+    "Cámara principal": "108 MP",
+    "Peso": "173,5 g"
+   },
+   "antutu": {
+    "total": 581315,
+    "cpu": 222402,
+    "gpu": 48931,
+    "mem": 135953,
+    "ux": 174029
+   }
+  },
+  {
+   "model": "Poco X7 5G",
+   "url": "https://nanoreview.net/en/phone/xiaomi-poco-x7",
+   "specs": {
+    "Procesador": "Dimensity 7300 Ultra",
+    "Tamaño y tipo": "6,67\" AMOLED",
+    "Frecuencia": "120 Hz",
+    "Batería": "5110 mAh",
+    "Carga rápida": "45 W",
+    "Cámara principal": "50 MP",
+    "Peso": "185,5 g"
+   },
+   "antutu": {
+    "total": 854970,
+    "cpu": 321554,
+    "gpu": 125325,
+    "mem": 143201,
+    "ux": 264891
+   }
+  },
+  {
+   "model": "Mi 17T 5G",
+   "url": "https://nanoreview.net/en/phone/xiaomi-17t",
+   "specs": {
+    "Procesador": "Dimensity 9500",
+    "Tamaño y tipo": "6,59\" AMOLED",
+    "Frecuencia": "120 Hz",
+    "Batería": "6500 mAh",
+    "Carga rápida": "67 W",
+    "Cámara principal": "50 MP",
+    "Peso": "200 g"
+   },
+   "antutu": {
+    "total": 2407614,
+    "cpu": 709591,
+    "gpu": 762021,
+    "mem": 409017,
+    "ux": 526985
+   }
+  },
+  {
+   "model": "Mi 17T Pro 5G",
+   "url": "https://nanoreview.net/en/phone/xiaomi-17t-pro",
+   "specs": {
+    "Procesador": "Dimensity 9500",
+    "Tamaño y tipo": "6,83\" AMOLED",
+    "Frecuencia": "144 Hz",
+    "Batería": "7000 mAh",
+    "Carga rápida": "100 W",
+    "Cámara principal": "50 MP",
+    "Peso": "219 g"
+   },
+   "antutu": {
+    "total": 3749435,
+    "cpu": 1053385,
+    "gpu": 1332311,
+    "mem": 529807,
+    "ux": 833932
+   }
+  },
+  {
+   "model": "Redmi 15 5G",
+   "url": "https://nanoreview.net/en/phone/xiaomi-redmi-15-5g",
+   "specs": {
+    "Procesador": "Snapdragon 6s Gen 3",
+    "Tamaño y tipo": "6,9\" IPS LCD",
+    "Frecuencia": "144 Hz",
+    "Batería": "7000 mAh",
+    "Carga rápida": "33 W",
+    "Cámara principal": "50 MP",
+    "Peso": "217 g"
+   },
+   "antutu": {
+    "total": 632934,
+    "cpu": 251623,
+    "gpu": 60173,
+    "mem": 136632,
+    "ux": 184506
+   }
+  },
+  {
+   "model": "Redmi Note 15 Pro 5G",
+   "url": "https://nanoreview.net/en/phone/xiaomi-redmi-note-15-pro-5g",
+   "specs": {
+    "Procesador": "Dimensity 7400 Ultra",
+    "Tamaño y tipo": "6,83\" AMOLED",
+    "Frecuencia": "120 Hz",
+    "Batería": "6580 mAh",
+    "Carga rápida": "45 W",
+    "Cámara principal": "200 MP",
+    "Peso": "210 g"
+   }
+  },
+  {
+   "model": "Redmi Note 15 Pro+ 5G",
+   "url": "https://nanoreview.net/en/phone/xiaomi-redmi-note-15-pro-plus-5g",
+   "specs": {
+    "Procesador": "Snapdragon 7s Gen 4",
+    "Tamaño y tipo": "6,83\" AMOLED",
+    "Frecuencia": "120 Hz",
+    "Batería": "6500 mAh",
+    "Carga rápida": "100 W",
+    "Cámara principal": "200 MP",
+    "Peso": "207 g"
+   }
+  }
+ ]
+}

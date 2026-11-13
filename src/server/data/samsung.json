@@ -1,0 +1,531 @@
+{
+ "batch": "samsung-2026-11-12",
+ "date": "2026-11-12",
+ "sourceName": "Comparigon",
+ "note": "AnTuTu publicado por la fuente; en gama media puede coincidir con el puntaje de referencia del chip.",
+ "models": [
+  {
+   "model": "Galaxy A16 5G",
+   "url": "https://comparigon.com/phones/samsung-galaxy-a16-5g",
+   "specs": {
+    "Procesador": "Exynos 1330 o Dimensity 6300 (según región)",
+    "RAM": "4 / 6 / 8 GB",
+    "Tamaño y tipo": "6,7\" Super AMOLED",
+    "Resolución": "1080 x 2340",
+    "Frecuencia": "90 Hz",
+    "Brillo máximo": "800 nits",
+    "Batería": "5000 mAh",
+    "Carga rápida": "25 W",
+    "Carga inalámbrica": "No",
+    "Cámara principal": "50 MP f/1.8",
+    "Gran angular": "5 MP f/2.2",
+    "Cámara frontal": "13 MP",
+    "Video": "1080p 30 fps",
+    "5G": "Sí",
+    "NFC": "Sí",
+    "Puerto": "USB-C 2.0",
+    "Peso": "200 g",
+    "Medidas": "164,4 x 77,9 x 7,9 mm"
+   },
+   "antutu": {
+    "total": 576249,
+    "cpu": 244407,
+    "gpu": 42598,
+    "mem": 110301,
+    "ux": 178943
+   }
+  },
+  {
+   "model": "Galaxy A17 5G",
+   "url": "https://comparigon.com/phones/samsung-galaxy-a17-5g",
+   "specs": {
+    "Procesador": "Exynos 1330",
+    "RAM": "4 GB",
+    "Tamaño y tipo": "6,7\" Super AMOLED",
+    "Resolución": "1080 x 2340",
+    "Frecuencia": "90 Hz",
+    "Brillo máximo": "800 nits",
+    "Batería": "5000 mAh",
+    "Carga rápida": "25 W",
+    "Carga inalámbrica": "No",
+    "Cámara principal": "50 MP f/1.8 OIS",
+    "Gran angular": "5 MP f/2.2",
+    "Cámara frontal": "13 MP",
+    "Video": "1080p 30 fps",
+    "5G": "Sí",
+    "NFC": "No",
+    "Puerto": "USB-C 2.0",
+    "Peso": "192 g",
+    "Medidas": "164,4 x 77,9 x 7,5 mm"
+   },
+   "antutu": {
+    "total": 592392,
+    "cpu": 268429,
+    "gpu": 42319,
+    "mem": 106692,
+    "ux": 174952
+   }
+  },
+  {
+   "model": "Galaxy A26 5G",
+   "url": "https://comparigon.com/phones/samsung-galaxy-a26-5g",
+   "specs": {
+    "Procesador": "Exynos 1380",
+    "RAM": "4 / 6 / 8 GB",
+    "Tamaño y tipo": "6,7\" Super AMOLED",
+    "Resolución": "1080 x 2340",
+    "Frecuencia": "120 Hz",
+    "Brillo máximo": "800 nits",
+    "Batería": "5000 mAh",
+    "Carga rápida": "25 W",
+    "Carga inalámbrica": "No",
+    "Cámara principal": "50 MP f/1.8",
+    "Gran angular": "8 MP f/2.2",
+    "Cámara frontal": "13 MP",
+    "Video": "4K 30 fps",
+    "5G": "Sí",
+    "NFC": "Sí",
+    "Puerto": "USB-C 2.0",
+    "Peso": "200 g",
+    "Medidas": "164 x 77,5 x 7,7 mm"
+   },
+   "antutu": {
+    "total": 771279,
+    "cpu": 305887,
+    "gpu": 90848,
+    "mem": 151394,
+    "ux": 223150
+   }
+  },
+  {
+   "model": "Galaxy A34 5G",
+   "url": "https://comparigon.com/phones/samsung-galaxy-a34-5g",
+   "specs": {
+    "Procesador": "Dimensity 1080",
+    "RAM": "4 / 6 / 8 GB",
+    "Tamaño y tipo": "6,6\" Super AMOLED",
+    "Resolución": "1080 x 2340",
+    "Frecuencia": "120 Hz",
+    "Brillo máximo": "1000 nits",
+    "Batería": "5000 mAh",
+    "Carga rápida": "25 W",
+    "Cámara principal": "48 MP f/1.8 OIS",
+    "Gran angular": "8 MP f/2.2",
+    "Cámara frontal": "13 MP",
+    "Video": "4K 30 fps",
+    "5G": "Sí",
+    "NFC": "Sí",
+    "Puerto": "USB-C 2.0",
+    "Peso": "199 g",
+    "Medidas": "161,3 x 78,1 x 8,2 mm"
+   },
+   "antutu": {
+    "total": 741627,
+    "cpu": 299339,
+    "gpu": 79444,
+    "mem": 125398,
+    "ux": 237446
+   }
+  },
+  {
+   "model": "Galaxy A35 5G",
+   "url": "https://comparigon.com/phones/samsung-galaxy-a35-5g",
+   "specs": {
+    "Procesador": "Exynos 1380",
+    "RAM": "6 / 8 GB",
+    "Tamaño y tipo": "6,6\" Super AMOLED",
+    "Resolución": "1080 x 2340",
+    "Frecuencia": "120 Hz",
+    "Brillo máximo": "1000 nits",
+    "Batería": "5000 mAh",
+    "Carga rápida": "25 W",
+    "Cámara principal": "50 MP f/1.8 OIS",
+    "Gran angular": "8 MP f/2.2",
+    "Cámara frontal": "13 MP f/2.2",
+    "Video": "4K 30 fps",
+    "5G": "Sí",
+    "NFC": "Sí",
+    "Puerto": "USB-C 2.0",
+    "Peso": "209 g",
+    "Medidas": "161,7 x 78 x 8,2 mm"
+   },
+   "antutu": {
+    "total": 768212,
+    "cpu": 311721,
+    "gpu": 89942,
+    "mem": 136276,
+    "ux": 230273
+   }
+  },
+  {
+   "model": "Galaxy A36 5G",
+   "url": "https://comparigon.com/phones/samsung-galaxy-a36-5g",
+   "specs": {
+    "Procesador": "Snapdragon 6 Gen 3",
+    "RAM": "6 GB",
+    "Tamaño y tipo": "6,7\" Super AMOLED",
+    "Resolución": "1080 x 2340",
+    "Frecuencia": "120 Hz",
+    "Brillo máximo": "1200 nits",
+    "Batería": "5000 mAh",
+    "Carga rápida": "45 W",
+    "Carga inalámbrica": "No",
+    "Cámara principal": "50 MP f/1.8 OIS",
+    "Gran angular": "8 MP f/2.2",
+    "Cámara frontal": "12 MP f/2.2",
+    "Video": "4K 30 fps",
+    "5G": "Sí",
+    "NFC": "Sí",
+    "Puerto": "USB-C 2.0",
+    "Peso": "195 g",
+    "Medidas": "162,9 x 78,2 x 7,4 mm"
+   },
+   "antutu": {
+    "total": 835170,
+    "cpu": 301473,
+    "gpu": 135089,
+    "mem": 156057,
+    "ux": 242551
+   }
+  },
+  {
+   "model": "Galaxy A54 5G",
+   "url": "https://comparigon.com/phones/samsung-galaxy-a54-5g",
+   "specs": {
+    "Procesador": "Exynos 1380",
+    "RAM": "4 / 6 / 8 GB",
+    "Tamaño y tipo": "6,4\" Super AMOLED",
+    "Resolución": "1080 x 2340",
+    "Frecuencia": "120 Hz",
+    "Brillo máximo": "1000 nits",
+    "Batería": "5000 mAh",
+    "Carga rápida": "25 W",
+    "Cámara principal": "50 MP f/1.8 OIS",
+    "Gran angular": "12 MP f/2.2",
+    "Cámara frontal": "32 MP f/2.2",
+    "Video": "4K 30 fps",
+    "5G": "Sí",
+    "NFC": "Sí",
+    "Puerto": "USB-C 2.0",
+    "Peso": "202 g",
+    "Medidas": "158,2 x 76,7 x 8,2 mm"
+   },
+   "antutu": {
+    "total": 779380,
+    "cpu": 320379,
+    "gpu": 91502,
+    "mem": 118771,
+    "ux": 248788
+   }
+  },
+  {
+   "model": "Galaxy A56 5G",
+   "url": "https://comparigon.com/phones/samsung-galaxy-a56-5g",
+   "specs": {
+    "Procesador": "Exynos 1580",
+    "RAM": "6 / 8 / 12 GB",
+    "Tamaño y tipo": "6,7\" Super AMOLED",
+    "Resolución": "1080 x 2340",
+    "Frecuencia": "120 Hz",
+    "Brillo máximo": "1200 nits (1900 HDR)",
+    "Batería": "5000 mAh",
+    "Carga rápida": "45 W",
+    "Carga inalámbrica": "No",
+    "Cámara principal": "50 MP f/1.8 OIS",
+    "Gran angular": "12 MP f/2.2",
+    "Cámara frontal": "12 MP f/2.2",
+    "Video": "4K 30 fps",
+    "5G": "Sí",
+    "NFC": "Sí",
+    "Puerto": "USB-C 2.0",
+    "Peso": "198 g",
+    "Medidas": "162,2 x 77,5 x 7,4 mm"
+   },
+   "antutu": {
+    "total": 1251330,
+    "cpu": 496982,
+    "gpu": 286955,
+    "mem": 160782,
+    "ux": 306611
+   }
+  },
+  {
+   "model": "Galaxy A57 5G",
+   "url": "https://comparigon.com/phones/samsung-galaxy-a57-5g",
+   "specs": {
+    "Procesador": "Exynos 1680",
+    "RAM": "8 GB",
+    "Tamaño y tipo": "6,7\" Super AMOLED",
+    "Resolución": "1080 x 2340",
+    "Frecuencia": "120 Hz",
+    "Brillo máximo": "1200 nits",
+    "Batería": "5000 mAh",
+    "Carga rápida": "45 W",
+    "Cámara principal": "50 MP f/1.8 OIS",
+    "Gran angular": "12 MP f/2.2",
+    "Cámara frontal": "12 MP",
+    "Video": "4K 30 fps",
+    "5G": "Sí",
+    "NFC": "Sí",
+    "Puerto": "USB-C 2.0",
+    "Peso": "179 g",
+    "Medidas": "161,5 x 76,8 x 6,9 mm"
+   },
+   "antutu": {
+    "total": 1390055,
+    "cpu": 510705,
+    "gpu": 374535,
+    "mem": 204469,
+    "ux": 300346
+   }
+  },
+  {
+   "model": "Galaxy S23",
+   "url": "https://comparigon.com/phones/samsung-galaxy-s23",
+   "specs": {
+    "Procesador": "Snapdragon 8 Gen 2",
+    "RAM": "8 GB",
+    "Tamaño y tipo": "6,1\" Dynamic AMOLED",
+    "Resolución": "1080 x 2340",
+    "Frecuencia": "120 Hz",
+    "Brillo máximo": "1200 nits",
+    "Batería": "3900 mAh",
+    "Carga rápida": "25 W",
+    "Carga inalámbrica": "15 W",
+    "Cámara principal": "50 MP f/1.8",
+    "Gran angular": "12 MP f/2.2",
+    "Teleobjetivo": "10 MP f/2.4 70 mm",
+    "Cámara frontal": "12 MP",
+    "Video": "8K 30 fps",
+    "5G": "Sí",
+    "NFC": "Sí",
+    "Puerto": "USB-C 3.2",
+    "Peso": "168 g",
+    "Medidas": "146,3 x 70,9 x 7,6 mm"
+   },
+   "antutu": {
+    "total": 1712393,
+    "cpu": 587063,
+    "gpu": 434955,
+    "mem": 275390,
+    "ux": 414985
+   }
+  },
+  {
+   "model": "Galaxy S24 FE 5G",
+   "url": "https://comparigon.com/phones/samsung-galaxy-s24-fe",
+   "specs": {
+    "Procesador": "Exynos 2400e",
+    "RAM": "8 GB",
+    "Tamaño y tipo": "6,7\" Dynamic AMOLED",
+    "Resolución": "1080 x 2340",
+    "Frecuencia": "120 Hz",
+    "Brillo máximo": "1300 nits (1900 HDR)",
+    "Batería": "4700 mAh",
+    "Carga rápida": "25 W",
+    "Carga inalámbrica": "15 W",
+    "Cámara principal": "50 MP f/1.8 OIS",
+    "Gran angular": "12 MP f/2.2",
+    "Teleobjetivo": "8 MP f/2.4 75 mm",
+    "Cámara frontal": "10 MP",
+    "Video": "8K 30 fps",
+    "5G": "Sí",
+    "NFC": "Sí",
+    "Puerto": "USB-C 3.2",
+    "Peso": "213 g",
+    "Medidas": "162 x 77,3 x 8 mm"
+   },
+   "antutu": {
+    "total": 1971406,
+    "cpu": 675688,
+    "gpu": 653205,
+    "mem": 234506,
+    "ux": 408007
+   }
+  },
+  {
+   "model": "Galaxy S25 5G",
+   "url": "https://comparigon.com/phones/samsung-galaxy-s25",
+   "specs": {
+    "Procesador": "Snapdragon 8 Elite",
+    "RAM": "12 GB",
+    "Tamaño y tipo": "6,2\" Dynamic LTPO AMOLED 2X",
+    "Resolución": "1080 x 2340",
+    "Frecuencia": "120 Hz",
+    "Brillo máximo": "2600 nits",
+    "Batería": "4000 mAh",
+    "Carga rápida": "25 W (la fuente también indica 45 W)",
+    "Carga inalámbrica": "15 W",
+    "Cámara principal": "50 MP f/1.8 OIS",
+    "Gran angular": "12 MP f/2.2",
+    "Teleobjetivo": "10 MP f/2.4 67 mm",
+    "Cámara frontal": "12 MP f/2.2",
+    "Video": "8K 30 fps",
+    "5G": "Sí",
+    "NFC": "Sí",
+    "Puerto": "USB-C",
+    "Peso": "162 g"
+   },
+   "antutu": {
+    "total": 3051168,
+    "cpu": 917368,
+    "gpu": 1152732,
+    "mem": 377208,
+    "ux": 603860
+   }
+  },
+  {
+   "model": "Galaxy S25+ 5G",
+   "url": "https://comparigon.com/phones/samsung-galaxy-s25-plus",
+   "specs": {
+    "Procesador": "Snapdragon 8 Elite",
+    "RAM": "12 GB",
+    "Tamaño y tipo": "6,7\" Dynamic LTPO AMOLED 2X",
+    "Resolución": "1440 x 3120",
+    "Frecuencia": "120 Hz",
+    "Brillo máximo": "2600 nits",
+    "Batería": "4900 mAh",
+    "Carga rápida": "45 W",
+    "Carga inalámbrica": "15 W",
+    "Cámara principal": "50 MP f/1.8",
+    "Gran angular": "12 MP f/2.2",
+    "Teleobjetivo": "10 MP f/2.4 67 mm",
+    "Cámara frontal": "12 MP f/2.2",
+    "Video": "8K 30 fps",
+    "5G": "Sí",
+    "NFC": "Sí",
+    "Puerto": "USB-C",
+    "Peso": "190 g"
+   },
+   "antutu": {
+    "total": 3271956,
+    "cpu": 1036560,
+    "gpu": 1210971,
+    "mem": 380417,
+    "ux": 644008
+   }
+  },
+  {
+   "model": "Galaxy S25 FE 5G",
+   "url": "https://comparigon.com/phones/samsung-galaxy-s25-fe",
+   "specs": {
+    "Procesador": "Exynos 2400",
+    "RAM": "8 GB",
+    "Tamaño y tipo": "6,7\" Dynamic AMOLED",
+    "Resolución": "1080 x 2340",
+    "Frecuencia": "120 Hz",
+    "Brillo máximo": "1300 nits (1900 HDR)",
+    "Batería": "4900 mAh",
+    "Carga rápida": "45 W",
+    "Carga inalámbrica": "25 W",
+    "Cámara principal": "50 MP f/1.8 OIS",
+    "Gran angular": "12 MP f/2.2",
+    "Teleobjetivo": "8 MP f/2.4 75 mm",
+    "Cámara frontal": "12 MP",
+    "Video": "8K 30 fps",
+    "5G": "Sí",
+    "NFC": "Sí",
+    "Puerto": "USB-C 3.2",
+    "Peso": "190 g",
+    "Medidas": "161,3 x 76,6 x 7,4 mm"
+   },
+   "antutu": {
+    "total": 2066828,
+    "cpu": 691857,
+    "gpu": 635919,
+    "mem": 317779,
+    "ux": 421273
+   }
+  },
+  {
+   "model": "Galaxy S25 Ultra 5G",
+   "url": "https://comparigon.com/phones/samsung-galaxy-s25-ultra",
+   "specs": {
+    "Procesador": "Snapdragon 8 Elite",
+    "RAM": "12 / 16 GB",
+    "Tamaño y tipo": "6,9\" Dynamic LTPO AMOLED 2X",
+    "Resolución": "1440 x 3120",
+    "Frecuencia": "120 Hz",
+    "Brillo máximo": "2600 nits",
+    "Batería": "5000 mAh",
+    "Carga rápida": "45 W",
+    "Carga inalámbrica": "Sí",
+    "Cámara principal": "200 MP f/1.7",
+    "Gran angular": "50 MP f/1.9",
+    "Teleobjetivo": "50 MP f/3.4 111 mm",
+    "Cámara frontal": "12 MP f/2.2",
+    "Video": "8K 30 fps",
+    "5G": "Sí",
+    "NFC": "Sí",
+    "Puerto": "USB-C",
+    "Peso": "218 g"
+   },
+   "antutu": {
+    "total": 3326148,
+    "cpu": 1090904,
+    "gpu": 1225203,
+    "mem": 378840,
+    "ux": 631201
+   }
+  },
+  {
+   "model": "Galaxy S26 5G",
+   "url": "https://comparigon.com/phones/samsung-galaxy-s26",
+   "specs": {
+    "Procesador": "Snapdragon 8 Elite Gen 5",
+    "RAM": "12 GB",
+    "Tamaño y tipo": "6,3\" Dynamic LTPO AMOLED 2X",
+    "Resolución": "1080 x 2340",
+    "Frecuencia": "120 Hz",
+    "Brillo máximo": "2600 nits",
+    "Batería": "4300 mAh",
+    "Carga rápida": "25 W",
+    "Cámara principal": "50 MP f/1.8 OIS",
+    "Gran angular": "12 MP f/2.2",
+    "Teleobjetivo": "10 MP f/2.4",
+    "Cámara frontal": "12 MP",
+    "Video": "8K 30 fps",
+    "5G": "Sí",
+    "NFC": "Sí",
+    "Puerto": "USB-C 3.2",
+    "Peso": "167 g"
+   },
+   "antutu": {
+    "total": 2993684,
+    "cpu": 984024,
+    "gpu": 1140841,
+    "mem": 413795,
+    "ux": 455024
+   }
+  },
+  {
+   "model": "Galaxy S26 Ultra 5G",
+   "url": "https://comparigon.com/phones/samsung-galaxy-s26-ultra",
+   "specs": {
+    "Procesador": "Snapdragon 8 Elite Gen 5",
+    "RAM": "12 / 16 GB",
+    "Tamaño y tipo": "6,9\" Dynamic LTPO AMOLED 2X",
+    "Resolución": "1440 x 3120",
+    "Frecuencia": "120 Hz",
+    "Brillo máximo": "2600 nits",
+    "Batería": "5000 mAh",
+    "Carga rápida": "60 W",
+    "Cámara principal": "200 MP f/1.4 OIS",
+    "Gran angular": "50 MP f/1.9",
+    "Teleobjetivo": "50 MP f/2.9 111 mm",
+    "Cámara frontal": "12 MP f/2.2",
+    "Video": "8K 30 fps",
+    "5G": "Sí",
+    "NFC": "Sí",
+    "Peso": "214 g"
+   },
+   "antutu": {
+    "total": 4005831,
+    "cpu": 1165757,
+    "gpu": 1539732,
+    "mem": 488505,
+    "ux": 811837
+   }
+  }
+ ]
+}

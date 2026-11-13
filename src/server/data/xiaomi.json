@@ -1,0 +1,157 @@
+{
+ "batch": "xiaomi-2026-11-12",
+ "date": "2026-11-12",
+ "sourceName": "Comparigon",
+ "note": "AnTuTu publicado por la fuente; puede variar entre mediciones.",
+ "models": [
+  {
+   "model": "Redmi Note 14 Pro+ 5G",
+   "url": "https://comparigon.com/phones/xiaomi-redmi-note-14-pro-plus-5g",
+   "specs": {
+    "Procesador": "Snapdragon 7s Gen 3",
+    "RAM": "8 GB",
+    "Tamaño y tipo": "6,67\" AMOLED",
+    "Resolución": "1220 x 2712",
+    "Frecuencia": "120 Hz",
+    "Brillo máximo": "1200 nits",
+    "Batería": "5110 mAh",
+    "Carga rápida": "120 W",
+    "Carga inalámbrica": "No",
+    "Cámara principal": "200 MP",
+    "Gran angular": "8 MP",
+    "Cámara frontal": "20 MP",
+    "Video": "4K 30 fps",
+    "5G": "Sí",
+    "NFC": "Sí",
+    "Puerto": "USB-C 2.0",
+    "Peso": "205-210 g",
+    "Medidas": "162,5 x 74,7 x 8,8 mm"
+   },
+   "antutu": {
+    "total": 1001783,
+    "cpu": 388668,
+    "gpu": 177263,
+    "mem": 186944,
+    "ux": 248908
+   }
+  },
+  {
+   "model": "Redmi Note 13 Pro+ 5G",
+   "url": "https://comparigon.com/phones/xiaomi-redmi-note-13-pro-plus-5g",
+   "specs": {
+    "Procesador": "Dimensity 7200 Ultra (la fuente también indica Snapdragon 7s Gen 2)",
+    "RAM": "8 / 12 / 16 GB",
+    "Tamaño y tipo": "6,67\" AMOLED",
+    "Resolución": "1220 x 2712",
+    "Frecuencia": "120 Hz",
+    "Brillo máximo": "1800 nits",
+    "Batería": "5000 mAh",
+    "Carga rápida": "120 W",
+    "Cámara principal": "200 MP f/1.7",
+    "Gran angular": "8 MP f/2.2",
+    "Cámara frontal": "16 MP",
+    "Video": "4K 30 fps",
+    "5G": "Sí",
+    "NFC": "No (según la fuente)",
+    "Puerto": "USB-C 2.0",
+    "Peso": "204,5 g",
+    "Medidas": "161,4 x 74,2 x 8,9 mm"
+   },
+   "antutu": {
+    "total": 977841,
+    "cpu": 348288,
+    "gpu": 155904,
+    "mem": 200042,
+    "ux": 273607
+   }
+  },
+  {
+   "model": "Poco X7 Pro 5G",
+   "url": "https://comparigon.com/phones/xiaomi-poco-x7-pro",
+   "specs": {
+    "Procesador": "Dimensity 8400",
+    "RAM": "8 GB",
+    "Tamaño y tipo": "6,67\" AMOLED",
+    "Resolución": "1220 x 2712",
+    "Frecuencia": "120 Hz",
+    "Brillo máximo": "1400 nits",
+    "Batería": "6000 mAh",
+    "Carga rápida": "90 W",
+    "Cámara principal": "50 MP f/1.5",
+    "Gran angular": "8 MP f/2.2",
+    "Cámara frontal": "20 MP",
+    "Video": "4K 60 fps",
+    "5G": "Sí",
+    "NFC": "No (según la fuente)",
+    "Puerto": "USB-C 2.0",
+    "Peso": "195 g",
+    "Medidas": "160,8 x 75,2 x 8,3 mm"
+   },
+   "antutu": {
+    "total": 1925109,
+    "cpu": 604919,
+    "gpu": 599014,
+    "mem": 299603,
+    "ux": 386377
+   }
+  },
+  {
+   "model": "Poco X6 Pro 5G",
+   "url": "https://comparigon.com/phones/xiaomi-poco-x6-pro",
+   "specs": {
+    "Procesador": "Dimensity 8300",
+    "RAM": "8 / 12 GB",
+    "Tamaño y tipo": "6,67\" AMOLED",
+    "Resolución": "1220 x 2712",
+    "Frecuencia": "120 Hz",
+    "Brillo máximo": "1800 nits",
+    "Batería": "5000 mAh",
+    "Carga rápida": "67 W",
+    "Cámara principal": "64 MP f/1.7 OIS",
+    "Gran angular": "8 MP f/2.2",
+    "Cámara frontal": "16 MP",
+    "Video": "4K 30 fps",
+    "5G": "Sí",
+    "NFC": "No (según la fuente)",
+    "Puerto": "USB-C 2.0",
+    "Peso": "186 g",
+    "Medidas": "160,45 x 74,34 x 8,25 mm"
+   },
+   "antutu": {
+    "total": 1604305,
+    "cpu": 482670,
+    "gpu": 432750,
+    "mem": 299238,
+    "ux": 389647
+   }
+  },
+  {
+   "model": "Redmi 13c 5G",
+   "url": "https://comparigon.com/phones/xiaomi-redmi-13c-5g",
+   "specs": {
+    "Procesador": "Dimensity 6100+",
+    "RAM": "4 / 6 / 8 GB",
+    "Tamaño y tipo": "6,74\" IPS LCD",
+    "Resolución": "720 x 1600",
+    "Frecuencia": "90 Hz",
+    "Brillo máximo": "600 nits",
+    "Batería": "5000 mAh",
+    "Carga rápida": "18 W",
+    "Cámara principal": "50 MP f/1.8",
+    "Cámara frontal": "5 MP",
+    "5G": "Sí",
+    "NFC": "Sí",
+    "Peso": "192 g",
+    "Medidas": "168 x 78 x 8,09 mm",
+    "Sistema operativo": "Android 13 (de fábrica)"
+   },
+   "antutu": {
+    "total": 546817,
+    "cpu": 204248,
+    "gpu": 43143,
+    "mem": 144205,
+    "ux": 155221
+   }
+  }
+ ]
+}

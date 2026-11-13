@@ -1,0 +1,73 @@
+# Publica automáticamente cada versión nueva:
+# al hacer push a main, si la versión de package.json todavía no tiene release en
+# churys-pc/celulares-al-costo-releases (repo público), genera el instalador Windows y lo publica.
+# La app instalada lo detecta y se actualiza sola.
+name: Publicar versión Windows
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.v.outputs.version }}
+      publish: ${{ steps.v.outputs.publish }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: v
+        env:
+          GH_TOKEN: ${{ secrets.RELEASES_TOKEN }}
+        run: |
+          v=$(node -p "require('./package.json').version")
+          echo "version=$v" >> "$GITHUB_OUTPUT"
+          if [ -z "$GH_TOKEN" ]; then echo "::error::Falta el secreto RELEASES_TOKEN"; exit 1; fi
+          # Publicada = existe el release Y tiene latest.yml (si quedó incompleto, se completa).
+          if gh release view "v$v" -R churys-pc/celulares-al-costo-releases --json assets --jq '.assets[].name' 2>/dev/null | grep -qx latest.yml; then
+            echo "v$v ya está publicada; no se publica de nuevo."; echo "publish=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "Nueva versión v$v: se publica."; echo "publish=true" >> "$GITHUB_OUTPUT"
+          fi
+
+  windows:
+    needs: check
+    if: needs.check.outputs.publish == 'true'
+    runs-on: windows-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install
+      - run: npm test
+      - name: Generar instalador
+        env:
+          DATA_REPO_TOKEN: ${{ secrets.DATA_REPO_TOKEN }}
+        run: npm run dist:win
+      - name: Publicar en el repo de releases
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.RELEASES_TOKEN }}
+          VERSION: ${{ needs.check.outputs.version }}
+        run: |
+          ls release
+          NOTES="$(git log -1 --pretty=%B | grep -v -E '^(Co-Authored-By|Claude-Session):' | sed '/^\s*$/d')"
+          [ -n "$NOTES" ] || NOTES="Versión $VERSION de la app Celulares al Costo para Windows." 
+          # latest.yml + .exe + .blockmap: lo que electron-updater necesita para detectar y descargar la versión.
+          R=churys-pc/celulares-al-costo-releases
+          FILES="release/latest.yml $(ls release/*.exe release/*.blockmap | tr '\n' ' ')"
+          if gh release view "v$VERSION" -R $R >/dev/null 2>&1; then
+            gh release upload "v$VERSION" -R $R --clobber $FILES
+            gh release edit "v$VERSION" -R $R --draft=false --latest --title "Celulares al Costo $VERSION" --notes "$NOTES"
+          else
+            gh release create "v$VERSION" -R $R --target main --latest \
+              --title "Celulares al Costo $VERSION" --notes "$NOTES" $FILES
+          fi
+          gh release view "v$VERSION" -R $R --json assets --jq '.assets[].name'

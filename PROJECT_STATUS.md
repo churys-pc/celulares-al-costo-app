@@ -1,0 +1,74 @@
+# PROJECT_STATUS — App Celulares al Costo
+
+## Arquitectura
+- **Windows**: Electron (`electron/main.ts`) levanta el backend in-process y abre la UI en `http://127.0.0.1:<puerto>`.
+- **Backend**: Node `http` puro (`src/server/http.ts`), solo loopback. Rutas REST `/api/...` + estáticos de `dist/web`.
+- **DB**: SQLite local en `%APPDATA%/Celulares al Costo/data/celulares.db` (Electron) o `CELULARES_DATA_DIR`.
+  `node:sqlite` (Node ≥ 22.13 / Electron ≥ 37). Se quitó `better-sqlite3` de dependencias para evitar compilación nativa al empaquetar (el código aún lo intenta si estuviera instalado). Migraciones versionadas en `db.ts`.
+- **UI**: React 19 + TS, bundle con esbuild (`scripts/build.mjs`). Responsive (sirve para Safari en Fase 3).
+- **Compartido**: `src/shared/types.ts` (entidades, estados Aprobado/Fallido/Pendiente/No compatible/No verificado, validación).
+
+## Decisiones
+- esbuild en vez de Vite: un solo script compila UI, servidor y Electron; menos dependencias.
+- Sin Express ni ORM. Validación y saneamiento en `catalog.ts`; consultas siempre parametrizadas.
+- Marca/modelo/variante se crean o reutilizan por nombre al guardar un producto; variantes huérfanas se borran.
+- Specs por **modelo**, cada una con fuente/URL/fecha; sin fuente se muestra «Sin fuente · No verificado».
+- DEMO: eliminado en v0.10.1 (ya no hay registros de ejemplo).
+- Conversión UYU/USD solo con cotización manual cargada en Ajustes (no se inventa).
+- Escrituras API rechazan `Origin` ajeno (CSRF básico). CSP estricta en la UI.
+
+## Avance
+- [x] Fase 0: estructura, build, tests, comandos.
+- [x] Fase 1 (bloque 1): esquema SQLite, CRUD productos, búsqueda/filtros (marca, condición, uso, favoritos), ficha breve + «Ver todas», editor de specs con fuente, export/import JSON atómico, Ajustes (nombre, color, moneda, cotización, DEMO).
+- [x] Rediseño Windows según mockup del cliente: tema azul marino con brillos, logo configurable (default recortado del mockup en `src/web/logo.png`), barra de título oscura integrada (titleBarOverlay), Inicio con buscador Ctrl+K, KPIs reales (`/api/stats`; ventas/tasaciones = «—» hasta tener módulo), carrusel de destacados (reales primero, DEMO al final) y herramientas.
+- [x] Fotos por producto: máx. 5, origen obligatorio (propia/autorizada), validación de bytes reales, redimensión a 1600 px en cliente, zoom, borrado de archivos al eliminar producto.
+- [x] Empaquetado .exe: electron-builder (NSIS instalador + portable x64) a `release/`, ícono `build/icon.png`, `CREAR-EXE.bat` (reintenta con `signAndEditExecutable=false` si falla por permisos de symlink). React pasa a devDependencies (va dentro del bundle). Una sola instancia + diálogo de error con `error.log` en userData.
+- [x] Auto-actualización: `electron-updater` (provider github → **churys-pc/celulares-al-costo-releases**, público). Busca a los 3 s de abrir y **cada 10 s** (pedido del usuario; pausa 5 min tras error/límite de GitHub), descarga sola, pregunta «Reiniciar ahora / Más tarde» (si no, instala al cerrar). Desde v0.6.1 el aviso es **propio de la app** (`UpdateToast.tsx`: progreso de descarga, tarjeta «Nueva versión lista» con novedades = mensaje del commit, pantalla «Actualizando…»), sin diálogos nativos. Desde v0.5.1 la instalación es **silenciosa** (`quitAndInstall(true, true)`, sin ventana del instalador) y la app se reabre sola. Ajustes muestra versión y botón «Buscar actualizaciones» (preload `window.desktop`). Solo instalador NSIS (el portable no se auto-actualiza).
+- [x] CI: `.github/workflows/release.yml` (push a main con versión nueva sin release publicado → windows-latest; el proxy de la sesión bloquea push de tags → tests → `npm run release` publica en el repo público con secreto `RELEASES_TOKEN`) y `ci.yml` (tests en cada push).
+- [x] Repos creados en **churys-pc** (el navegador tenía esa sesión; el usuario eligió usarla): `celulares-al-costo-app` (privado, código, rama main) y `celulares-al-costo-releases` (público, instaladores). CI de tests en verde.
+- [x] Secreto `RELEASES_TOKEN` cargado por el usuario. **v0.1.0 publicada** (Setup .exe ~97 MB + blockmap + latest.yml) en https://github.com/churys-pc/celulares-al-costo-releases/releases/latest. Publicación: build con `--publish never` + `gh release create/upload --clobber` (electron-builder daba 422 «Published releases must have a valid tag» al publicar en otro repo).
+- [x] **Comparador** 2-4 modelos (`src/shared/compare.ts` lógica pura + `Compare.tsx`): filas alineadas por clave (plantilla estándar `specTemplate.ts`), «Solo diferencias», AnTuTu por modelo (tabla `benchmarks`, migración v2: versión v9/v10/v11, plataforma, total + CPU/GPU/MEM/UX, fuente, URL, fecha, variante), barras %, ganador solo si todos tienen la misma versión, aviso Android vs iOS, resumen «¿Cuál conviene?» con precios reales del catálogo (USD; UYU requiere cotización). «Modelo sin stock» para comparar sin producto.
+- Fuentes: no hay API oficial gratuita (Kimovil bloquea acceso automatizado; GSMArena restringe uso de su info). Decisión: **carga guiada** con enlaces de búsqueda (AnTuTu ranking oficial, Kimovil, GSMArena, Nanoreview) + «Medición propia en el local». Sin scraping.
+- [x] Sincronización con Google Sheets (v0.2–v0.6): **retirada en v0.10.7** junto con la copia del catálogo (código y datos borrados al hacer público el repo).
+- [x] **Datos investigados** (`server/data/*.json` + `seedData.ts`, solo completan vacíos, una vez por lote): lote Apple 2026-11-12 desde Comparigon (11 modelos, 10 con AnTuTu V11). Sin datos aún: iPhone 8 Plus, 11, 12, 13 Pro, 16, 17 Pro, 18 Pro (y AnTuTu de 17 Air). AnTuTu V12 agregado a versiones.
+- [x] v0.3.0: Lote **Samsung** (17/27 con ficha + AnTuTu V11). Sin página en Comparigon: A06, A07, A16 LTE, A17 LTE, A27, A37, S20 FE, S23 FE, S24, S24+.
+- [x] v0.4.0: lote **Xiaomi** 5/45 (Redmi Note 14 Pro+ 5G, Note 13 Pro+ 5G, Poco X7 Pro 5G, Poco X6 Pro 5G, Redmi 13c 5G). Comparigon no tiene la mayoría de Redmi/Poco de gama baja-media (slugs probados sin página).
+- [x] v0.4.1: lote **Xiaomi Nanoreview** (7 con AnTuTu V11: Note 14 5G, Note 14 Pro 5G, Note 13 5G, Poco X7 5G, Mi 17T 5G, Mi 17T Pro 5G, Redmi 15 5G; solo ficha: Note 15 Pro 5G y Pro+ 5G porque la página no indica versión de AnTuTu). Slugs Nanoreview: `nanoreview.net/en/phone/xiaomi-<modelo>` (LTE y Poco C/Redmi A sin página).
+- [x] v0.4.2: lote **varios Nanoreview** (AnTuTu V11: Galaxy S24 5G, S24 Plus 5G, S23 FE, A06, Moto G06, Honor X7d LTE, iPhone 16, 12, 11; solo ficha iPhone 13 Pro). S20 FE 5G NO cargado: la página de Nanoreview es la versión Exynos 990 (otro chip).
+- [ ] Pendiente: resto de Xiaomi y otras (7) → buscar otra fuente con AnTuTu V11 por equipo, o medición propia en el local. Slugs Comparigon: `comparigon.com/phones/<marca>-<modelo>` (Samsung A: sufijo `-5g`). Precios actualizados: el usuario definirá luego cómo (por ahora planilla no pública).
+- [x] v0.5.0: **Modo presentación** (`Presentation.tsx`): pantalla completa, un equipo por vez de la lista filtrada (solo disponibles con precio), fotos, hasta 6 características, AnTuTu con fuente, precio USD (+UYU si hay cotización), garantía, «Ideal para»; ← → / Espacio (automático 8 s) / Esc. Sin costo ni notas internas. Botones en Catálogo y en la ficha («Presentar al cliente»). ProductDetail incluye benchmarks.
+- [x] v0.6.0: **Búsqueda en línea** para modelos sin stock (`shared/nanoreview.ts` parser + `server/lookup.ts`): `GET /api/lookup?q=` usa la API pública de búsqueda de Nanoreview (`/api/search?q=`), `POST /api/lookup {slug}` descarga `/en/phone/<slug>`, lee tabla «cell-h/cell-s» y barra «AnTuTu Benchmark N», guarda ficha + AnTuTu con fuente «Nanoreview (búsqueda en línea)», URL y fecha (solo completa lo vacío). En el Comparador aparece la sección «Buscar en internet». **Base precargada** (`data/popular-models.json`, 85 slugs: faltantes del catálogo con su nombre exacto + populares) que se descarga sola en segundo plano (1,5 s entre modelos, una vez por slug; si no hay internet reintenta cada hora). Sin página en Nanoreview: Alcatel 1B, CAT S42 H+, Itel A100c, ZTE Blade A56.
+- [x] v0.6.1: aviso de actualización integrado (UpdateToast) con progreso, novedades y «Reiniciar y actualizar».
+- [x] v0.7.0: **Cargar productos** (`QuickAdd.tsx`, `server/quickProducts.ts`, `shared/describe.ts`): nombre + precio + foto opcional → busca la ficha en Nanoreview (900 ms tras escribir), genera descripción editable; RAM/almacenamiento se leen del nombre ("8/256", "128GB"). Catálogo simplificado (foto, modelo, precio); la ficha muestra descripción y especificaciones completas. **Repo de datos privado `churys-pc/celulares-al-costo-datos`** (`server/repoSync.ts`): un JSON por producto en `catalog/products/<uuid>.json` + foto `catalog/photos/<uuid>.jpg`; SQLite local con outbox; push/pull cada 30 s; clave fine-grained (solo ese repo, Contents RW) cifrada con safeStorage, se pega en Ajustes → Repositorio de datos en cada PC. Migración v4 borra los productos importados de Drive (precios desactualizados/duplicados aparentes). Productos del repo: editar/borrar/foto solo desde «Cargar productos».
+- [x] v0.8.0: **Comparador rediseñado** según imagen del cliente: «Agregar modelo» (ventana con búsqueda en la app + internet + modelo manual), tarjetas «Modelos seleccionados» (N de 4, foto, stock/precio, «Ver ficha», quitar; el ganador AnTuTu resaltado), panel «Rendimiento AnTuTu» (versión, +X% del mejor sobre el segundo, barras, fuente, «Ver desglose y fuentes» con CPU/GPU/MEM/UX y editar), tabla «Especificaciones» con filas principales (Procesador, Pantalla + resolución, Batería, Carga, Cámara, RAM, Almacenamiento, Red móvil), mejor batería/carga en cian, «Solo diferencias», «Ver todas», fuentes de las fichas; «¿Cuál conviene?» se mantiene al final.
+- [x] v0.8.1: se quitó el recuadro de descripción de la ficha del producto (pedido del usuario); la descripción se sigue generando en «Cargar productos».
+- [x] v0.8.2: **conexión automática al repo de datos**: el workflow pasa el secreto `DATA_REPO_TOKEN` al build y `scripts/build.mjs` lo incluye ofuscado (XOR + base64, no es cifrado real) solo en `electron.cjs`; `repoConfig` usa la clave pegada en la PC si existe, si no la incluida (`builtin`). Riesgo aceptado por el usuario: quien descargue el instalador público podría extraer la clave y modificar el catálogo (recuperable por historial de git).
+- [x] v0.9.0: **Catálogo en formato lista** (imagen del cliente): buscador + marcas, segmento Todos/Nuevos/Usados, usos con ícono, Favoritos, «N equipos · M de ejemplo», tabla Equipo (foto, modelo, marca · memoria · color) / Estado (píldora) / Precio (USD grande + pesos debajo) / Acciones (favorito, «Ver equipo»). **Precios**: se cargan en USD en «Cargar productos» (se quitó el selector de moneda; vista previa en pesos); pesos = USD × «Cotización del dólar» de Ajustes (`dualPrice` en `format.ts`); sin cotización se avisa y no se muestran pesos.
+- [x] v0.10.0: **Inicio de sesión con correo** (`server/auth.ts`, `Login.tsx`, `UsersSection.tsx`, `session.ts`). Admin fijo `ADMIN_EMAIL = celularesalcostopando@gmail.com` (`shared/types.ts`); la primera vez crea su contraseña, solo después de la primera bajada del repo (`RepoClient.pulledOnce`, para no pisar una cuenta creada en otra PC; sin clave de repo = modo local). Vendedores: los crea el admin en Ajustes → Usuarios (cambiar contraseña / dar de baja). Contraseñas scrypt + sal en `config/users.json` del repo de datos; bloqueo 5 min tras 8 intentos. Sesión del servidor local recordada (`sessionEmail`). **Permisos en el servidor**: toda la API requiere sesión; escrituras solo admin salvo favoritos, búsqueda en línea y sincronizar. UI: vendedor sin «Cargar productos», sin edición en ficha/comparador, Ajustes = Mi cuenta + cotización (solo lectura) + actualizaciones. **Cotización compartida**: al guardarla el admin se sube `config/settings.json` y las demás PCs la aplican al sincronizar (UI refresca cada 60 s). Riesgo conocido: quien extraiga la clave del instalador podría editar `config/users.json`.
+- [x] v0.10.1: **se eliminó todo lo DEMO** (pedido del usuario): sin siembra (`seed.ts` borrado), migración v5 borra productos/modelos/marcas DEMO y los ajustes `showDemo`/`demoSeeded`; sin etiquetas, avisos, casilla ni botón «Borrar datos DEMO». La columna `is_demo` queda sin uso.
+- [x] v0.10.2: catálogo con selector «Ordenar» (destacados / precio menor a mayor / mayor a menor; compara en USD, sin precio al final; se recuerda en la PC; el modo presentación sigue ese orden). Columna Acciones de ancho fijo para alinear encabezados.
+- [x] v0.10.3: contraseña mínima 4 caracteres (antes 8), pedido del usuario.
+- [x] v0.10.4: botón «Cerrar sesión» en Ajustes → Mi cuenta (además del de la barra lateral).
+- [x] v0.10.5: Comparador: barras de AnTuTu (y el desglose) ordenadas de mayor a menor puntaje; sin dato al final.
+- [x] v0.10.6: **Actualizaciones de iOS** (`shared/iosSupport.ts`): dato oficial (iOS 27 = iPhone 11 y posteriores + SE 2.ª/3.ª; XS/XR llegaron a iOS 18; 8/X a iOS 16) + estimación no oficial «hasta» = lanzamiento + 6–7 años (nunca antes del año actual). Recuadro en la ficha del catálogo y fila «Actualizaciones» en el comparador (Android: spec «Años de actualizaciones» si existe). **Actualizar `CURRENT_IOS`/`CURRENT_YEAR` cada junio** con la lista nueva de Apple.
+- [x] v0.10.7: **repo del código público** (Actions gratis): se borró el código de Drive y la copia del catálogo, y se reemplazó el historial por uno limpio (un commit). Secretos siguen en GitHub Secrets.
+- [ ] Fase 1 (bloque 3): import/export CSV.
+- [ ] Luego: versión móvil (Safari) con el diseño del mockup.
+- [ ] Fases 2-6 según prompt original.
+
+## Pendiente / no verificado
+- Electron + `node:sqlite` y el .exe no probados aún en Windows (sin red en el entorno de desarrollo). .exe sin firma digital → SmartScreen avisa la primera vez.
+- Typecheck de la UI requiere `@types/react` instalado (`npm run typecheck`); aquí solo se tipó servidor/compartido/tests.
+- INICIAR.bat: instala Node LTS con winget si falta, `npm install` la primera vez y `npm start`.
+
+## Comandos
+```
+npm install            # una vez
+npm start              # compila y abre la app Windows
+npm run server         # solo backend+UI en http://127.0.0.1:5180 (navegador)
+npm run dev            # recompila al guardar
+npm test               # tests de catálogo + API
+npm run typecheck
+npm run dist:win       # .exe instalador local en release/ (o CREAR-EXE.bat)
+# Publicar actualización: subir version en package.json, commit y push a main (el workflow publica si la versión es nueva)
+```

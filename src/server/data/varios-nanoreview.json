@@ -1,0 +1,211 @@
+{
+ "batch": "varios-nanoreview-2026-11-13",
+ "date": "2026-11-13",
+ "sourceName": "Nanoreview",
+ "note": "AnTuTu publicado por Nanoreview a partir de mediciones de usuarios; puede variar entre pruebas.",
+ "models": [
+  {
+   "brand": "Samsung",
+   "model": "Galaxy S24 5G",
+   "url": "https://nanoreview.net/en/phone/samsung-galaxy-s24",
+   "specs": {
+    "Procesador": "Snapdragon 8 Gen 3",
+    "Tamaño y tipo": "6,2\" Dynamic AMOLED",
+    "Frecuencia": "120 Hz",
+    "Batería": "4000 mAh",
+    "Carga rápida": "25 W",
+    "Cámara principal": "50 MP",
+    "Peso": "167 g"
+   },
+   "antutu": {
+    "total": 2291956,
+    "cpu": 707370,
+    "gpu": 804343,
+    "mem": 304574,
+    "ux": 475669
+   }
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy S24 Plus 5G",
+   "url": "https://nanoreview.net/en/phone/samsung-galaxy-s24-plus",
+   "specs": {
+    "Procesador": "Snapdragon 8 Gen 3",
+    "Tamaño y tipo": "6,7\" Dynamic AMOLED",
+    "Frecuencia": "120 Hz",
+    "Batería": "4900 mAh",
+    "Carga rápida": "45 W",
+    "Cámara principal": "50 MP",
+    "Peso": "196 g"
+   },
+   "antutu": {
+    "total": 2235168,
+    "cpu": 697088,
+    "gpu": 743460,
+    "mem": 310939,
+    "ux": 483681
+   }
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy S23 FE",
+   "url": "https://nanoreview.net/en/phone/samsung-galaxy-s23-fe",
+   "specs": {
+    "Procesador": "Snapdragon 8 Gen 1",
+    "Tamaño y tipo": "6,4\" Dynamic AMOLED",
+    "Frecuencia": "120 Hz",
+    "Batería": "4500 mAh",
+    "Carga rápida": "25 W",
+    "Cámara principal": "50 MP",
+    "Peso": "209 g"
+   },
+   "antutu": {
+    "total": 1436963,
+    "cpu": 516037,
+    "gpu": 391403,
+    "mem": 186259,
+    "ux": 343264
+   }
+  },
+  {
+   "brand": "Samsung",
+   "model": "Galaxy A06",
+   "url": "https://nanoreview.net/en/phone/samsung-galaxy-a06",
+   "specs": {
+    "Procesador": "Helio G85",
+    "Tamaño y tipo": "6,7\" PLS TFT",
+    "Frecuencia": "60 Hz",
+    "Batería": "5000 mAh",
+    "Carga rápida": "25 W",
+    "Cámara principal": "50 MP",
+    "Peso": "189 g"
+   },
+   "antutu": {
+    "total": 338136,
+    "cpu": 138987,
+    "gpu": 26170,
+    "mem": 73439,
+    "ux": 99540
+   }
+  },
+  {
+   "brand": "Motorola",
+   "model": "Moto G06",
+   "url": "https://nanoreview.net/en/phone/motorola-moto-g06",
+   "specs": {
+    "Procesador": "Helio G81 Extreme",
+    "Tamaño y tipo": "6,88\" IPS LCD",
+    "Frecuencia": "120 Hz",
+    "Batería": "5200 mAh",
+    "Carga rápida": "10 W",
+    "Cámara principal": "50 MP",
+    "Peso": "194 g"
+   },
+   "antutu": {
+    "total": 353291,
+    "cpu": 147376,
+    "gpu": 68275,
+    "mem": 56781,
+    "ux": 80859
+   }
+  },
+  {
+   "brand": "Honor",
+   "model": "X7d LTE",
+   "url": "https://nanoreview.net/en/phone/honor-x7d",
+   "specs": {
+    "Procesador": "Snapdragon 685",
+    "Tamaño y tipo": "6,77\" TFT LCD",
+    "Frecuencia": "120 Hz",
+    "Batería": "6500 mAh",
+    "Carga rápida": "35 W",
+    "Cámara principal": "108 MP",
+    "Peso": "208 g"
+   },
+   "antutu": {
+    "total": 499100,
+    "cpu": 200512,
+    "gpu": 25936,
+    "mem": 159584,
+    "ux": 113068
+   }
+  },
+  {
+   "brand": "Apple",
+   "model": "iPhone 16",
+   "url": "https://nanoreview.net/en/phone/apple-iphone-16",
+   "specs": {
+    "Procesador": "A18",
+    "Tamaño y tipo": "6,1\" OLED",
+    "Frecuencia": "60 Hz",
+    "Batería": "3561 mAh",
+    "Carga rápida": "30 W",
+    "Cámara principal": "48 MP",
+    "Peso": "170 g"
+   },
+   "antutu": {
+    "total": 1985600,
+    "cpu": 621688,
+    "gpu": 592569,
+    "mem": 184239,
+    "ux": 587104
+   }
+  },
+  {
+   "brand": "Apple",
+   "model": "iPhone 12",
+   "url": "https://nanoreview.net/en/phone/apple-iphone-12",
+   "specs": {
+    "Procesador": "A14 Bionic",
+    "Tamaño y tipo": "6,1\" OLED",
+    "Frecuencia": "60 Hz",
+    "Batería": "2815 mAh",
+    "Carga rápida": "18 W",
+    "Cámara principal": "12 MP",
+    "Peso": "164 g"
+   },
+   "antutu": {
+    "total": 1341575,
+    "cpu": 402035,
+    "gpu": 336490,
+    "mem": 153915,
+    "ux": 449135
+   }
+  },
+  {
+   "brand": "Apple",
+   "model": "iPhone 11",
+   "url": "https://nanoreview.net/en/phone/apple-iphone-11",
+   "specs": {
+    "Procesador": "A13 Bionic",
+    "Tamaño y tipo": "6,1\" IPS LCD",
+    "Frecuencia": "60 Hz",
+    "Batería": "3110 mAh",
+    "Carga rápida": "18 W",
+    "Cámara principal": "12 MP",
+    "Peso": "194 g"
+   },
+   "antutu": {
+    "total": 1101851,
+    "cpu": 296803,
+    "gpu": 301818,
+    "mem": 149834,
+    "ux": 353396
+   }
+  },
+  {
+   "brand": "Apple",
+   "model": "iPhone 13 Pro",
+   "url": "https://nanoreview.net/en/phone/apple-iphone-13-pro",
+   "specs": {
+    "Procesador": "A15 Bionic",
+    "Tamaño y tipo": "6,1\" OLED",
+    "Frecuencia": "120 Hz",
+    "Batería": "3125 mAh",
+    "Carga rápida": "20 W",
+    "Cámara principal": "12 MP",
+    "Peso": "204 g"
+   }
+  }
+ ]
+}
