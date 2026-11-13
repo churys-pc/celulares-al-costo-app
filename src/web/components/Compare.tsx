@@ -9,7 +9,7 @@ import { useIsAdmin } from '../session.ts';
 import { iosSupport, IOS_SOURCE } from '../../shared/iosSupport.ts';
 
 type Candidate = Awaited<ReturnType<typeof api.compareCandidates>>[number];
-const MAX = 4;
+const MAX = 3;
 const nf = (n: number) => n.toLocaleString('es-UY');
 const name = (m: { brand: string; model: string }) => (m.brand === 'Apple' ? m.model : `${m.brand} ${m.model}`);
 
@@ -59,7 +59,7 @@ export function Compare({ settings }: { settings: Settings | null }) {
   const admin = useIsAdmin();
   const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [ids, setIds] = useState<number[]>(() => {
-    try { return JSON.parse(localStorage.getItem('compare.ids') ?? '[]'); } catch { return []; }
+    try { return (JSON.parse(localStorage.getItem('compare.ids') ?? '[]') as number[]).slice(0, MAX); } catch { return []; }
   });
   const [models, setModels] = useState<CompareModel[]>([]);
   const [adding, setAdding] = useState(false);

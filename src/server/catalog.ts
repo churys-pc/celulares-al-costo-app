@@ -355,7 +355,7 @@ export class CatalogRepo {
   }
 
   compareModels(ids: number[]): CompareModel[] {
-    if (ids.length < 1 || ids.length > 4) throw new ValidationError('Elegí entre 2 y 4 modelos');
+    if (ids.length < 1 || ids.length > 3) throw new ValidationError("Elegí entre 2 y 3 modelos");
     return ids.map((id) => {
       const m = this.db.prepare(`SELECT m.*, b.name AS brand FROM models m JOIN brands b ON b.id = m.brand_id WHERE m.id = ?`).get(id);
       if (!m) throw new ValidationError('Modelo inexistente');
