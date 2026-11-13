@@ -121,6 +121,9 @@ const MIGRATIONS: string[] = [
    ALTER TABLE models ADD COLUMN ficha_rev TEXT;`,
   // v7: portada oficial vinculada al ID de cada modelo (clave de data/covers.json).
   `ALTER TABLE models ADD COLUMN cover_key TEXT;`,
+  // v8: «Pendientes del local» (notas de tareas del personal; se comparten por el repo de datos como tasks/<id>.json).
+  `CREATE TABLE tasks (id TEXT PRIMARY KEY, title TEXT NOT NULL, description TEXT NOT NULL DEFAULT '',
+     done INTEGER NOT NULL DEFAULT 0, created_by TEXT, created_at TEXT NOT NULL, updated_at TEXT NOT NULL, completed_at TEXT);`,
 ];
 
 function migrate(db: Db) {

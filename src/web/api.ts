@@ -18,7 +18,23 @@ const qs = (o: Record<string, unknown>) => {
   return p.toString();
 };
 
+export interface SearchHit {
+  type: 'product' | 'model'; productId: number | null; modelId: number; brand: string; model: string; variant: string;
+  price: number | null; currency: 'USD' | 'UYU' | null; available: boolean; availabilityLabel: string; availability: string;
+  coverKey: string | null; photoUrl: string | null;
+}
+export interface Task { id: string; title: string; description: string; done: boolean; createdBy: string | null; createdAt: string; updatedAt: string; completedAt: string | null }
+export interface NewsItem { brand: string; title: string; date: string; summary: string; url: string; source: string; official: boolean }
+export interface NewsState { items: NewsItem[]; fetchedAt: string | null; lastAttemptAt: string | null; error: string | null }
+
 export const api = {
+  search: (q: string) => call<SearchHit[]>('GET', `/api/search?q=${encodeURIComponent(q)}`),
+  tasks: () => call<Task[]>('GET', '/api/tasks'),
+  addTask: (b: { title: string; description?: string }) => call<Task>('POST', '/api/tasks', b),
+  updateTask: (id: string, b: Partial<Pick<Task, 'title' | 'description' | 'done'>>) => call<Task>('PATCH', `/api/tasks/${id}`, b),
+  deleteTask: (id: string) => call<{ deleted: boolean }>('DELETE', `/api/tasks/${id}`),
+  news: () => call<NewsState>('GET', '/api/news'),
+  refreshNews: () => call<NewsState>('POST', '/api/news/refresh'),
   auth: () => call<AuthStatus>('GET', '/api/auth'),
   login: (email: string, password: string) => call<AuthStatus>('POST', '/api/auth/login', { email, password }),
   setupAdmin: (email: string, password: string) => call<AuthStatus>('POST', '/api/auth/setup', { email, password }),

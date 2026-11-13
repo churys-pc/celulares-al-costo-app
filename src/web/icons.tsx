@@ -35,6 +35,13 @@ const P: Record<string, string> = {
   list: 'M9 6h11M9 12h11M9 18h11M4.5 6h.01M4.5 12h.01M4.5 18h.01',
   doc: 'M6 3h8l4 4v14H6zM14 3v4h4M9 12h6M9 16h6',
   trend: 'M3 17l6-6 4 4 8-8M15 7h6v6',
+  check: 'M5 12.5l4.5 4.5L19 7.5',
+  down: 'M6 9l6 6 6-6',
+  news: 'M4 5h13v14H6a2 2 0 01-2-2V5zM17 9h3v8a2 2 0 01-2 2M7.5 9h6M7.5 12.5h6M7.5 16h4',
+  external: 'M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 01-1 1H5a1 1 0 01-1-1V7a1 1 0 011-1h5',
+  undo: 'M9 14L4 9l5-5M4 9h10a6 6 0 010 12h-3',
+  refresh: 'M20 11a8 8 0 00-14.3-4.9L4 8M4 4v4h4M4 13a8 8 0 0014.3 4.9L20 16M20 20v-4h-4',
+  task: 'M9 6h11M9 12h11M9 18h11M3.5 6l1 1 2-2M3.5 12l1 1 2-2M3.5 18l1 1 2-2',
 };
 export type IconName = keyof typeof P;
 

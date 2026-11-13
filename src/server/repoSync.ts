@@ -67,11 +67,13 @@ type Apply = (db: Db, doc: any, photo: Buffer | null) => void;
 export const CONFIG_DIR = 'config/';
 type ApplyConfig = (db: Db, path: string, text: string) => void;
 type Remove = (db: Db, repoId: string) => void;
+/** Otras carpetas compartidas con un JSON por elemento (ej. tasks/ para los pendientes del local). */
+export interface RepoFolder { dir: string; apply: (db: Db, doc: any) => void; remove: (db: Db, id: string) => void }
 
 export class RepoClient {
   /** true después de la primera bajada completa del repo en esta sesión. */
   pulledOnce = false;
-  constructor(private db: Db, private apply: Apply, private remove: Remove, private secret: Secret = PLAIN, private applyConfig?: ApplyConfig) {}
+  constructor(private db: Db, private apply: Apply, private remove: Remove, private secret: Secret = PLAIN, private applyConfig?: ApplyConfig, private folders: RepoFolder[] = []) {}
 
   private async gh(path: string, init: RequestInit = {}) {
     const { repo, token } = repoConfig(this.db, this.secret);
@@ -135,6 +137,16 @@ export class RepoClient {
         });
         n++; continue;
       }
+      const folder = this.folders.find((f) => path.startsWith(f.dir) && path.endsWith('.json'));
+      if (folder) {
+        if (pending.has(path) || local.get(path) === sha) continue;
+        const text = (await this.blob(sha)).toString('utf8');
+        tx(this.db, () => {
+          try { folder.apply(this.db, JSON.parse(text)); } catch { /* archivo inválido: se ignora */ }
+          this.db.prepare('INSERT INTO repo_files (path, sha) VALUES (?,?) ON CONFLICT(path) DO UPDATE SET sha = excluded.sha').run(path, sha);
+        });
+        n++; continue;
+      }
       if (!path.startsWith(PRODUCTS_DIR) || !path.endsWith('.json') || pending.has(path)) continue;
       const doc = JSON.parse((await this.blob(sha)).toString('utf8'));
       const photoSha = doc.photo ? remote.get(doc.photo) : undefined;
@@ -149,6 +161,11 @@ export class RepoClient {
       n++;
     }
     for (const [path] of local) {
+      const folder = this.folders.find((f) => path.startsWith(f.dir) && path.endsWith('.json'));
+      if (folder && !remote.has(path) && !pending.has(path)) {
+        tx(this.db, () => { folder.remove(this.db, path.slice(folder.dir.length, -5)); this.db.prepare('DELETE FROM repo_files WHERE path = ?').run(path); });
+        n++; continue;
+      }
       if (path.startsWith(PRODUCTS_DIR) && !remote.has(path) && !pending.has(path)) {
         tx(this.db, () => { this.remove(this.db, path.slice(PRODUCTS_DIR.length, -5)); this.db.prepare('DELETE FROM repo_files WHERE path = ?').run(path); });
         n++;

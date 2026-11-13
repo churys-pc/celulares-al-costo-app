@@ -13,6 +13,9 @@ import { repoStatus, setRepoConfig, type Secret } from './repoSync.ts';
 import { Auth, AuthError } from './auth.ts';
 import { publishRate } from './sharedConfig.ts';
 import { fichasStatus } from './fichas.ts';
+import { homeSearch } from './homeSearch.ts';
+import { TaskRepo } from './tasks.ts';
+import { newsState, refreshNews } from './news.ts';
 import { ValidationError, type ProductFilter } from '../shared/types.ts';
 
 const MAX_BODY = 5 * 1024 * 1024;
@@ -60,8 +63,12 @@ export function createServer(db: Db, webRoot: string, dataDir: string, opts: { s
     ['PUT', /^\/api\/catalog\/products\/\d+\/favorite$/], ['POST', /^\/api\/lookup$/], ['POST', /^\/api\/repo\/sync$/],
     // Cualquier sesión puede generar la portada oficial que falta en esta PC.
     ['POST', /^\/api\/covers\/[a-z0-9-]+$/],
+    // Inicio: todo el personal maneja los pendientes del local y puede refrescar las novedades.
+    ['POST', /^\/api\/tasks$/], ['PATCH', /^\/api\/tasks\/[a-f0-9-]{36}$/], ['DELETE', /^\/api\/tasks\/[a-f0-9-]{36}$/],
+    ['POST', /^\/api\/news\/refresh$/],
   ];
   const repo = new CatalogRepo(db);
+  const tasks = new TaskRepo(db);
   const photos = new PhotoRepo(db, dataDir);
   const covers = new CoverStore(dataDir, undefined, webRoot);
   covers.assignKeys(db);
@@ -86,6 +93,13 @@ export function createServer(db: Db, webRoot: string, dataDir: string, opts: { s
       if ('usdRate' in body && r.usdRate !== before) { publishRate(db); kick(); }
       return r;
     }],
+    ['GET', /^\/api\/search$/, (_m, _r, u) => homeSearch(db, repo, u.searchParams.get('q') ?? '', Math.min(20, Number(u.searchParams.get('limit')) || 8))],
+    ['GET', /^\/api\/tasks$/, () => tasks.list()],
+    ['POST', /^\/api\/tasks$/, async (_m, req) => { const t = tasks.create(await readJson(req), auth.current()?.email ?? null); kick(); return t; }],
+    ['PATCH', /^\/api\/tasks\/([a-f0-9-]{36})$/, async (m, req) => { const t = tasks.update(m[1], await readJson(req)); kick(); return t; }],
+    ['DELETE', /^\/api\/tasks\/([a-f0-9-]{36})$/, (m) => { const r = tasks.remove(m[1]); kick(); return { deleted: r }; }],
+    ['GET', /^\/api\/news$/, () => newsState(db)],
+    ['POST', /^\/api\/news\/refresh$/, () => refreshNews(db)],
     ['GET', /^\/api\/catalog\/brands$/, () => repo.listBrands()],
     ['GET', /^\/api\/catalog\/models$/, (_m, _r, u) => repo.listModels(u.searchParams.get('brandId') ? idOf(u.searchParams.get('brandId')!) : undefined)],
     ['GET', /^\/api\/catalog\/products$/, (_m, _r, u) => {
