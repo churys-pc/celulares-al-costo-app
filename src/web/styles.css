@@ -134,7 +134,10 @@ button, input, select, textarea { font: inherit; color: inherit; }
 /* Paneles */
 .overlay { position: fixed; inset: 0; background: rgba(2, 6, 16, .72); display: flex; justify-content: flex-end; z-index: 10; backdrop-filter: blur(3px); }
 .overlay.center { justify-content: center; align-items: center; }
-.drawer { width: min(660px, 100%); height: 100%; background: var(--panel-solid); border-left: 1px solid var(--line-strong); overflow: auto; padding: 46px 26px 26px; }
+.drawer { width: min(660px, 100%); height: 100%; background: var(--panel-solid); border-left: 1px solid var(--line-strong); overflow: auto; padding: 22px 26px 26px; }
+/* La ficha abre debajo de la barra de título: los botones de la ventana (—, ▢, ✕) no quedan encima de ella. */
+.overlay:not(.center) { top: 36px; }
+.drawer-back { margin-right: 6px; }
 .modal { width: min(700px, 96%); max-height: 92vh; overflow: auto; background: var(--panel-solid); border: 1px solid var(--line-strong); border-radius: var(--radius); padding: 24px; }
 .form { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
 .form label { display: flex; flex-direction: column; gap: 5px; font-size: 12px; color: var(--muted); }

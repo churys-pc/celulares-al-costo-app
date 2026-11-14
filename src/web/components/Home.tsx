@@ -158,9 +158,8 @@ function ModelSheet({ m, onClose, onCompare }: { m: CompareModel; onClose: () =>
     <div className="overlay" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
       <aside className="drawer">
         <div className="row">
+          <button className="btn drawer-back" onClick={onClose}><Icon name="left" size={16} /> Volver</button>
           <span className="badge out">Sin stock</span>
-          <span className="spacer" />
-          <button className="icon-btn" onClick={onClose} aria-label="Cerrar">✕</button>
         </div>
         <h2 style={{ margin: '10px 0 2px' }}>{m.brand} {m.model}</h2>
         <div className="muted">No hay unidades cargadas en el catálogo.</div>
