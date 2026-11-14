@@ -133,10 +133,10 @@ function Session({ id, onBack, onReport }: { id: string; onBack: () => void; onR
   const status: { key: string; label: string } =
     usb?.service === 'unavailable' ? { key: 'off', label: 'Lectura USB no disponible' }
     : !device ? (wasConnected ? { key: 'disconnected', label: 'Desconectado' } : { key: 'none', label: devices.length > 1 ? 'Elegí un iPhone' : 'Sin equipo' })
-    : usbState === 'connected' && d?.usbState && autoRead.current === device.key ? { key: 'connected', label: 'Conectado' }
+    : usbState === 'connected' && d?.usbState && autoRead.current === device.key ? { key: 'connected', label: d.usbState.detail ? 'Conectado · faltan datos' : 'Conectado' }
     : usbState === 'pending_trust' ? { key: 'pending', label: 'Pendiente de autorización' }
     : usbState === 'locked' ? { key: 'pending', label: 'Desbloqueá el iPhone' }
-    : usbState === 'error' && autoRead.current === device.key && !reading ? { key: 'disconnected', label: 'Lectura incompleta' }
+    : usbState === 'error' && autoRead.current === device.key && !reading ? { key: 'partial', label: 'Lectura incompleta' }
     : reading ? { key: 'reading', label: 'Leyendo…' } : { key: 'detected', label: 'Detectado' };
 
   async function readUsb(key: string) {

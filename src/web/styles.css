@@ -937,3 +937,4 @@ table.specs td:first-child { color: var(--muted); width: 40%; }
 }
 .dg-r-table td:nth-child(4) { white-space: nowrap; } .dg-r-table td:nth-child(2) { white-space: nowrap; }
 .dg-tech { margin: 0; font-family: ui-monospace, Consolas, monospace; font-size: 11.5px; opacity: .8; word-break: break-all; }
+.dg-usb.partial { color: #fcd34d; border-color: rgba(245, 158, 11, .5); }

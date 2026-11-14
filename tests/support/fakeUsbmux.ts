@@ -27,6 +27,8 @@ function pairCerts() {
 export interface FakeDevice {
   /** Sesión cifrada como en un iPhone real (EnableSessionSSL / EnableServiceSSL). */
   ssl?: boolean;
+  /** Sin el dominio de fábrica (iOS viejos) y/o con el uso de disco lento, como cuando iOS calcula todo el uso. */
+  noFactory?: boolean; diskDelayMs?: number;
   udid: string; deviceId: number; paired: boolean; locked?: boolean; values: Record<string, any>;
   disk?: Record<string, any>; battery?: Record<string, any>; ioreg?: Record<string, any> | null; deviceClass?: string;
 }
@@ -86,7 +88,8 @@ export function startFakeMux(devices: FakeDevice[]) {
             case 'QueryType': ldReply({ Request: 'QueryType', Type: 'com.apple.mobile.lockdown' }); break;
             case 'GetValue': {
               if (!session) { ldReply({ Request: 'GetValue', Value: { ProductType: d.values.ProductType, ProductVersion: d.values.ProductVersion, BuildVersion: d.values.BuildVersion, DeviceClass: d.deviceClass ?? 'iPhone' } }); break; }
-              if (msg.Domain === 'com.apple.disk_usage') ldReply({ Request: 'GetValue', Value: d.disk ?? {} });
+              if (msg.Domain === 'com.apple.disk_usage.factory') ldReply({ Request: 'GetValue', Value: d.noFactory ? {} : { TotalDiskCapacity: d.disk?.TotalDiskCapacity } });
+              else if (msg.Domain === 'com.apple.disk_usage') { const r = { Request: 'GetValue', Value: d.disk ?? {} }; if (d.diskDelayMs) setTimeout(() => ldReply(r), d.diskDelayMs); else ldReply(r); }
               else if (msg.Domain === 'com.apple.mobile.battery') ldReply({ Request: 'GetValue', Value: d.battery ?? {} });
               else ldReply({ Request: 'GetValue', Value: { ...d.values, DeviceClass: d.deviceClass ?? 'iPhone' } });
               break;

@@ -62,6 +62,8 @@ class Reader {
   detach() { this.sock.removeAllListeners('data'); this.sock.removeAllListeners('end'); this.sock.removeAllListeners('close'); this.sock.removeAllListeners('error'); this.sock.on('error', () => {}); }
 }
 
+/** Tiempos de espera (ms). Se pueden achicar en las pruebas. */
+export const usbTiming = { step: 8_000, slow: 15_000, disk: 30_000 };
 const TIMEOUT = 8_000;
 let tag = 1;
 
@@ -148,13 +150,20 @@ class PlistChannel {
     const body = Buffer.from(toXml(obj), 'utf8'); const h = Buffer.alloc(4); h.writeUInt32BE(body.length, 0);
     this.sock.write(Buffer.concat([h, body]));
   }
-  async recv(): Promise<Record<string, any>> {
-    const len = (await this.reader.read(4, TIMEOUT)).readUInt32BE(0);
-    if (len > 8_000_000) throw new Error('respuesta demasiado grande');
-    const b = await this.reader.read(len, TIMEOUT);
-    return parseAny(b) as Record<string, any>;
+  /** Si una respuesta no llegó a tiempo, el canal queda desfasado y no se vuelve a usar. */
+  broken = false;
+  async recv(timeoutMs = usbTiming.step): Promise<Record<string, any>> {
+    try {
+      const len = (await this.reader.read(4, timeoutMs)).readUInt32BE(0);
+      if (len > 8_000_000) throw new Error('respuesta demasiado grande');
+      const b = await this.reader.read(len, timeoutMs);
+      return parseAny(b) as Record<string, any>;
+    } catch (e) { this.broken = true; throw e; }
   }
-  async request(obj: Record<string, PlistValue>) { await this.send({ Label: 'CelularesAlCosto', ...obj }); return this.recv(); }
+  async request(obj: Record<string, PlistValue>, timeoutMs = usbTiming.step) {
+    if (this.broken) throw new Error('la conexión quedó esperando una respuesta anterior');
+    await this.send({ Label: 'CelularesAlCosto', ...obj }); return this.recv(timeoutMs);
+  }
   /** Pasa a TLS con el certificado del emparejamiento (lo exige lockdownd al iniciar la sesión). */
   async upgrade(pair: Record<string, any>) {
     this.reader.detach();
@@ -178,7 +187,9 @@ class PlistChannel {
 
 const BASIC_KEYS = ['ProductType', 'ProductVersion', 'BuildVersion', 'DeviceClass'];
 
-export interface UsbReading { state: UsbState; info: DeviceInfo; read: string[]; missing: string[]; message: string | null; detail?: string | null }
+export interface UsbReading { state: UsbState; info: DeviceInfo; read: string[]; missing: string[]; message: string | null; detail?: string | null;
+  /** La sesión autorizada se abrió: lo leído identifica al equipo aunque falte algún dato. */
+  session?: boolean }
 
 /** Texto técnico corto, sin identificadores largos. */
 export const techText = (e: any) => String(e?.code ? `${e.code} ${e.message ?? ''}` : e?.message ?? e ?? '').replace(/[0-9A-F]{8}-?[0-9A-F]{8,}/gi, '•••').replace(/\s+/g, ' ').trim().slice(0, 140);
@@ -190,6 +201,7 @@ export async function readDevice(mux: Usbmux, dev: { deviceId: number; udid: str
   const info: DeviceInfo = { battery: {} };
   const read: string[] = [];
   let step = 'conexión con el iPhone';
+  let session = false;
   let ld: PlistChannel;
   try { ld = new PlistChannel(await mux.connect(dev.deviceId, 62078)); }
   catch (e) { return { state: 'error', info, read, missing: [], message: 'No se pudo abrir la conexión con el iPhone. Desconectalo, desbloquealo y volvé a conectarlo.', detail: `${step}: ${techText(e)}` }; }
@@ -218,6 +230,7 @@ export async function readDevice(mux: Usbmux, dev: { deviceId: number; udid: str
     step = 'conexión cifrada';
     if (ss.EnableSessionSSL) await ld.upgrade(pair);
     step = 'datos del equipo';
+    session = true;
     const full = ((await ld.request({ Request: 'GetValue' })).Value ?? {}) as Record<string, any>;
     if (full.SerialNumber) { info.serial = String(full.SerialNumber); read.push('serial'); }
     if (full.InternationalMobileEquipmentIdentity) { info.imei1 = String(full.InternationalMobileEquipmentIdentity); read.push('imei1'); }
@@ -225,41 +238,52 @@ export async function readDevice(mux: Usbmux, dev: { deviceId: number; udid: str
     if (full.ModelNumber) info.modelNumber = `${full.ModelNumber}${full.RegionInfo ?? ''}`;
     if (full.ProductType && !info.productType) { info.productType = String(full.ProductType); info.model = modelName(info.productType); }
     if (full.ProductVersion && !info.ios) info.ios = String(full.ProductVersion);
-    step = 'capacidad y batería';
-    const disk = ((await ld.request({ Request: 'GetValue', Domain: 'com.apple.disk_usage' })).Value ?? {}) as Record<string, any>;
-    const cap = capacityGb(Number(disk.TotalDiskCapacity));
-    if (cap) { info.capacityGb = cap; read.push('capacityGb'); }
-    const bat = ((await ld.request({ Request: 'GetValue', Domain: 'com.apple.mobile.battery' })).Value ?? {}) as Record<string, any>;
-    if (Number.isFinite(Number(bat.BatteryCurrentCapacity))) { info.battery!.chargePct = Number(bat.BatteryCurrentCapacity); read.push('battery.chargePct'); }
-    if (typeof bat.BatteryIsCharging === 'boolean') info.battery!.charging = bat.BatteryIsCharging;
-    // Batería: ciclos y capacidad estimada desde el registro de energía, si el servicio de diagnóstico está disponible.
-    try {
+    session = true;
+    // Desde acá cada dato es opcional y va por separado: si uno no responde, lo demás se conserva.
+    const notes: string[] = [];
+    const opt = async (name: string, fn: () => Promise<void>) => { try { await fn(); } catch (e) { notes.push(`${name}: ${techText(e)}`); } };
+    await opt('carga actual', async () => {
+      const bat = ((await ld.request({ Request: 'GetValue', Domain: 'com.apple.mobile.battery' })).Value ?? {}) as Record<string, any>;
+      if (Number.isFinite(Number(bat.BatteryCurrentCapacity))) { info.battery!.chargePct = Number(bat.BatteryCurrentCapacity); read.push('battery.chargePct'); }
+      if (typeof bat.BatteryIsCharging === 'boolean') info.battery!.charging = bat.BatteryIsCharging;
+    });
+    // Ciclos y capacidad estimada desde el registro de energía (servicio de diagnóstico, conexión aparte).
+    await opt('ciclos de batería', async () => {
       const svc = await ld.request({ Request: 'StartService', Service: 'com.apple.mobile.diagnostics_relay' });
-      if (svc.Port) {
-        const ch = new PlistChannel(await mux.connect(dev.deviceId, Number(svc.Port)));
-        try {
-          if (svc.EnableServiceSSL) await ch.upgrade(pair);
-          let reg: any = null;
-          for (const cls of ['IOPMPowerSource', 'AppleSmartBattery']) {
-            const r = await ch.request({ Request: 'IORegistry', EntryClass: cls });
-            if (r.Status === 'Success' && r.Diagnostics?.IORegistry) { reg = r.Diagnostics.IORegistry; break; }
-          }
-          if (reg) {
-            if (Number.isFinite(Number(reg.CycleCount))) { info.battery!.cycles = Number(reg.CycleCount); read.push('battery.cycles'); }
-            const design = Number(reg.DesignCapacity); const max = Number(reg.NominalChargeCapacity ?? reg.AppleRawMaxCapacity);
-            if (design > 0 && max > 0) { info.battery!.estimatedMaxPct = Math.round((max / design) * 100); read.push('battery.estimatedMaxPct'); }
-          }
-          await ch.send({ Request: 'Goodbye' }).catch(() => {});
-        } finally { ch.close(); }
-      }
-    } catch { /* sin datos de batería por USB: se cargan desde Configuración */ }
-    await ld.request({ Request: 'StopSession', SessionID: ss.SessionID }).catch(() => {});
+      if (!svc.Port) throw new Error(svc.Error ? String(svc.Error) : 'servicio no disponible');
+      const ch = new PlistChannel(await mux.connect(dev.deviceId, Number(svc.Port)));
+      try {
+        if (svc.EnableServiceSSL) await ch.upgrade(pair);
+        let reg: any = null;
+        for (const cls of ['IOPMPowerSource', 'AppleSmartBattery']) {
+          const r = await ch.request({ Request: 'IORegistry', EntryClass: cls }, usbTiming.slow);
+          if (r.Status === 'Success' && r.Diagnostics?.IORegistry) { reg = r.Diagnostics.IORegistry; break; }
+        }
+        if (!reg) throw new Error('el iPhone no entregó el registro de energía');
+        if (Number.isFinite(Number(reg.CycleCount))) { info.battery!.cycles = Number(reg.CycleCount); read.push('battery.cycles'); }
+        const design = Number(reg.DesignCapacity); const max = Number(reg.NominalChargeCapacity ?? reg.AppleRawMaxCapacity);
+        if (design > 0 && max > 0) { info.battery!.estimatedMaxPct = Math.round((max / design) * 100); read.push('battery.estimatedMaxPct'); }
+        await ch.send({ Request: 'Goodbye' }).catch(() => {});
+      } finally { ch.close(); }
+    });
+    // Capacidad al final: el dominio de fábrica responde al instante; el de uso de disco hace que iOS calcule todo el
+    // uso y puede tardar (por eso va último y con más tiempo).
+    await opt('capacidad', async () => {
+      let disk = ((await ld.request({ Request: 'GetValue', Domain: 'com.apple.disk_usage.factory' })).Value ?? {}) as Record<string, any>;
+      if (!Number(disk.TotalDiskCapacity)) disk = ((await ld.request({ Request: 'GetValue', Domain: 'com.apple.disk_usage' }, usbTiming.disk)).Value ?? {}) as Record<string, any>;
+      const cap = capacityGb(Number(disk.TotalDiskCapacity));
+      if (!cap) throw new Error('el iPhone no informó la capacidad');
+      info.capacityGb = cap; read.push('capacityGb');
+    });
+    if (!ld.broken) await ld.request({ Request: 'StopSession', SessionID: ss.SessionID }).catch(() => {});
     const want = ['model', 'ios', 'capacityGb', 'serial', 'imei1', 'battery.chargePct', 'battery.cycles'];
-    return { state: 'connected', info, read, missing: want.filter((k) => !read.includes(k)), message: null };
+    const missing = want.filter((k) => !read.includes(k));
+    return { state: 'connected', session, info, read, missing, detail: notes.length ? notes.join(' · ') : null,
+      message: notes.length ? 'Algunos datos no se pudieron leer por USB: completalos con «Editar».' : null };
   } catch (e) {
     // Lo leído hasta acá se conserva (modelo e iOS); el resto se puede cargar a mano.
     const want = ['model', 'ios', 'capacityGb', 'serial', 'imei1', 'battery.chargePct', 'battery.cycles'];
-    return { state: 'error', info, read, missing: want.filter((k) => !read.includes(k)),
+    return { state: 'error', session, info, read, missing: want.filter((k) => !read.includes(k)),
       message: 'No se pudieron leer todos los datos por USB. Podés seguir: completá lo que falte con «Editar» y abrí las pruebas con el QR.', detail: `${step}: ${techText(e)}` };
   } finally { ld.close(); }
 }

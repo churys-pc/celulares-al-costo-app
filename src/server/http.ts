@@ -130,7 +130,8 @@ export function createServer(db: Db, webRoot: string, dataDir: string, opts: { s
       }
       const state = { state: r.state, message: r.message, detail: r.detail ?? null, read: r.read, missing: r.missing, at: new Date().toISOString() };
       // Sin autorización también se guardan modelo e iOS, pero no se fija la identidad del equipo hasta tener la sesión.
-      if (r.state === 'connected') return diag.applyUsb(m[1], dev.udid, r.info, state);
+      // Con la sesión autorizada abierta, lo leído (serie, IMEI…) se guarda aunque falte algún dato.
+      if (r.state === 'connected' || r.session) return diag.applyUsb(m[1], dev.udid, r.info, state);
       diag.setUsbState(m[1], state);
       if (r.info.productType || r.info.ios) diag.updateDeviceFromUsbBasic(m[1], r.info);
       return diag.get(m[1]);

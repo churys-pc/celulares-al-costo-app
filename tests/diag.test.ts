@@ -6,7 +6,7 @@ import path from 'node:path';
 import { openDb } from '../src/server/db.ts';
 import { DiagStore, phoneInfoFromUa } from '../src/server/diag.ts';
 import { DiagLan } from '../src/server/diagLan.ts';
-import { Usbmux, UsbWatcher, readDevice } from '../src/server/usbmux.ts';
+import { Usbmux, UsbWatcher, readDevice, usbTiming } from '../src/server/usbmux.ts';
 import { toXml, parseXml, parseBinary } from '../src/server/plist.ts';
 import { verdict, TESTS, maskId, capacityGb, checkResult } from '../src/shared/diag.ts';
 import { startFakeMux, SAMPLE_IPHONE } from './support/fakeUsbmux.ts';
@@ -140,6 +140,25 @@ test('USB: sesión cifrada como en un iPhone real (TLS con el certificado del em
     assert.equal(r.state, 'connected', r.detail ?? '');
     assert.equal(r.info.serial, 'F2LXK0ABCD12'); assert.equal(r.info.capacityGb, 128); assert.equal(r.info.battery!.cycles, 412);
   } finally { await mux.close(); }
+});
+
+test('USB: si la capacidad tarda (iOS calculando el uso), se conserva todo lo demás', async () => {
+  const prev = { ...usbTiming }; usbTiming.disk = 600; usbTiming.slow = 600;
+  const mux = await startFakeMux([SAMPLE_IPHONE({ ssl: true, noFactory: true, diskDelayMs: 5000 })]);
+  try {
+    const m = new Usbmux({ host: '127.0.0.1', port: mux.port });
+    const [dev] = await m.listDevices();
+    const r = await readDevice(m, dev);
+    assert.equal(r.state, 'connected'); assert.equal(r.session, true);
+    assert.equal(r.info.serial, 'F2LXK0ABCD12'); assert.equal(r.info.imei1, '351234567890124');
+    assert.equal(r.info.battery!.chargePct, 76); assert.equal(r.info.battery!.cycles, 412);
+    assert.equal(r.info.capacityGb, undefined); assert.deepEqual(r.missing, ['capacityGb']);
+    assert.match(r.detail!, /^capacidad: .*tiempo de espera agotado/); assert.match(r.message!, /Editar/);
+    // Con el dominio de fábrica, la capacidad sale al instante aunque el uso de disco sea lento.
+    mux.devices[0] = SAMPLE_IPHONE({ ssl: true, diskDelayMs: 5000 });
+    const r2 = await readDevice(m, dev);
+    assert.equal(r2.info.capacityGb, 128); assert.equal(r2.detail, null);
+  } finally { Object.assign(usbTiming, prev); await mux.close(); }
 });
 
 test('USB: si falla un paso se conserva lo leído y se informa en qué paso', async () => {
