@@ -1,11 +1,12 @@
 // Sección «Cargar productos»: nombre + precio + foto → ficha y descripción automáticas → repo de GitHub.
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import type { Product, Settings } from '../../shared/types.ts';
 import { api, fileToDataUrl } from '../api.ts';
 import { num } from '../format.ts';
 import { Icon } from '../icons.tsx';
 import { useCovers } from '../covers.ts';
 import { normalizeModelName } from '../../shared/covers.ts';
+import { findDuplicates } from '../../shared/duplicates.ts';
 import { cancelJob, isActive, linkJob, requestCover, useCoverJobs, type CoverJob } from '../coverJobs.ts';
 
 type Match = { slug: string; name: string; brand: string; model: string; url: string; specs: { group: string; key: string; value: string; highlight: boolean }[];
@@ -138,6 +139,9 @@ export function QuickAdd({ settings }: { settings: Settings | null }) {
   const coverSrc = match ? cover(match.brand, match.model) : null;
   const ownPhoto = photo ?? null;
   const thumb = ownPhoto ?? coverSrc;
+  // Aviso (no bloquea): ya hay un producto igual o parecido cargado.
+  const dups = useMemo(() => findDuplicates(f.name ?? '', list, f.id), [f.name, list, f.id]);
+  const dupRow = (p: Product) => `${p.brand} ${p.model}${memLabel(p) ? ` · ${memLabel(p)}` : ''} · ${condLabel(p.condition)} · ${p.currency} ${num(p.price)}`;
   const status = searching ? { cls: 'busy', icon: 'refresh', text: 'Buscando la ficha…' }
     : match ? { cls: 'ok', icon: 'check', text: f.id ? `Ficha: ${match.name}` : 'Ficha encontrada' }
     : searched && f.name.trim().length >= 3 ? { cls: 'warn', icon: 'dot', text: 'No encontré ese equipo en internet. Podés cargarlo igual con tu descripción.' } : null;
@@ -174,6 +178,16 @@ export function QuickAdd({ settings }: { settings: Settings | null }) {
               <select ref={candRef} className={`field-select ${coverNote?.cls === 'pick' ? 'attention' : ''}`} value={match?.slug ?? ''} onChange={(e) => { setCoverNote(null); void search(e.target.value); }} aria-label="Coincidencia">
                 {cands.map((c) => <option key={c.slug} value={c.slug}>{c.name}</option>)}
               </select>)}
+            {(dups.same.length > 0 || dups.similar.length > 0) && (
+              <div className="qa2-dup" role="status">
+                <Icon name="dot" size={15} />
+                <div>
+                  <b>{dups.same.length ? 'Este producto ya está cargado.' : 'Hay productos parecidos ya cargados.'}</b> Podés cargarlo igual.
+                  {([['', dups.same], [dups.same.length ? 'Parecidos:' : '', dups.similar]] as const).map(([t, l], i) => l.length > 0 && (
+                    <ul key={i}>{t && <li className="t">{t}</li>}{l.slice(0, 3).map((p) => (
+                      <li key={p.id}><span>{dupRow(p)}</span><button type="button" className="link" onClick={() => void edit(p)}>Editar</button></li>))}</ul>))}
+                </div>
+              </div>)}
 
             <div className="qa2-two">
               <div>
