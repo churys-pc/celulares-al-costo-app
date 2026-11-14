@@ -13,6 +13,8 @@ import { applySharedConfig } from './sharedConfig.ts';
 import { applyDoc, removeLocal } from './quickProducts.ts';
 import { applyTaskDoc, removeTaskLocal, TASKS_DIR } from './tasks.ts';
 import { startNewsRefresh } from './news.ts';
+import { CoverStore } from './covers.ts';
+import { applyCoverDoc, COVERS_DIR } from './coverJobs.ts';
 import popular from './data/popular-models.json';
 
 export function defaultDataDir() {
@@ -28,7 +30,10 @@ export async function startServer(opts: { dataDir?: string; webRoot: string; por
   applyFichas(db);
   // Catálogo compartido entre PCs: repo privado de GitHub (reemplaza la lectura de la planilla de Drive).
   const client = new RepoClient(db, (d, doc, photo) => applyDoc(d, dataDir, doc, photo), (d, id) => removeLocal(d, dataDir, id), opts.secret, applySharedConfig,
-    [{ dir: TASKS_DIR, apply: applyTaskDoc, remove: removeTaskLocal }]);
+    [{ dir: TASKS_DIR, apply: applyTaskDoc, remove: removeTaskLocal },
+     // Portadas encontradas con «Buscar imagen» en otra PC.
+     { dir: COVERS_DIR, apply: (d, doc) => applyCoverDoc(new CoverStore(dataDir, undefined, opts.webRoot, d), doc),
+       remove: (d, key) => new CoverStore(dataDir, undefined, opts.webRoot, d).removeCustom(key) }]);
   const sync = opts.noBackgroundJobs ? { syncNow: () => client.sync() } : startRepoSync(client);
   const server = createServer(db, opts.webRoot, dataDir, { secret: opts.secret, syncNow: sync.syncNow,
     // Crear el admin solo después de bajar el repo (así no se pisa una cuenta creada en otra PC). Sin clave: modo local.

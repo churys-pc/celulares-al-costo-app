@@ -5,6 +5,8 @@ import { api, fileToDataUrl } from '../api.ts';
 import { num } from '../format.ts';
 import { Icon } from '../icons.tsx';
 import { useCovers } from '../covers.ts';
+import { normalizeModelName } from '../../shared/covers.ts';
+import { cancelJob, isActive, linkJob, requestCover, useCoverJobs, type CoverJob } from '../coverJobs.ts';
 
 type Match = { slug: string; name: string; brand: string; model: string; url: string; specs: { group: string; key: string; value: string; highlight: boolean }[];
   antutu: { version: string; total: number } | null; description: string };
@@ -36,6 +38,13 @@ export function QuickAdd({ settings }: { settings: Settings | null }) {
   const [cond, setCond] = useState('');
   const [page, setPage] = useState(0);
   const [menu, setMenu] = useState<number | null>(null);
+  // «Buscar imagen»
+  const jobs = useCoverJobs();
+  const [jobId, setJobId] = useState<string | null>(null);
+  const [coverNote, setCoverNote] = useState<{ cls: string; text: string; retry?: boolean } | null>(null);
+  const [variantChosen, setVariantChosen] = useState(false);
+  const candRef = useRef<HTMLSelectElement>(null);
+  const job = jobId ? jobs.find((j) => j.id === jobId) ?? null : null;
 
   // Búsqueda en la lista de cargados: marca, modelo, memoria y condición.
   const norm = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
@@ -44,6 +53,12 @@ export function QuickAdd({ settings }: { settings: Settings | null }) {
   const pages = Math.max(1, Math.ceil(shown.length / PAGE));
   const pg = Math.min(page, pages - 1);
   const rows = shown.slice(pg * PAGE, pg * PAGE + PAGE);
+  /** Búsqueda de portada de un producto de la lista: la vinculada al producto o la de su modelo. */
+  const jobFor = (p: Product) => {
+    const mine = jobs.filter((j) => j.productRepoId === p.repoId || (j.brand.toLowerCase() === p.brand.toLowerCase() && normalizeModelName(j.model) === normalizeModelName(p.model)))
+      .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+    return mine.find(isActive) ?? mine[0] ?? null;
+  };
   useEffect(() => setPage(0), [q, cond]);
 
   const load = () => { api.products({}).then((l) => setList(l.filter((p) => p.repoId))).catch(() => {}); api.repoStatus().then(setRepo).catch(() => {}); };
@@ -60,9 +75,36 @@ export function QuickAdd({ settings }: { settings: Settings | null }) {
     } catch (e) { setError((e as Error).message); } finally { setSearching(false); }
   }
   // Busca solo al dejar de escribir el nombre.
-  useEffect(() => { if (f.id) return; setSearched(false); const t = setTimeout(() => search(), 900); return () => clearTimeout(t); }, [f.name]);
+  useEffect(() => { if (f.id) return; setSearched(false); setVariantChosen(false); const t = setTimeout(() => search(), 900); return () => clearTimeout(t); }, [f.name]);
+
+  /** Cancela la búsqueda del formulario si todavía no está vinculada a un producto guardado. */
+  function dropJob(reason: string) {
+    if (job && isActive(job) && !job.productRepoId) void cancelJob(job.id, reason).catch(() => {});
+    setJobId(null); setCoverNote(null);
+  }
+  // Si cambia el equipo, el resultado de la búsqueda anterior ya no sirve.
+  const modelKey = match ? `${match.brand}|${normalizeModelName(match.model)}` : '';
+  useEffect(() => {
+    if (job && isActive(job) && `${job.brand}|${normalizeModelName(job.model)}` !== modelKey) dropJob('Se cambió el equipo');
+  }, [modelKey]);
+
+  async function findCover() {
+    if (!match) return;
+    if (cands.length > 1 && !variantChosen && !f.id) {
+      setCoverNote({ cls: 'pick', text: 'Hay varias variantes que coinciden: elegí la correcta en la lista de arriba y después buscá la imagen.' });
+      candRef.current?.focus(); return;
+    }
+    if (photo) { setCoverNote({ cls: 'warn', text: 'Ya elegiste una foto manual: quitala para usar la imagen del modelo.' }); return; }
+    setCoverNote({ cls: 'busy', text: 'Buscando imagen…' });
+    try {
+      const r = await requestCover(match.brand, match.model, f.id || null);
+      if (r.status === 'exists') { setJobId(null); setCoverNote({ cls: 'ok', text: 'Este modelo ya tiene portada: se usa la del catálogo.' }); }
+      else { setJobId(r.id); setCoverNote(null); }
+    } catch (e) { setCoverNote({ cls: 'warn', text: (e as Error).message, retry: true }); }
+  }
 
   function reset() {
+    setJobId(null); setCoverNote(null); setVariantChosen(false);
     setF({ ...EMPTY }); setPhoto(undefined); setHasOwnPhoto(false); setMatch(null); setCands([]); setSearched(false);
     setPesos(null); setDescOpen(false); setError(''); descTouched.current = false;
   }
@@ -70,8 +112,11 @@ export function QuickAdd({ settings }: { settings: Settings | null }) {
   async function save(e: React.FormEvent) {
     e.preventDefault(); setError(''); setMsg('');
     try {
-      await api.quickSave({ ...f, id: f.id || undefined, match, photo });
-      setMsg(f.id ? 'Producto actualizado.' : 'Producto cargado. Se sube al repositorio automáticamente.');
+      const r = await api.quickSave({ ...f, id: f.id || undefined, match, photo });
+      // La búsqueda de portada sigue en segundo plano y se asigna sola al terminar.
+      const pending = job && isActive(job) && !photo;
+      if (pending) await linkJob(job!.id, r.id).catch(() => {});
+      setMsg(`${f.id ? 'Producto actualizado.' : 'Producto cargado. Se sube al repositorio automáticamente.'}${pending ? ' La portada se asigna sola cuando termine la búsqueda.' : ''}`);
       reset(); load();
     } catch (err) { setError((err as Error).message); }
   }
@@ -130,7 +175,7 @@ export function QuickAdd({ settings }: { settings: Settings | null }) {
             {status && <div className={`qa2-status ${status.cls}`}><Icon name={status.icon} size={15} className={searching ? 'spin' : ''} />{status.text}
               {match?.url && !searching && <a href={match.url} target="_blank" rel="noreferrer">Fuente</a>}</div>}
             {cands.length > 1 && (
-              <select className="field-select" value={match?.slug ?? ''} onChange={(e) => search(e.target.value)} aria-label="Coincidencia">
+              <select ref={candRef} className={`field-select ${coverNote?.cls === 'pick' ? 'attention' : ''}`} value={match?.slug ?? ''} onChange={(e) => { setVariantChosen(true); setCoverNote(null); void search(e.target.value); }} aria-label="Coincidencia">
                 {cands.map((c) => <option key={c.slug} value={c.slug}>{c.name}</option>)}
               </select>)}
 
@@ -172,12 +217,16 @@ export function QuickAdd({ settings }: { settings: Settings | null }) {
               </div>
               <div className="row tight">
                 {(ownPhoto || (f.id && hasOwnPhoto && photo === undefined)) && <button type="button" className="link" onClick={() => setPhoto(f.id ? null : undefined)}>Quitar</button>}
+                <button type="button" className="btn qa2-findimg" onClick={findCover} disabled={!match || (!!job && isActive(job))}
+                  title={match ? `Buscar en la web la foto de ${match.brand} ${match.model}` : 'Primero elegí el equipo (Buscar ficha)'}>
+                  <Icon name={job && isActive(job) ? 'refresh' : 'search'} size={15} className={job && isActive(job) ? 'spin' : ''} /> {job && isActive(job) ? 'Buscando…' : 'Buscar imagen'}</button>
                 <label className="btn"><Icon name="image" size={15} /> {thumb || hasOwnPhoto ? 'Cambiar foto' : 'Subir foto'}
                   <input type="file" accept="image/jpeg,image/png,image/webp" hidden onChange={async (e) => {
                     const file = e.target.files?.[0]; e.target.value = '';
-                    if (file) try { setPhoto(await fileToDataUrl(file, 1200, 'image/jpeg')); } catch (err) { setError((err as Error).message); } }} /></label>
+                    if (file) try { setPhoto(await fileToDataUrl(file, 1200, 'image/jpeg')); if (job && isActive(job)) dropJob('Se eligió una foto manual'); } catch (err) { setError((err as Error).message); } }} /></label>
               </div>
             </div>
+            <CoverStatus job={job} note={coverNote} onRetry={() => void findCover()} />
 
             <div className={`qa2-desc ${descOpen ? 'open' : ''}`}>
               <button type="button" className="qa2-desc-head" onClick={() => setDescOpen(!descOpen)} aria-expanded={descOpen}>
@@ -223,7 +272,14 @@ export function QuickAdd({ settings }: { settings: Settings | null }) {
               return (
                 <div key={p.id} className={`tr ${f.id === p.repoId ? 'editing' : ''}`}>
                   <div className="eq"><span className="ph">{img ? <img src={img} alt="" /> : <Icon name="phone" size={20} />}</span>
-                    <span className="nm"><b>{p.brand} {p.model}</b><small>{memLabel(p) || '—'}<span className={`cond cond-inline ${p.condition}`}>{condLabel(p.condition)}</span></small></span></div>
+                    <span className="nm"><b>{p.brand} {p.model}</b><small>{memLabel(p) || '—'}<span className={`cond cond-inline ${p.condition}`}>{condLabel(p.condition)}</span></small>
+                      {(() => {
+                        const j = jobFor(p);
+                        if (j && isActive(j)) return <em className="qa2-jobst busy"><Icon name="refresh" size={12} className="spin" /> Buscando portada…</em>;
+                        if (j && !img && (j.status === 'not_found' || j.status === 'offline' || j.status === 'error') && j.productRepoId === p.repoId)
+                          return <em className="qa2-jobst warn">{j.status === 'offline' ? 'Sin conexión' : 'Sin portada'} · <button className="link" onClick={() => void requestCover(p.brand, p.model, p.repoId)}>Reintentar</button></em>;
+                        return null;
+                      })()}</span></div>
                   <span className="cond-col"><span className={`cond ${p.condition}`}>{condLabel(p.condition)}</span></span>
                   <span className="r pr"><b>{p.currency} {num(p.price)}</b>{p.currency === 'USD' && rate ? <small>$ {num(p.price * rate)}</small> : null}</span>
                   <span className="acts">
@@ -232,6 +288,7 @@ export function QuickAdd({ settings }: { settings: Settings | null }) {
                       <button className="icon-btn" title="Más opciones" aria-label="Más opciones" onClick={(e) => { e.stopPropagation(); setMenu(menu === p.id ? null : p.id); }}>⋯</button>
                       {menu === p.id && <div className="menu" onClick={(e) => e.stopPropagation()}>
                         <button onClick={() => { setMenu(null); void edit(p); }}><Icon name="edit" size={15} /> Editar</button>
+                        {!img && <button onClick={() => { setMenu(null); void requestCover(p.brand, p.model, p.repoId); }}><Icon name="search" size={15} /> Buscar imagen</button>}
                         <button className="danger" onClick={() => { setMenu(null); void remove(p); }}><Icon name="trash" size={15} /> Eliminar</button>
                       </div>}
                     </span>
@@ -247,6 +304,26 @@ export function QuickAdd({ settings }: { settings: Settings | null }) {
           </div>}
         </section>
       </div>
+    </div>
+  );
+}
+
+/** Estado de «Buscar imagen» debajo de la foto de portada. */
+function CoverStatus({ job, note, onRetry }: { job: CoverJob | null; note: { cls: string; text: string; retry?: boolean } | null; onRetry: () => void }) {
+  let st = note;
+  if (job) {
+    if (isActive(job)) st = { cls: 'busy', text: 'Buscando imagen… Podés seguir cargando el producto: la portada se asigna sola.' };
+    else if (job.status === 'done') st = { cls: 'ok', text: job.message ?? 'Portada encontrada' };
+    else if (job.status === 'not_found') st = { cls: 'warn', text: 'No encontramos una imagen para este modelo. Podés reintentar o subir una foto.', retry: true };
+    else if (job.status === 'offline') st = { cls: 'warn', text: 'Sin conexión a internet: no se pudo buscar la imagen. Revisá la conexión y reintentá.', retry: true };
+    else if (job.status === 'error') st = { cls: 'warn', text: job.message ?? 'No se pudo buscar la imagen.', retry: true };
+  }
+  if (!st) return null;
+  return (
+    <div className={`qa2-status cover ${st.cls}`} role="status">
+      <Icon name={st.cls === 'busy' ? 'refresh' : st.cls === 'ok' ? 'check' : 'dot'} size={15} className={st.cls === 'busy' ? 'spin' : ''} />
+      <span>{st.text}</span>
+      {st.retry && <button type="button" className="link" onClick={onRetry}>Reintentar</button>}
     </div>
   );
 }

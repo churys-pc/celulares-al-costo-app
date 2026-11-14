@@ -27,12 +27,24 @@ export class CoverStore {
   private meta: Record<string, Meta>;
   /** Carpeta de portadas incluidas en la app (o null). */
   private bundledDir: string | null;
-  constructor(dataDir: string, private entries: CoverEntry[] = ENTRIES, webRoot?: string) {
+  /** Portadas encontradas desde la app («Buscar imagen»), guardadas en la base y compartidas por el repo. */
+  private db: Db | null = null;
+  constructor(dataDir: string, private staticEntries: CoverEntry[] = ENTRIES, webRoot?: string, db?: Db) {
+    this.db = db ?? null;
     this.bundledDir = webRoot ? path.join(webRoot, 'covers') : null;
     this.dir = path.join(dataDir, 'covers');
     fs.mkdirSync(this.dir, { recursive: true });
     this.metaPath = path.join(this.dir, 'index.json');
     try { this.meta = JSON.parse(fs.readFileSync(this.metaPath, 'utf8')); } catch { this.meta = {}; }
+  }
+
+  /** Portadas incluidas en la app + las encontradas desde la app. */
+  get entries(): CoverEntry[] {
+    if (!this.db) return this.staticEntries;
+    const custom = this.db.prepare('SELECT * FROM covers_custom ORDER BY key').all().map((r) => ({
+      key: String(r.key), brand: String(r.brand), models: [String(r.model)], url: String(r.url), page: String(r.page ?? r.url),
+      note: `Encontrada desde «Buscar imagen» (${r.source ?? 'web'}); fondo quitado y centrada en 768 × 768.`, custom: true }) as CoverEntry);
+    return custom.length ? [...this.staticEntries, ...custom] : this.staticEntries;
   }
 
   private entry(key: string): CoverEntry {
@@ -43,7 +55,7 @@ export class CoverStore {
 
   /** true si la portada guardada corresponde a la URL de origen vigente. */
   private ready(e: CoverEntry): boolean {
-    return this.meta[e.key]?.url === e.url && fs.existsSync(path.join(this.dir, e.key + '.webp'));
+    return (this.meta[e.key]?.url === e.url || !!(e as { custom?: boolean }).custom) && fs.existsSync(path.join(this.dir, e.key + '.webp'));
   }
 
   /** Archivo incluido en la app para esa clave (o null). */
@@ -56,7 +68,9 @@ export class CoverStore {
   private urlFor(e: CoverEntry): string | null {
     const b = this.bundled(e.key);
     if (b) return `/covers/${e.key}.webp?v=${fs.statSync(b).size}`;
-    return this.ready(e) ? `/api/covers/${e.key}.webp?v=${encodeURIComponent(this.meta[e.key].savedAt)}` : null;
+    if (!this.ready(e)) return null;
+    const v = this.meta[e.key]?.savedAt ?? String(fs.statSync(path.join(this.dir, e.key + '.webp')).mtimeMs | 0);
+    return `/api/covers/${e.key}.webp?v=${encodeURIComponent(v)}`;
   }
 
   list(): CoverInfo[] {
@@ -100,6 +114,35 @@ export class CoverStore {
   file(key: string): string | null {
     const e = this.entry(key);
     return this.ready(e) ? path.join(this.dir, e.key + '.webp') : null;
+  }
+
+  /** URL visible de la portada de esa clave (o null). */
+  urlOf(key: string): string | null {
+    const e = this.entries.find((x) => x.key === key);
+    return e ? this.urlFor(e) : null;
+  }
+
+  /** Guarda una portada encontrada desde la app (WebP ya procesado) y la registra para su modelo. */
+  saveCustom(c: { key: string; brand: string; model: string; url: string; page: string | null; source: string | null }, webp: Buffer, savedAt = new Date().toISOString()) {
+    if (!this.db) throw new Error('Sin base');
+    if (!KEY_RE.test(c.key)) throw new ValidationError('Clave de portada inválida');
+    if (webp.length > MAX_COVER || webp.toString('ascii', 0, 4) !== 'RIFF' || webp.toString('ascii', 8, 12) !== 'WEBP') throw new ValidationError('La portada debe ser WebP');
+    const file = path.join(this.dir, c.key + '.webp');
+    fs.writeFileSync(file + '.tmp', webp);
+    fs.renameSync(file + '.tmp', file);
+    this.db.prepare(`INSERT INTO covers_custom (key, brand, model, url, page, source, saved_at) VALUES (?,?,?,?,?,?,?)
+      ON CONFLICT(key) DO UPDATE SET brand = excluded.brand, model = excluded.model, url = excluded.url, page = excluded.page, source = excluded.source, saved_at = excluded.saved_at`)
+      .run(c.key, c.brand, c.model, c.url, c.page, c.source, savedAt);
+    this.meta[c.key] = { url: c.url, savedAt };
+    fs.writeFileSync(this.metaPath + '.tmp', JSON.stringify(this.meta, null, 1));
+    fs.renameSync(this.metaPath + '.tmp', this.metaPath);
+  }
+
+  removeCustom(key: string) {
+    if (!this.db || !KEY_RE.test(key)) return;
+    this.db.prepare('DELETE FROM covers_custom WHERE key = ?').run(key);
+    fs.rmSync(path.join(this.dir, key + '.webp'), { force: true });
+    delete this.meta[key];
   }
 
   /** Descarga la imagen oficial de origen para procesarla en la app. */

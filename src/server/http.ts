@@ -7,6 +7,7 @@ import { CatalogRepo } from './catalog.ts';
 import { getSettings, updateSettings } from './settings.ts';
 import { PhotoRepo } from './photos.ts';
 import { CoverStore } from './covers.ts';
+import { CoverJobs } from './coverJobs.ts';
 import { importOnline, searchOnline } from './lookup.ts';
 import { deleteQuick, preview, saveQuick, updateQuick } from './quickProducts.ts';
 import { repoStatus, setRepoConfig, type Secret } from './repoSync.ts';
@@ -70,7 +71,8 @@ export function createServer(db: Db, webRoot: string, dataDir: string, opts: { s
   const repo = new CatalogRepo(db);
   const tasks = new TaskRepo(db);
   const photos = new PhotoRepo(db, dataDir);
-  const covers = new CoverStore(dataDir, undefined, webRoot);
+  const covers = new CoverStore(dataDir, undefined, webRoot, db);
+  const coverJobs = new CoverJobs(db, covers);
   covers.assignKeys(db);
   const idOf = (s: string) => { const n = Number(s); if (!Number.isInteger(n) || n <= 0) throw new HttpError(400, 'ID inválido'); return n; };
 
@@ -126,8 +128,23 @@ export function createServer(db: Db, webRoot: string, dataDir: string, opts: { s
     ['GET', /^\/api\/covers$/, () => { covers.assignKeys(db); return covers.list(); }],
     ['GET', /^\/api\/covers\/coverage$/, () => covers.coverage(db)],
     ['POST', /^\/api\/covers\/([a-z0-9-]+)$/, async (m, req) => covers.save(m[1], await readJson(req))],
-    ['POST', /^\/api\/quick\/products$/, async (_m, req) => { const r = saveQuick(db, dataDir, await readJson(req)); kick(); return r; }],
-    ['PATCH', /^\/api\/quick\/products\/([a-f0-9-]{36})$/, async (m, req) => { const r = updateQuick(db, dataDir, m[1], await readJson(req)); kick(); return r; }],
+    ['POST', /^\/api\/quick\/products$/, async (_m, req) => {
+      const b = await readJson(req); const r = saveQuick(db, dataDir, b);
+      if (b?.photo) coverJobs.discardForProduct(r.id); // la foto manual tiene prioridad sobre la búsqueda automática
+      kick(); return r;
+    }],
+    ['PATCH', /^\/api\/quick\/products\/([a-f0-9-]{36})$/, async (m, req) => {
+      const b = await readJson(req); const r = updateQuick(db, dataDir, m[1], b);
+      if (b?.photo) coverJobs.discardForProduct(r.id);
+      kick(); return r;
+    }],
+    // «Buscar imagen»: búsquedas de portada en segundo plano.
+    ['GET', /^\/api\/cover-jobs$/, () => coverJobs.list()],
+    ['POST', /^\/api\/cover-jobs$/, async (_m, req) => coverJobs.request(await readJson(req))],
+    ['PATCH', /^\/api\/cover-jobs\/([a-f0-9-]{36})$/, async (m, req) => coverJobs.update(m[1], await readJson(req))],
+    ['POST', /^\/api\/cover-jobs\/([a-f0-9-]{36})\/search$/, (m) => coverJobs.runSearch(m[1])],
+    ['POST', /^\/api\/cover-jobs\/([a-f0-9-]{36})\/result$/, async (m, req) => { const r = coverJobs.result(m[1], await readJson(req)); kick(); return r; }],
+    ['POST', /^\/api\/cover-jobs\/([a-f0-9-]{36})\/fail$/, async (m, req) => coverJobs.fail(m[1], await readJson(req))],
     ['DELETE', /^\/api\/quick\/products\/([a-f0-9-]{36})$/, (m) => { deleteQuick(db, dataDir, m[1]); kick(); return { ok: true }; }],
     ['GET', /^\/api\/repo$/, () => repoStatus(db, opts.secret)],
     ['PUT', /^\/api\/repo$/, async (_m, req) => { setRepoConfig(db, await readJson(req), opts.secret); kick(); return repoStatus(db, opts.secret); }],
@@ -174,6 +191,13 @@ export function createServer(db: Db, webRoot: string, dataDir: string, opts: { s
         if (!f) throw new HttpError(404, 'Portada no disponible');
         res.writeHead(200, { 'Content-Type': 'image/webp', 'Cache-Control': 'private, max-age=604800', ...SECURITY_HEADERS });
         return void fs.createReadStream(f).pipe(res);
+      }
+      const jobImg = req.method === 'GET' && url.pathname.match(/^\/api\/cover-jobs\/([a-f0-9-]{36})\/image\/(\d)$/);
+      if (jobImg) {
+        auth.require('admin');
+        const src = await coverJobs.image(jobImg[1], Number(jobImg[2]));
+        res.writeHead(200, { 'Content-Type': src.mime, 'Cache-Control': 'no-store', ...SECURITY_HEADERS });
+        return void res.end(src.buf);
       }
       const coverSrc = req.method === 'GET' && url.pathname.match(/^\/api\/covers\/([a-z0-9-]+)\/source$/);
       if (coverSrc) {

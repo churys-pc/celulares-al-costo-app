@@ -124,6 +124,12 @@ const MIGRATIONS: string[] = [
   // v8: «Pendientes del local» (notas de tareas del personal; se comparten por el repo de datos como tasks/<id>.json).
   `CREATE TABLE tasks (id TEXT PRIMARY KEY, title TEXT NOT NULL, description TEXT NOT NULL DEFAULT '',
      done INTEGER NOT NULL DEFAULT 0, created_by TEXT, created_at TEXT NOT NULL, updated_at TEXT NOT NULL, completed_at TEXT);`,
+  // v9: portadas encontradas desde la app («Buscar imagen») y sus búsquedas en segundo plano.
+  `CREATE TABLE covers_custom (key TEXT PRIMARY KEY, brand TEXT NOT NULL, model TEXT NOT NULL, url TEXT NOT NULL,
+     page TEXT, source TEXT, saved_at TEXT NOT NULL);
+   CREATE TABLE cover_jobs (id TEXT PRIMARY KEY, key TEXT NOT NULL, brand TEXT NOT NULL, model TEXT NOT NULL,
+     product_repo_id TEXT, status TEXT NOT NULL, message TEXT, candidates TEXT, created_at TEXT NOT NULL, updated_at TEXT NOT NULL);
+   CREATE INDEX ix_cover_jobs_key ON cover_jobs(key, status);`,
 ];
 
 function migrate(db: Db) {
