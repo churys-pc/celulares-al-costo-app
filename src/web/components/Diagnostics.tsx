@@ -13,7 +13,7 @@ interface Diag {
   phone: { qrExpiresAt: string | null; pending: { id: string; code: string; info: string; since: string }[]; active: { id: string; info: string; lastSeen: string | null } | null };
 }
 interface UsbList { service: 'ok' | 'unavailable'; message: string | null; detail?: string | null; devices: { key: string; model: string | null; productType: string | null; ios: string | null }[] }
-interface Lan { running: boolean; error: string | null; port: number; https: boolean; host: string | null; addresses: string[]; configuredHost: string | null; certName: string | null; note: string | null }
+interface Lan { badHost?: string | null; running: boolean; error: string | null; port: number; https: boolean; host: string | null; addresses: string[]; configuredHost: string | null; certName: string | null; note: string | null }
 interface Row { id: string; ref: string; status: string; createdAt: string; closedAt: string | null; createdBy: string | null; model: string | null; ios: string | null; capacityGb: number | null; verdict: string }
 
 async function call<T>(method: string, url: string, body?: unknown): Promise<T> {
@@ -463,6 +463,7 @@ function LanSettings() {
       <h2>Conexión con el iPhone <span className={`dg-usb ${lan.running ? 'connected' : 'off'}`}>{lan.running ? (lan.https ? 'HTTPS activo' : 'HTTP activo') : 'Detenida'}</span></h2>
       <p className="muted small">El iPhone abre {lan.https ? 'https' : 'http'}://{lan.host ?? '(sin red)'}:{lan.port}/d en la red del local. Si Windows pregunta, permití la app en <b>redes privadas</b>.</p>
       {lan.error && <p className="err small">{lan.error}</p>}
+      {lan.badHost && <p className="dg-note small">La dirección configurada «{lan.badHost}» no la encuentra el iPhone: se usa la IP {lan.host}. Borrala en «Configurar dirección y HTTPS».</p>}
       {lan.note && <p className="dg-note small">{lan.note}</p>}
       {isAdmin && (!open ? <button className="link small" onClick={() => setOpen(true)}>Configurar dirección y HTTPS</button> : (
         <div className="dg-fields">

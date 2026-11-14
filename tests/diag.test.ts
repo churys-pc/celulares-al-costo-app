@@ -5,7 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { openDb } from '../src/server/db.ts';
 import { DiagStore, phoneInfoFromUa } from '../src/server/diag.ts';
-import { DiagLan } from '../src/server/diagLan.ts';
+import { DiagLan, usableHost } from '../src/server/diagLan.ts';
 import { Usbmux, UsbWatcher, readDevice, usbTiming } from '../src/server/usbmux.ts';
 import { toXml, parseXml, parseBinary } from '../src/server/plist.ts';
 import { verdict, TESTS, maskId, capacityGb, checkResult } from '../src/shared/diag.ts';
@@ -27,6 +27,7 @@ test('Diagnóstico: veredicto sin aprobación global si faltan pruebas; «Falla�
   assert.equal(maskId('351234567890124'), '35•••••••••0124');
   assert.equal(capacityGb(127989469184), 128); assert.equal(capacityGb(255_869_321_216), 256);
   assert.equal(phoneInfoFromUa(UA), 'iPhone · iOS 18.1 · Safari');
+  assert.equal(usableHost('chury'), false); assert.equal(usableHost('192.168.1.34'), true); assert.equal(usableHost('diag.celularesalcosto.uy'), true);
 });
 
 test('Diagnóstico: QR de un solo uso, confirmación en Windows y credencial limitada a ese diagnóstico', () => {
@@ -239,6 +240,11 @@ test('Servidor para Safari: solo la página y la sesión del iPhone; datos invá
   const lan = new DiagLan(d, s, path.join(dir, 'web'), dir);
   d.prepare(`INSERT INTO settings (key, value) VALUES ('diagLan', ?)`).run(JSON.stringify({ port: 5199 + Math.floor(Math.random() * 400), host: '127.0.0.1' }));
   await lan.ensure();
+  await assert.rejects(lan.configure({ host: 'chury' }), /nombre de la PC/);
+  // Un nombre sin dominio guardado antes se ignora: el QR usa la IP.
+  d.prepare(`UPDATE settings SET value = ? WHERE key = 'diagLan'`).run(JSON.stringify({ ...JSON.parse((d.prepare(`SELECT value FROM settings WHERE key = 'diagLan'`).get() as any).value), host: 'chury' }));
+  assert.equal(lan.info().badHost, 'chury'); assert.notEqual(lan.info().host, 'chury');
+  d.prepare(`UPDATE settings SET value = ? WHERE key = 'diagLan'`).run(JSON.stringify({ ...JSON.parse((d.prepare(`SELECT value FROM settings WHERE key = 'diagLan'`).get() as any).value), host: '127.0.0.1' }));
   const info = lan.info();
   assert.equal(info.running, true, info.error ?? ''); assert.equal(info.https, false); assert.match(info.note!, /HTTPS/);
   const base = `http://127.0.0.1:${info.port}`;

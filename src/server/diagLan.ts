@@ -40,6 +40,9 @@ export function lanAddresses(): { address: string; iface: string }[] {
   return out.sort((a, b) => Number(priv(b.address)) - Number(priv(a.address)));
 }
 
+/** Lo que el iPhone puede resolver: una IPv4 o un nombre con dominio (con punto). El nombre de la PC solo («chury») no. */
+export const usableHost = (h: string) => /^\d{1,3}(\.\d{1,3}){3}$/.test(h) || (/\./.test(h) && /^[a-z0-9.-]+$/i.test(h));
+
 export class DiagLan {
   private server: http.Server | https.Server | null = null;
   private starting: Promise<void> | null = null;
@@ -55,8 +58,9 @@ export class DiagLan {
   info() {
     const c = this.conf();
     const addrs = lanAddresses();
-    const host = c.host || addrs[0]?.address || null;
-    return { running: !!this.server, error: this.error, port: this.port || c.port || DEFAULT_PORT, https: this.https || !!c.pfxFile,
+    const badHost = !!c.host && !usableHost(c.host);
+    const host = (c.host && !badHost ? c.host : null) || addrs[0]?.address || null;
+    return { badHost: badHost ? c.host : null, running: !!this.server, error: this.error, port: this.port || c.port || DEFAULT_PORT, https: this.https || !!c.pfxFile,
       host, addresses: addrs.map((a) => a.address), configuredHost: c.host ?? null, certName: c.certName ?? null,
       note: this.https || c.pfxFile ? null : 'Conexión HTTP: Safari no permite cámara, micrófono ni sensores de movimiento sin HTTPS; esas pruebas quedan «No verificado» con su alternativa manual.' };
   }
@@ -106,6 +110,7 @@ export class DiagLan {
     if (body?.host !== undefined) {
       const h = String(body.host ?? '').trim();
       if (h && !/^[a-z0-9.-]{1,253}$/i.test(h)) throw new ValidationError('Nombre o dirección inválida');
+      if (h && !usableHost(h)) throw new ValidationError(`«${h}» parece el nombre de la PC: el iPhone no lo puede encontrar. Dejá el campo vacío (se usa la IP automáticamente) o poné una IP o un nombre con dominio.`);
       c.host = h || undefined;
     }
     if (body?.port !== undefined) {
