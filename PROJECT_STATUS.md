@@ -95,6 +95,15 @@
 - [x] v0.24.8: Modo presentación con **selector de marca** arriba («Todas» + marcas de los equipos que se están mostrando, ordenadas por cantidad): al elegir una marca se recorren solo sus equipos (contador, flechas, automático), y «Todas» vuelve a la lista completa. Se oculta si hay una sola marca.
 - [x] v0.24.9: la ficha del equipo (catálogo y modelo sin stock de Inicio) ya no tiene una ✕ al lado de la ✕ de la ventana: se cierra con **«‹ Volver»** a la izquierda (o tocando afuera) y el panel abre debajo de la barra de título (`.overlay:not(.center) { top: 36px }`), así los botones de Windows quedan separados.
 - [x] v0.24.10: Catálogo sin los filtros de uso (Gaming, Fotos, Redes, Trabajo), pedido del usuario. Quedan Todos/Nuevos/CPO y Favoritos.
+- [x] v0.25.0: **auditoría integral** (153 casos automatizados con Playwright contra el servidor real + 49 tests; matriz en `AUDITORIA.md`). Correcciones:
+  - Cargar productos: doble clic en «Cargar producto» creaba 2 productos → guarda una sola vez (botón «Guardando…»).
+  - Importar JSON: reimportar duplicaba todo, los importados no se sincronizaban y pisaban fichas verificadas → `importProducts` (al repo de datos, saltea iguales, todo o nada, la ficha del archivo solo si el modelo no tiene).
+  - Catálogo: búsqueda por palabras sin importar tildes («motó», «prueba 256», «cpo»); precios con centavos se ven exactos (USD 199,99, antes 200); Esc cierra fichas y ventanas (`useEscape`).
+  - Comparador: selector sin tildes y por palabras; Esc en sus ventanas; IDs guardados inválidos o de modelos borrados ya no vacían la selección ni muestran «ID inválido» (el servidor omite modelos inexistentes).
+  - Inicio: títulos de novedades a 2 líneas (completo al pasar el mouse) y descripciones de pendientes a 3 líneas, para que entren las tres novedades.
+  - Ajustes: se quitaron «Eslogan» (no se mostraba en ningún lado) y «Moneda por defecto» (los precios se cargan siempre en USD); muestra de color visible.
+  - Verificado: actualización desde una base de v0.23.0 (productos intactos, datos de Diagnóstico borrados, CPO a 1 año, integridad OK), CSRF, bloqueo por intentos, logs sin datos sensibles, 4 tamaños de ventana sin desbordes, rendimiento con 120 productos (catálogo ~400 ms, APIs < 15 ms).
+  - Pendiente con hardware/red: app de Windows real, fichas y portadas reales en internet, feeds de novedades reales, sincronización con 2 PCs.
 - [ ] Fase 1 (bloque 3): import/export CSV.
 - [ ] Luego: versión móvil (Safari) con el diseño del mockup.
 - [ ] Fases 2-6 según prompt original.

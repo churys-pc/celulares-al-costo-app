@@ -52,5 +52,6 @@ test('comparación: versiones distintas no se comparan; sin precio no se inventa
   assert.match(c.antutu.warnings.join(' '), /distintas versiones/);
   assert.match(c.summary.join(' '), /sin datos comparables/);
   assert.match(c.summary.join(' '), /falta precio/);
-  assert.throws(() => repo.compareModels([1, 2, 3, 4]), /entre 2 y 3/);
+  assert.throws(() => repo.compareModels([1, 2, 3, 4]), /entre 1 y 3/);
+  assert.equal(repo.compareModels([999999]).length, 0, 'modelo borrado se omite, no rompe la comparación');
 });

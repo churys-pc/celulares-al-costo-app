@@ -136,6 +136,8 @@ const mapBench = (r: any): Benchmark => ({
   sourceName: r.source_name, sourceUrl: r.source_url ?? null, measuredAt: r.measured_at, notes: r.notes, sample: r.sample ?? null,
 });
 
+const fold = (s: string) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+
 export class CatalogRepo {
   constructor(private db: Db) {}
 
@@ -155,11 +157,6 @@ export class CatalogRepo {
   listProducts(f: ProductFilter = {}): Product[] {
     const where: string[] = [];
     const params: unknown[] = [];
-    if (f.q) {
-      const q = `%${String(f.q).slice(0, 80).replace(/[%_\\]/g, '\\$&')}%`;
-      where.push(`(b.name || ' ' || m.name || ' ' || IFNULL(v.color,'') || ' ' || IFNULL(v.storage_gb,'')) LIKE ? ESCAPE '\\'`);
-      params.push(q);
-    }
     if (f.condition) { where.push('p.condition = ?'); params.push(oneOf(f.condition, CONDITIONS, 'condición')); }
     if (f.brandId) { where.push('b.id = ?'); params.push(Number(f.brandId)); }
     if (f.use) { where.push(`EXISTS (SELECT 1 FROM json_each(p.uses) WHERE value = ?)`); params.push(oneOf(f.use, USES, 'uso')); }
@@ -167,7 +164,15 @@ export class CatalogRepo {
     if (f.includeDemo === false) where.push('p.is_demo = 0');
     const sql = `${PRODUCT_SELECT} ${where.length ? 'WHERE ' + where.join(' AND ') : ''}
       ORDER BY p.is_demo, p.favorite DESC, b.name, m.name, v.storage_gb`;
-    return this.db.prepare(sql).all(...params).map(mapProduct);
+    const list = this.db.prepare(sql).all(...params).map(mapProduct);
+    // Texto: cada palabra tiene que aparecer (sin importar tildes ni mayúsculas) en marca, modelo, memoria, color o condición.
+    const toks = f.q ? fold(String(f.q).slice(0, 80)).split(/\s+/).filter(Boolean) : [];
+    if (!toks.length) return list;
+    return list.filter((p) => {
+      const mem = p.ramGb && p.storageGb ? `${p.ramGb}/${p.storageGb}` : '';
+      const hay = fold(`${p.brand} ${p.model} ${p.color ?? ''} ${p.storageGb ?? ''} ${p.storageGb ? p.storageGb + 'gb' : ''} ${mem} ${p.condition === 'nuevo' ? 'nuevo' : 'cpo usado'}`);
+      return toks.every((t) => hay.includes(t) || hay.replace(/\s+/g, '').includes(t));
+    });
   }
 
   getProduct(id: number): ProductDetail | null {
@@ -355,10 +360,10 @@ export class CatalogRepo {
   }
 
   compareModels(ids: number[]): CompareModel[] {
-    if (ids.length < 1 || ids.length > 3) throw new ValidationError("Elegí entre 2 y 3 modelos");
-    return ids.map((id) => {
-      const m = this.db.prepare(`SELECT m.*, b.name AS brand FROM models m JOIN brands b ON b.id = m.brand_id WHERE m.id = ?`).get(id);
-      if (!m) throw new ValidationError('Modelo inexistente');
+    if (ids.length < 1 || ids.length > 3) throw new ValidationError('Elegí entre 1 y 3 modelos');
+    // Un modelo borrado (por ejemplo desde otra PC) se omite: el resto se sigue comparando.
+    const found = ids.map((id) => ({ id, m: this.db.prepare(`SELECT m.*, b.name AS brand FROM models m JOIN brands b ON b.id = m.brand_id WHERE m.id = ?`).get(id) })).filter((x) => x.m);
+    return found.map(({ id, m }) => {
       const price = this.db.prepare(`SELECT p.price, p.currency FROM products p JOIN variants v ON v.id = p.variant_id
         WHERE v.model_id = ? AND p.stock > 0 AND p.status = 'disponible' AND p.price > 0
         ORDER BY (p.currency = 'USD') DESC, p.price LIMIT 1`).get(id);

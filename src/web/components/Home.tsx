@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import type { CompareModel, ProductDetail, Settings, Stats } from '../../shared/types.ts';
 import { api, type NewsItem, type NewsState, type SearchHit, type Task } from '../api.ts';
 import { Icon } from '../icons.tsx';
+import { useEscape } from '../useEscape.ts';
 import type { Nav } from '../sections.ts';
 import { useCovers } from '../covers.ts';
 import { dualPrice, num } from '../format.ts';
@@ -150,6 +151,7 @@ function SearchArt() {
 
 /** Ficha de un modelo sin producto cargado (agotado): portada, características principales y ficha completa. */
 function ModelSheet({ m, onClose, onCompare }: { m: CompareModel; onClose: () => void; onCompare: () => void }) {
+  useEscape(onClose);
   const cover = useCovers();
   const img = cover(m.brand, m.model, m.coverKey) ?? m.photoUrl;
   const highlights = keySpecValues(m.specs);
@@ -311,7 +313,7 @@ function NewsPanel() {
                   <div className="n3-body">
                     <div className="n3-meta"><b className="n3-brand">{n.brand}</b><span>· {fecha(n.date, false)}</span>
                       <span className="spacer" /><a className="n3-src" href={n.url} target="_blank" rel="noreferrer">{n.source} <Icon name="external" size={14} /></a></div>
-                    <a className="n3-title" href={n.url} target="_blank" rel="noreferrer">{n.title}</a>
+                    <a className="n3-title" title={n.title} href={n.url} target="_blank" rel="noreferrer">{n.title}</a>
                     {n.summary && <p>{n.summary}</p>}
                   </div>
                 </li>))}

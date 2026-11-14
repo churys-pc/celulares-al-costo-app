@@ -5,7 +5,7 @@ import path from 'node:path';
 import type { Db } from './db.ts';
 import { tx } from './db.ts';
 import { applyFichaFor } from './fichas.ts';
-import { CatalogRepo, validateSpecs } from './catalog.ts';
+import { CatalogRepo, validateProduct, validateSpecs } from './catalog.ts';
 import { decodeImage } from './photos.ts';
 import { fetchPhone, searchOnline, LOOKUP_SOURCE } from './lookup.ts';
 import { enqueue, PHOTOS_DIR, PRODUCTS_DIR } from './repoSync.ts';
@@ -162,4 +162,47 @@ export function deleteQuick(db: Db, dataDir: string, id: string) {
     enqueue(db, `${PRODUCTS_DIR}${id}.json`, 'delete');
     enqueue(db, `${PHOTOS_DIR}${id}.jpg`, 'delete');
   });
+}
+
+/**
+ * Importar JSON (Ajustes → Datos del catálogo): cada fila entra como un producto más del catálogo compartido (se sube
+ * al repo de datos y llega a las demás PCs). Todo o nada: si una fila es inválida no se importa ninguna. Las filas
+ * iguales a un producto que ya está (marca, modelo, memoria, color, condición y precio) se saltean, así reimportar
+ * el mismo archivo no duplica. La ficha del archivo solo se usa si el modelo todavía no tiene ficha.
+ */
+export function importProducts(db: Db, dataDir: string, data: any): { products: number; skipped: number } {
+  if (!data || data.format !== 'celulares-catalog' || !Array.isArray(data.products)) {
+    throw new ValidationError('Archivo no reconocido (se espera formato celulares-catalog)');
+  }
+  if (data.products.length > 5000) throw new ValidationError('Demasiados productos en un solo archivo');
+  const rows: { p: ReturnType<typeof validateProduct>; specs: Spec[] }[] = data.products.map((p: any, idx: number) => {
+    try { return { p: validateProduct(p), specs: p.specs ? validateSpecs(p.specs) : [] }; }
+    catch (e) { throw new ValidationError(`Fila ${idx + 1}: ${(e as Error).message}`); }
+  });
+  const repo = new CatalogRepo(db);
+  const key = (x: { brand: string; model: string; storageGb: number | null; ramGb: number | null; color: string | null; condition: string; price: number; currency: string }) =>
+    [x.brand, x.model, x.storageGb ?? '', x.ramGb ?? '', x.color ?? '', x.condition, x.price, x.currency].join('|').toLowerCase();
+  const have = new Set(repo.listProducts({}).map(key));
+  let added = 0, skipped = 0;
+  tx(db, () => {
+    for (const { p, specs } of rows) {
+      const k = key(p);
+      if (have.has(k)) { skipped++; continue; }
+      have.add(k);
+      const modelRow = db.prepare('SELECT m.id FROM models m JOIN brands b ON b.id = m.brand_id WHERE b.name = ? AND m.name = ?').get(p.brand, p.model);
+      const hasSpecs = modelRow && db.prepare('SELECT 1 FROM specs WHERE model_id = ? LIMIT 1').get(modelRow.id);
+      const id = crypto.randomUUID();
+      const mem = p.ramGb && p.storageGb ? ` ${p.ramGb}/${p.storageGb}` : p.storageGb ? ` ${p.storageGb}GB` : '';
+      const doc: ProductDoc = {
+        id, name: `${p.brand} ${p.model}${mem}`.slice(0, 80), brand: p.brand, model: p.model, price: p.price, currency: p.currency,
+        condition: p.condition, storageGb: p.storageGb, ramGb: p.ramGb, color: p.color, description: '',
+        specs: hasSpecs ? [] : specs.map(({ group, key: k2, value, highlight }) => ({ group, key: k2, value, highlight, sourceName: null, sourceUrl: null, sourceDate: null })),
+        antutu: null, source: null, photo: null, updatedAt: new Date().toISOString(),
+      };
+      applyDoc(db, dataDir, doc, null);
+      enqueue(db, `${PRODUCTS_DIR}${id}.json`, 'put', JSON.stringify(doc, null, 1));
+      added++;
+    }
+  });
+  return { products: added, skipped };
 }

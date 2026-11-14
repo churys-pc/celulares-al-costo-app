@@ -19,7 +19,7 @@ function catalogDb() {
   const db = openDb(path.join(dir, 'c.db'));
   applySeedData(db); applyFichas(db);
   const doc = (id: string, brand: string, model: string, ramGb: number, storageGb: number, price: number, condition = 'nuevo') =>
-    applyDoc(db, dir, { id, name: `${brand} ${model}`, brand, model, price, currency: 'USD', condition, storageGb, ramGb, color: 'Negro',
+    applyDoc(db, dir, { id, name: `${brand} ${model}`, brand, model, price, currency: 'USD', condition: condition as 'nuevo' | 'usado', storageGb, ramGb, color: 'Negro',
       description: '', specs: [], antutu: null, source: null, photo: null, updatedAt: '' }, null);
   doc('11111111-1111-4111-8111-111111111111', 'Samsung', 'Galaxy A56 5G', 8, 256, 420);
   doc('22222222-2222-4222-8222-222222222222', 'Apple', 'iPhone 15 Pro', 8, 128, 780, 'usado');

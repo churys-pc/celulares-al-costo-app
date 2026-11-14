@@ -4,6 +4,7 @@ import { api, fileToDataUrl } from '../api.ts';
 import { useIsAdmin } from '../session.ts';
 import { iosSupport, IOS_SOURCE } from '../../shared/iosSupport.ts';
 import { Icon } from '../icons.tsx';
+import { useEscape } from '../useEscape.ts';
 import { useCovers } from '../covers.ts';
 import { keySpecValues, prioritySort } from '../../shared/keySpecs.ts';
 import { SPEC_TEMPLATE } from '../../shared/specTemplate.ts';
@@ -12,6 +13,7 @@ import { converted, money, STATUS_LABEL, USE_LABEL, variantLabel, warrantyLabel 
 interface Props { product: ProductDetail; settings: Settings | null; onClose: () => void; onEdit: () => void; onDelete?: () => void; onChanged: () => void; onPresent?: () => void }
 
 export function ProductSheet({ product: p, settings, onClose, onEdit, onDelete, onChanged, onPresent }: Props) {
+  useEscape(onClose);
   const ios = iosSupport(p.brand, p.model);
   const cover = useCovers();
   const admin = useIsAdmin();

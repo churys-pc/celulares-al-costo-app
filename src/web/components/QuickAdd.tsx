@@ -27,7 +27,8 @@ export function QuickAdd({ settings }: { settings: Settings | null }) {
   const [match, setMatch] = useState<Match | null>(null);
   const [cands, setCands] = useState<{ slug: string; name: string }[]>([]);
   const [selSlug, setSelSlug] = useState(''); // variante elegida en la lista (se ve al instante, aunque la ficha siga cargando)
-  const searchSeq = useRef(0); // solo vale la respuesta de la última búsqueda de ficha
+  const searchSeq = useRef(0);
+  const savingRef = useRef(false); const [saving, setSaving] = useState(false); // solo vale la respuesta de la última búsqueda de ficha
   const [searching, setSearching] = useState(false);
   const [searched, setSearched] = useState(false);
   const [pesos, setPesos] = useState<string | null>(null); // null = se muestra el equivalente; texto = se está escribiendo en pesos
@@ -132,8 +133,11 @@ export function QuickAdd({ settings }: { settings: Settings | null }) {
   }
 
   async function save(e: React.FormEvent) {
-    e.preventDefault(); setError(''); setMsg('');
+    e.preventDefault();
+    if (savingRef.current) return; // doble clic o Enter repetido: un solo producto
+    setError(''); setMsg('');
     if (searching) { setError('Esperá a que termine de cargar la ficha del modelo elegido.'); return; }
+    savingRef.current = true; setSaving(true);
     try {
       const r = await api.quickSave({ ...f, id: f.id || undefined, match, photo });
       // La búsqueda de portada sigue en segundo plano y se asigna sola al terminar.
@@ -141,7 +145,7 @@ export function QuickAdd({ settings }: { settings: Settings | null }) {
       if (pending) await linkJob(shownJob!.id, r.id).catch(() => {});
       setMsg(`${f.id ? 'Producto actualizado.' : 'Producto cargado. Se sube al repositorio automáticamente.'}${pending ? ' La portada se asigna sola cuando termine la búsqueda.' : ''}`);
       reset(); load();
-    } catch (err) { setError((err as Error).message); }
+    } catch (err) { setError((err as Error).message); } finally { savingRef.current = false; setSaving(false); }
   }
   async function edit(p: Product) {
     const d = await api.product(p.id);
@@ -282,7 +286,7 @@ export function QuickAdd({ settings }: { settings: Settings | null }) {
           </div>
           <div className="qa2-foot">
             <button type="button" className="link-muted" onClick={() => { reset(); setMsg(''); }}><Icon name="undo" size={16} /> {f.id ? 'Cancelar edición' : 'Limpiar formulario'}</button>
-            <button type="submit" className="btn primary big"><Icon name={f.id ? 'check' : 'plus'} size={18} /> {f.id ? 'Guardar cambios' : 'Cargar producto'}</button>
+            <button type="submit" className="btn primary big" disabled={saving}><Icon name={f.id ? 'check' : 'plus'} size={18} /> {saving ? 'Guardando…' : f.id ? 'Guardar cambios' : 'Cargar producto'}</button>
           </div>
         </form>
 

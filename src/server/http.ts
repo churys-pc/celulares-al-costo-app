@@ -9,7 +9,7 @@ import { PhotoRepo } from './photos.ts';
 import { CoverStore } from './covers.ts';
 import { CoverJobs } from './coverJobs.ts';
 import { importOnline, searchOnline } from './lookup.ts';
-import { deleteQuick, preview, saveQuick, updateQuick } from './quickProducts.ts';
+import { deleteQuick, importProducts, preview, saveQuick, updateQuick } from './quickProducts.ts';
 import { repoStatus, setRepoConfig, type Secret } from './repoSync.ts';
 import { Auth, AuthError } from './auth.ts';
 import { publishRate } from './sharedConfig.ts';
@@ -163,7 +163,7 @@ export function createServer(db: Db, webRoot: string, dataDir: string, opts: { s
     ['GET', /^\/api\/catalog\/models\/(\d+)\/specs$/, (m) => repo.getSpecs(idOf(m[1]))],
     ['PUT', /^\/api\/catalog\/models\/(\d+)\/specs$/, async (m, req) => repo.setSpecs(idOf(m[1]), (await readJson(req)).specs)],
     ['GET', /^\/api\/catalog\/export$/, (_m, _r, u) => repo.exportCatalog(u.searchParams.get('includeDemo') === '1')],
-    ['POST', /^\/api\/catalog\/import$/, async (_m, req) => repo.importCatalog(await readJson(req))],
+    ['POST', /^\/api\/catalog\/import$/, async (_m, req) => { const r = importProducts(db, dataDir, await readJson(req)); kick(); return r; }],
   ];
 
   const root = path.resolve(webRoot);

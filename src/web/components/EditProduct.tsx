@@ -3,8 +3,10 @@ import { useState } from 'react';
 import type { Product, Settings } from '../../shared/types.ts';
 import { api, fileToDataUrl } from '../api.ts';
 import { Icon } from '../icons.tsx';
+import { useEscape } from '../useEscape.ts';
 
 export function EditProduct({ p, settings, onClose, onSaved }: { p: Product; settings: Settings | null; onClose: () => void; onSaved: () => void }) {
+  useEscape(onClose);
   const [f, setF] = useState({ price: String(p.price), condition: p.condition, ramGb: p.ramGb ? String(p.ramGb) : '', storageGb: p.storageGb ? String(p.storageGb) : '', color: p.color ?? '' });
   const [photo, setPhoto] = useState<string | null | undefined>(undefined); // undefined = sin cambios, null = quitar
   const [busy, setBusy] = useState(false); const [error, setError] = useState('');

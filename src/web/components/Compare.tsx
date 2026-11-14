@@ -4,6 +4,7 @@ import { buildComparison } from '../../shared/compare.ts';
 import { api } from '../api.ts';
 import { money } from '../format.ts';
 import { Icon } from '../icons.tsx';
+import { useEscape } from '../useEscape.ts';
 import { useCovers } from '../covers.ts';
 import { SpecEditor, AllSpecs, StatusTag } from './ProductSheet.tsx';
 import { useIsAdmin } from '../session.ts';
@@ -62,7 +63,8 @@ export function Compare({ settings }: { settings: Settings | null }) {
   const admin = useIsAdmin();
   const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [ids, setIds] = useState<number[]>(() => {
-    try { return (JSON.parse(localStorage.getItem('compare.ids') ?? '[]') as number[]).slice(0, MAX); } catch { return []; }
+    // Solo IDs válidos (lo guardado puede venir de una versión vieja o estar dañado).
+    try { const v = JSON.parse(localStorage.getItem('compare.ids') ?? '[]'); return (Array.isArray(v) ? v : []).filter((x) => Number.isInteger(x) && x > 0).slice(0, MAX); } catch { return []; }
   });
   const [models, setModels] = useState<CompareModel[]>([]);
   const [adding, setAdding] = useState(false);
@@ -78,7 +80,12 @@ export function Compare({ settings }: { settings: Settings | null }) {
   const loadModels = () => {
     try { localStorage.setItem('compare.ids', JSON.stringify(ids)); } catch {}
     if (!ids.length) { setModels([]); return; }
-    api.compare(ids).then(setModels).catch((e) => { setError(e.message); setIds([]); });
+    api.compare(ids).then((ms) => {
+      setModels(ms);
+      // Modelos que ya no existen (borrados en otra PC): se sacan de la selección sin mostrar error.
+      const found = new Set(ms.map((m) => m.modelId));
+      if (ids.some((x) => !found.has(x))) setIds(ids.filter((x) => found.has(x)));
+    }).catch(() => { setModels([]); setIds([]); });
   };
   useEffect(() => { loadCandidates(); }, []);
   useEffect(loadModels, [ids]);
@@ -236,6 +243,7 @@ export function Compare({ settings }: { settings: Settings | null }) {
 function AddModel({ candidates, ids, onClose, onAdd, onImported, onManual }: {
   candidates: Candidate[]; ids: number[]; onClose: () => void; onAdd: (id: number) => void; onImported: (id: number) => Promise<void>; onManual?: () => void;
 }) {
+  useEscape(onClose);
   const [q, setQ] = useState('');
   const [online, setOnline] = useState<{ slug: string; name: string }[] | null>(null);
   const [busy, setBusy] = useState('');
@@ -246,7 +254,9 @@ function AddModel({ candidates, ids, onClose, onAdd, onImported, onManual }: {
     const t = setTimeout(() => api.lookup(q).then(setOnline).catch((e) => { setOnline([]); setError(e.message); }), 450);
     return () => clearTimeout(t);
   }, [q]);
-  const local = candidates.filter((c) => !ids.includes(c.modelId) && name(c).toLowerCase().includes(q.toLowerCase()));
+  const fold = (x: string) => x.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  const toks = fold(q).split(/\s+/).filter(Boolean);
+  const local = candidates.filter((c) => !ids.includes(c.modelId) && toks.every((t) => fold(name(c)).includes(t)));
   async function importOnline(slug: string) {
     setBusy(slug); setError('');
     try { await onImported((await api.lookupImport(slug)).modelId); } catch (e) { setError((e as Error).message); } finally { setBusy(''); }
@@ -283,6 +293,7 @@ function AddModel({ candidates, ids, onClose, onAdd, onImported, onManual }: {
 }
 
 function BenchForm({ model, onClose, onSaved }: { model: CompareModel; onClose: () => void; onSaved: () => void }) {
+  useEscape(onClose);
   const existing = model.benchmarks[0];
   const [f, setF] = useState<any>(() => ({
     version: existing?.version ?? 'v11', platform: existing?.platform ?? (model.brand.toLowerCase() === 'apple' ? 'ios' : 'android'),
@@ -335,6 +346,7 @@ function BenchForm({ model, onClose, onSaved }: { model: CompareModel; onClose: 
 }
 
 function NewModel({ onClose, onCreated }: { onClose: () => void; onCreated: (id: number) => void }) {
+  useEscape(onClose);
   const [brand, setBrand] = useState('');
   const [model, setModel] = useState('');
   const [error, setError] = useState('');

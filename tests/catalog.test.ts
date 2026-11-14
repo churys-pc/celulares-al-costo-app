@@ -25,7 +25,9 @@ test('CRUD de producto reutiliza marca/modelo/variante', () => {
   assert.notEqual(u.variantId, a.variantId);
   assert.deepEqual(u.uses, ['fotos']);
   assert.equal(repo.listProducts({ use: 'fotos' }).length, 1);
-  assert.equal(repo.listProducts({ q: 'prueba 256' }).length, 0); // búsqueda por subcadena continua
+  assert.equal(repo.listProducts({ q: 'prueba 256' }).length, 1); // cada palabra por separado (modelo + memoria)
+  assert.equal(repo.listProducts({ q: 'IPHÓNE prueba' }).length, 2, 'sin importar tildes ni mayúsculas');
+  assert.equal(repo.listProducts({ q: 'prueba cpo' }).length, 1, 'condición CPO');
   assert.equal(repo.listProducts({ q: 'iphone' }).length, 2);
   assert.ok(repo.deleteProduct(b.id));
   assert.equal(repo.listProducts().length, 1);

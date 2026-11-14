@@ -28,8 +28,10 @@ export function SettingsPage({ settings, onChange }: { settings: Settings; onCha
   });
 
   const importJson = (file: File) => run(async () => {
-    const r = await api.importCatalog(JSON.parse(await file.text()));
-    return `Importados ${r.products} productos.`;
+    let data: unknown;
+    try { data = JSON.parse(await file.text()); } catch { throw new Error('El archivo no es un JSON válido. No se importó nada.'); }
+    const r = await api.importCatalog(data);
+    return `Importados ${r.products} productos${r.skipped ? ` (${r.skipped} ya estaban cargados y se saltearon)` : ''}.`;
   });
 
   return (
@@ -43,7 +45,6 @@ export function SettingsPage({ settings, onChange }: { settings: Settings; onCha
       <div className="section"><h2>Local y marca</h2>
         <div className="form">
           <label>Nombre del local<input className="input" value={f.storeName} onChange={(e) => setF({ ...f, storeName: e.target.value })} /></label>
-          <label className="full">Eslogan (Inicio)<input className="input" maxLength={80} value={f.slogan} onChange={(e) => setF({ ...f, slogan: e.target.value })} /></label>
           <div className="full logo-edit">
             <img src={f.logo ?? '/logo.png'} alt="Logo" />
             <label className="btn">Cambiar logo<input type="file" accept="image/png,image/jpeg,image/webp" hidden
@@ -52,8 +53,7 @@ export function SettingsPage({ settings, onChange }: { settings: Settings; onCha
             {f.logo && <button className="btn ghost" onClick={() => setF({ ...f, logo: null })}>Usar logo por defecto</button>}
             <span className="muted small">PNG con fondo transparente recomendado. Se guarda al tocar «Guardar».</span>
           </div>
-          <label>Color de acento<input className="input" type="color" value={f.primaryColor} onChange={(e) => setF({ ...f, primaryColor: e.target.value })} /></label>
-          <label>Moneda por defecto<select className="input" value={f.defaultCurrency} onChange={(e) => setF({ ...f, defaultCurrency: e.target.value })}><option>USD</option><option>UYU</option></select></label>
+          <label>Color de acento<input className="input color-input" type="color" value={f.primaryColor} onChange={(e) => setF({ ...f, primaryColor: e.target.value })} /></label>
           <label>Cotización del dólar (pesos por 1 USD)<input className="input" type="number" step="any" min={0} placeholder="Ej.: 40" value={f.usdRate} onChange={(e) => setF({ ...f, usdRate: e.target.value })} />
             <span className="muted small">Precio en pesos = dólares × cotización. Al guardar llega a todas las PCs.</span></label>
         </div>
@@ -65,7 +65,7 @@ export function SettingsPage({ settings, onChange }: { settings: Settings; onCha
           <label className="btn">Importar JSON<input type="file" accept="application/json,.json" hidden
             onChange={(e) => { const file = e.target.files?.[0]; if (file) importJson(file); e.target.value = ''; }} /></label>
         </div>
-        <p className="muted small">La importación es atómica: si una fila tiene errores no se importa nada y se indica la fila.</p>
+        <p className="muted small">La importación es atómica: si una fila tiene errores no se importa nada y se indica la fila. Los productos que ya están cargados no se duplican; los importados llegan a todas las PCs.</p>
       </div>
       <UsersSection />
       <RepoSection />
