@@ -144,6 +144,8 @@ const MIGRATIONS: string[] = [
   // v11: se quitó Diagnóstico (pedido del usuario): se borran los diagnósticos guardados (tenían serie e IMEI) y su configuración.
   `DROP TABLE IF EXISTS diag_results; DROP TABLE IF EXISTS diag_links; DROP TABLE IF EXISTS diagnostics;
    DELETE FROM settings WHERE key IN ('diagLan');`,
+  // v12: los CPO también tienen 1 año de garantía (antes se cargaban con 3 meses).
+  `UPDATE products SET warranty_months = 12 WHERE condition = 'usado' AND warranty_months = 3;`,
 ];
 
 function migrate(db: Db) {

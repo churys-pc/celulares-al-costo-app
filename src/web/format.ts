@@ -24,3 +24,6 @@ export function dualPrice(p: Pick<Product, 'price' | 'currency'>, s: Settings | 
   return { usd: rate ? Math.round(p.price / rate) : null, uyu: p.price };
 }
 export const num = (n: number) => n.toLocaleString('es-UY', { maximumFractionDigits: 0 });
+
+/** «1 año», «2 años» o «N meses». */
+export const warrantyLabel = (m: number) => (m % 12 === 0 ? `${m / 12} ${m === 12 ? 'año' : 'años'}` : `${m} meses`);

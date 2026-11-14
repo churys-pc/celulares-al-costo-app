@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import type { Product, ProductDetail, Settings } from '../../shared/types.ts';
 import { api } from '../api.ts';
-import { dualPrice, num, storageLabel, USE_LABEL } from '../format.ts';
+import { dualPrice, num, warrantyLabel, storageLabel, USE_LABEL } from '../format.ts';
 import { Icon, SPEC_ICON } from '../icons.tsx';
 import { useCovers } from '../covers.ts';
 import { keySpecValues } from '../../shared/keySpecs.ts';
@@ -69,7 +69,7 @@ export function Presentation({ items, start = 0, settings, onClose }: { items: P
         <div className="pres-info">
           <div className="row tight">
             <span className={`tag ${base.condition}`}>{base.condition === 'nuevo' ? 'Nuevo' : 'CPO'}</span>
-            {base.warrantyMonths > 0 && <span className="tag outline">Garantía {base.warrantyMonths} meses</span>}
+            {base.warrantyMonths > 0 && <span className="tag outline">Garantía {warrantyLabel(base.warrantyMonths)}</span>}
           </div>
           <h1>{base.brand === 'Apple' ? base.model : `${base.brand} ${base.model}`}</h1>
           <p className="pres-variant">{[storageLabel(base.storageGb), base.ramGb && `${base.ramGb} GB RAM`, base.color].filter(Boolean).join(' · ')}</p>

@@ -47,6 +47,8 @@ test('buscador de Inicio: marca, modelo, variante y código; agotados con «Sin 
   db.prepare(`UPDATE products SET status = 'vendido', stock = 0 WHERE id = ?`).run(a56.productId);
   const sold = homeSearch(db, repo, 'a56 5g').find((h) => h.productId === a56.productId)!;
   assert.equal(sold.available, false); assert.equal(sold.availabilityLabel, 'Sin stock');
+  // Garantía: Nuevo y CPO, 1 año.
+  assert.deepEqual(repo.listProducts({ includeDemo: false }).map((p) => [p.condition, p.warrantyMonths]).sort(), [['nuevo', 12], ['usado', 12]]);
   assert.deepEqual(homeSearch(db, repo, '   '), []);
   assert.deepEqual(homeSearch(db, repo, 'zzzz inexistente'), []);
 });
@@ -143,4 +145,14 @@ test('novedades: sin conexión se muestran las últimas guardadas con su fecha; 
   const empty = openDb(':memory:');
   const none = await refreshNews(empty, async () => { throw new Error('offline'); }, NOW);
   assert.deepEqual(none.items, []);
+});
+
+test('migración v12: los CPO con 3 meses de garantía pasan a 1 año', () => {
+  const { db, dir } = catalogDb();
+  db.prepare(`UPDATE products SET warranty_months = 3 WHERE condition = 'usado'`).run();
+  db.prepare('UPDATE schema_version SET v = 11').run();
+  db.close();
+  const again = openDb(path.join(dir, 'c.db'));
+  assert.deepEqual(again.prepare('SELECT condition, warranty_months AS w FROM products ORDER BY condition').all().map((r: any) => [r.condition, Number(r.w)]),
+    [['nuevo', 12], ['usado', 12]]);
 });

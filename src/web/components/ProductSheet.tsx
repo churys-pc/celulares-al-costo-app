@@ -7,7 +7,7 @@ import { Icon } from '../icons.tsx';
 import { useCovers } from '../covers.ts';
 import { keySpecValues, prioritySort } from '../../shared/keySpecs.ts';
 import { SPEC_TEMPLATE } from '../../shared/specTemplate.ts';
-import { converted, money, STATUS_LABEL, USE_LABEL, variantLabel } from '../format.ts';
+import { converted, money, STATUS_LABEL, USE_LABEL, variantLabel, warrantyLabel } from '../format.ts';
 
 interface Props { product: ProductDetail; settings: Settings | null; onClose: () => void; onEdit: () => void; onDelete?: () => void; onChanged: () => void; onPresent?: () => void }
 
@@ -43,7 +43,7 @@ export function ProductSheet({ product: p, settings, onClose, onEdit, onDelete, 
           {conv && <span className="muted small">≈ {conv} (cotización manual)</span>}
         </div>
         <div className="muted small" style={{ marginTop: 4 }}>
-          Stock {p.stock} · Garantía {p.warrantyMonths} meses{p.cost !== null && ` · Costo ${money(p.cost, p.currency)}`}
+          Stock {p.stock} · Garantía {warrantyLabel(p.warrantyMonths)}{p.cost !== null && ` · Costo ${money(p.cost, p.currency)}`}
         </div>
         {p.uses.length > 0 && <div className="row" style={{ marginTop: 8 }}>{p.uses.map((u) => <span key={u} className="badge">Ideal para {USE_LABEL[u]}</span>)}</div>}
         {p.notes && !p.repoId && <p className="muted">{p.notes}</p>}

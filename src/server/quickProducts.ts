@@ -47,10 +47,13 @@ export async function preview(name: unknown, slug?: unknown) {
 const PHOTO_DIR = (dataDir: string) => path.join(dataDir, 'photos');
 
 /** Aplica un documento del repo (o recién creado) a la base local. Reemplaza ficha, AnTuTu y foto del producto. */
+/** Garantía del local: 1 año para todos los equipos (Nuevo y CPO). */
+export const WARRANTY_MONTHS = 12;
+
 export function applyDoc(db: Db, dataDir: string, doc: ProductDoc, photo: Buffer | null) {
   const repo = new CatalogRepo(db);
   const input = { brand: doc.brand, model: doc.model, storageGb: doc.storageGb, ramGb: doc.ramGb, color: doc.color,
-    condition: doc.condition, status: 'disponible', price: doc.price, currency: doc.currency, stock: 1, warrantyMonths: doc.condition === 'nuevo' ? 12 : 3 };
+    condition: doc.condition, status: 'disponible', price: doc.price, currency: doc.currency, stock: 1, warrantyMonths: WARRANTY_MONTHS };
   const existing = db.prepare('SELECT id FROM products WHERE repo_id = ?').get(doc.id);
   const p = existing ? repo.updateProduct(Number(existing.id), input) : repo.createProduct(input);
   db.prepare(`UPDATE products SET repo_id = ?, description = ?, source = 'repo', notes = '' WHERE id = ?`).run(doc.id, doc.description ?? '', p.id);
