@@ -16,11 +16,25 @@ import { capacityGb, modelName, type DeviceInfo } from '../shared/diag.ts';
 export type UsbState = 'service_unavailable' | 'none' | 'pending_trust' | 'locked' | 'connected' | 'error';
 
 export interface MuxAddress { host?: string; port?: number; path?: string }
-export function defaultMuxAddress(): MuxAddress {
+const parseAddr = (v: string): MuxAddress | null => {
+  if (/^unix:/.test(v)) return { path: v.slice(5) };
+  const m = v.match(/^\[?([^\]]+?)\]?:(\d{2,5})$/);
+  return m ? { host: m[1], port: Number(m[2]) } : null;
+};
+/** Direcciones donde puede estar el servicio de Apple, en orden. */
+export function muxAddresses(): MuxAddress[] {
   const env = process.env.CEL_USBMUX_ADDR; // solo desarrollo y pruebas (simulador)
-  if (env) { const [h, p] = env.split(':'); return { host: h, port: Number(p) }; }
-  return process.platform === 'win32' ? { host: '127.0.0.1', port: 27015 } : { path: '/var/run/usbmuxd' };
+  if (env) return [parseAddr(env)!];
+  const out: MuxAddress[] = [];
+  // Variable estándar de usbmuxd (la respetan otras herramientas).
+  const std = process.env.USBMUXD_SOCKET_ADDRESS && parseAddr(process.env.USBMUXD_SOCKET_ADDRESS);
+  if (std) out.push(std);
+  if (process.platform === 'win32') out.push({ host: '127.0.0.1', port: 27015 }, { host: '::1', port: 27015 }, { host: 'localhost', port: 27015 });
+  else out.push({ path: '/var/run/usbmuxd' });
+  return out;
 }
+export const defaultMuxAddress = () => muxAddresses()[0];
+const addrText = (a: MuxAddress) => (a.path ? a.path : `${a.host?.includes(':') ? `[${a.host}]` : a.host}:${a.port}`);
 
 /** Lector con búfer para mensajes con prefijo de longitud. */
 class Reader {
@@ -52,15 +66,31 @@ const TIMEOUT = 8_000;
 let tag = 1;
 
 export class Usbmux {
-  constructor(private addr: MuxAddress = defaultMuxAddress()) {}
+  private addrs: MuxAddress[];
+  private good: MuxAddress | null = null;
+  /** Detalle técnico de la última falla de conexión (para mostrar en pantalla). */
+  lastError: string | null = null;
+  constructor(addr?: MuxAddress | MuxAddress[]) { this.addrs = addr ? (Array.isArray(addr) ? addr : [addr]) : muxAddresses(); }
 
-  private open(): Promise<net.Socket> {
+  private openAt(a: MuxAddress): Promise<net.Socket> {
     return new Promise((ok, ko) => {
-      const s = this.addr.path ? net.connect(this.addr.path) : net.connect(this.addr.port!, this.addr.host!);
-      const t = setTimeout(() => { s.destroy(); ko(Object.assign(new Error('usbmux no responde'), { code: 'ETIMEDOUT' })); }, 3000);
+      const s = a.path ? net.connect(a.path) : net.connect(a.port!, a.host!);
+      const t = setTimeout(() => { s.destroy(); ko(Object.assign(new Error('no responde'), { code: 'ETIMEDOUT' })); }, 3000);
       s.once('connect', () => { clearTimeout(t); ok(s); });
       s.once('error', (e) => { clearTimeout(t); ko(e); });
     });
+  }
+  /** Prueba la dirección que funcionó la última vez y, si falla, las demás. */
+  private async open(): Promise<net.Socket> {
+    const order = this.good ? [this.good, ...this.addrs.filter((x) => x !== this.good)] : this.addrs;
+    const errs: string[] = [];
+    for (const a of order) {
+      try { const s = await this.openAt(a); this.good = a; return s; }
+      catch (e) { errs.push(`${addrText(a)} ${(e as any)?.code ?? (e as Error)?.message ?? 'error'}`); }
+    }
+    this.good = null;
+    this.lastError = `Sin conexión al servicio de Apple (${errs.join(', ')})`;
+    throw Object.assign(new Error(this.lastError), { code: 'MUX_UNAVAILABLE' });
   }
 
   private async exchange(sock: net.Socket, reader: Reader, msg: Record<string, PlistValue>) {
@@ -79,10 +109,18 @@ export class Usbmux {
     try { return await this.exchange(s, r, msg); } finally { s.destroy(); }
   }
 
+  /** Equipos por cable. `raw` cuenta todo lo que informó el servicio (incluye equipos por Wi‑Fi). */
+  lastRaw: { total: number; network: number; address: string | null } = { total: 0, network: 0, address: null };
   async listDevices(): Promise<{ deviceId: number; udid: string }[]> {
     const r = await this.once({ MessageType: 'ListDevices' });
-    return (r.DeviceList ?? []).map((d: any) => ({ deviceId: Number(d.DeviceID), udid: String(d.Properties?.SerialNumber ?? ''), conn: d.Properties?.ConnectionType }))
-      .filter((d: any) => d.udid && d.conn !== 'Network'); // solo cable
+    const all = (Array.isArray(r.DeviceList) ? r.DeviceList : []).map((d: any) => {
+      const p = d.Properties ?? {};
+      return { deviceId: Number(d.DeviceID ?? p.DeviceID), udid: String(p.SerialNumber ?? p.UDID ?? p.UniqueDeviceID ?? ''), conn: p.ConnectionType };
+    });
+    this.lastRaw = { total: all.length, network: all.filter((d: any) => d.conn === 'Network').length, address: this.good ? addrText(this.good) : null };
+    this.lastError = null;
+    // Si el mismo iPhone figura por cable y por Wi‑Fi, se usa el cable; uno solo por Wi‑Fi no sirve para leer.
+    return all.filter((d: any) => d.udid && Number.isFinite(d.deviceId) && d.conn !== 'Network');
   }
 
   /** Registro de emparejamiento que guardó el servicio de Apple al tocar «Confiar». null si la PC no está autorizada. */
@@ -209,13 +247,18 @@ export class UsbWatcher {
   keyOf(udid: string) { return crypto.createHash('sha256').update(this.salt + udid).digest('hex').slice(0, 16); }
   udidOf(key: string) { return this.udids.get(key) ?? null; }
 
-  async devices(): Promise<{ service: 'ok' | 'unavailable'; message: string | null; devices: { key: string; model: string | null; productType: string | null; ios: string | null }[] }> {
+  async devices(): Promise<{ service: 'ok' | 'unavailable'; message: string | null; detail: string | null; devices: { key: string; model: string | null; productType: string | null; ios: string | null }[] }> {
     let list: { deviceId: number; udid: string }[];
     try { list = await this.mux.listDevices(); }
-    catch {
+    catch (e) {
+      const conn = (e as any)?.code === 'MUX_UNAVAILABLE';
       return { service: 'unavailable', devices: [],
-        message: 'No se encontró el servicio de Apple para dispositivos móviles. Instalá «Dispositivos Apple» desde Microsoft Store (o iTunes) y volvé a intentar.' };
+        message: conn ? 'La app no encuentra el servicio de Apple para dispositivos móviles. Instalá «Dispositivos Apple» desde Microsoft Store (o iTunes desde apple.com) y volvé a intentar.'
+          : 'El servicio de Apple respondió algo que la app no pudo interpretar.',
+        detail: conn ? this.mux.lastError : `Respuesta no reconocida: ${String((e as Error)?.message ?? e).replace(/[0-9a-f]{8,}-?[0-9a-f]*/gi, '•••').slice(0, 120)}` };
     }
+    const raw = this.mux.lastRaw;
+    const detail = `Servicio de Apple en ${raw.address ?? '?'} · ${raw.total} equipo(s) informado(s)${raw.network ? `, ${raw.network} por Wi‑Fi` : ''}`;
     this.udids = new Map(list.map((d) => [this.keyOf(d.udid), d]));
     const out = [];
     for (const [key, d] of this.udids) {
@@ -231,6 +274,6 @@ export class UsbWatcher {
       }
       out.push({ key, productType: c.basic.productType ?? null, model: modelName(c.basic.productType) ?? null, ios: c.basic.ios ?? null });
     }
-    return { service: 'ok', message: null, devices: out };
+    return { service: 'ok', message: !out.length && raw.network ? 'El iPhone figura solo por Wi‑Fi: conectalo con un cable de datos.' : null, detail, devices: out };
   }
 }

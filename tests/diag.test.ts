@@ -143,12 +143,24 @@ test('USB: sin autorización, bloqueado, sin servicio, otro tipo de equipo y var
     assert.equal(list.service, 'ok'); assert.equal(list.devices.length, 2);
     assert.ok(list.devices.every((d) => /^[a-f0-9]{16}$/.test(d.key)), 'la pantalla recibe una clave opaca, no el UDID');
     assert.ok(!JSON.stringify(list).includes('00008110'));
+    assert.match(list.detail!, /2 equipo\(s\)/);
     mux.devices.push({ ...SAMPLE_IPHONE({ udid: 'C-3', deviceId: 9 }), deviceClass: 'iPad' });
     assert.match((await readDevice(m, { deviceId: 9, udid: 'C-3' })).message!, /iPad/);
   } finally { await mux.close(); }
-  const none = new UsbWatcher(new Usbmux({ host: '127.0.0.1', port: 1 }));
+  const none = new UsbWatcher(new Usbmux([{ host: '127.0.0.1', port: 1 }, { host: '127.0.0.1', port: 2 }]));
   const r = await none.devices();
   assert.equal(r.service, 'unavailable'); assert.match(r.message!, /Dispositivos Apple/);
+  assert.match(r.detail!, /127\.0\.0\.1:1 ECONNREFUSED, 127\.0\.0\.1:2 ECONNREFUSED/, 'muestra las direcciones probadas');
+});
+
+test('USB: si la primera dirección falla, prueba la siguiente; un iPhone solo por Wi‑Fi se avisa', async () => {
+  const mux = await startFakeMux([SAMPLE_IPHONE()]);
+  try {
+    const m = new Usbmux([{ host: '127.0.0.1', port: 1 }, { host: '127.0.0.1', port: mux.port }]);
+    assert.equal((await m.listDevices()).length, 1);
+    const w = new UsbWatcher(m);
+    assert.match((await w.devices()).detail!, new RegExp(`127\\.0\\.0\\.1:${mux.port} · 1 equipo`));
+  } finally { await mux.close(); }
 });
 
 test('USB: al reconectar se verifica que sea el mismo equipo', async () => {

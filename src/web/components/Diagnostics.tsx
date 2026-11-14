@@ -12,7 +12,7 @@ interface Diag {
   observations: string; current: Record<string, TestResult>; history: Record<string, TestResult[]>; requests: string[]; verdict: Verdict;
   phone: { qrExpiresAt: string | null; pending: { id: string; code: string; info: string; since: string }[]; active: { id: string; info: string; lastSeen: string | null } | null };
 }
-interface UsbList { service: 'ok' | 'unavailable'; message: string | null; devices: { key: string; model: string | null; productType: string | null; ios: string | null }[] }
+interface UsbList { service: 'ok' | 'unavailable'; message: string | null; detail?: string | null; devices: { key: string; model: string | null; productType: string | null; ios: string | null }[] }
 interface Lan { running: boolean; error: string | null; port: number; https: boolean; host: string | null; addresses: string[]; configuredHost: string | null; certName: string | null; note: string | null }
 interface Row { id: string; ref: string; status: string; createdAt: string; closedAt: string | null; createdBy: string | null; model: string | null; ios: string | null; capacityGb: number | null; verdict: string }
 
@@ -71,6 +71,8 @@ function DiagHome({ onOpen, onReport }: { onOpen: (id: string) => void; onReport
           : usb.devices.map((d) => (
             <div key={d.key} className="dg-detect-msg found"><Icon name="phone" size={22} /><div><b>{d.model ?? d.productType ?? 'iPhone'} detectado</b><p className="muted">{d.ios ? `iOS ${d.ios}` : 'Desbloquealo para leer más datos'}</p></div>
               <button className="btn primary" onClick={() => start(d.key)} disabled={creating}>Empezar diagnóstico</button></div>))}
+        {usb?.message && usb.service === 'ok' && <p className="dg-note">{usb.message}</p>}
+        {usb?.detail && <p className="muted small dg-tech">Detalle técnico: {usb.detail}</p>}
       </section>
       {open.length > 0 && <section className="dg-card"><h2>En curso</h2>{open.map((r) => <HistRow key={r.id} r={r} onOpen={onOpen} onReport={onReport} />)}</section>}
       <section className="dg-card">
@@ -193,6 +195,7 @@ function Session({ id, onBack, onReport }: { id: string; onBack: () => void; onR
               <h2><Icon name="phone" size={18} /> Conectar iPhone <span className={`dg-usb ${status.key}`}>{status.label}</span></h2>
               <ol className="dg-steps"><li>Conectá el iPhone con un <b>cable de datos</b> (algunos cables solo cargan).</li><li>Desbloquealo y, si aparece, tocá <b>«Confiar»</b> e ingresá el código.</li></ol>
               {usb?.service === 'unavailable' && <p className="dg-note">{usb.message}</p>}
+              {usb?.detail && !device && <p className="muted small dg-tech">Detalle técnico: {usb.detail}</p>}
               {devices.length > 1 && (
                 <label className="dg-field">Hay {devices.length} iPhone conectados: elegí el que vas a diagnosticar
                   <select className="input" value={chosen ?? ''} onChange={(e) => { setChosen(e.target.value || null); autoRead.current = null; }}>
