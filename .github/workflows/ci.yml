@@ -11,7 +11,3 @@ jobs:
       - run: npm install
       - run: npm test
       - run: npm run build
-      - name: Lectura USB cifrada con el motor de Electron (BoringSSL)
-        env:
-          ELECTRON_RUN_AS_NODE: '1'
-        run: npm run check:usb-electron

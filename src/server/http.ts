@@ -17,9 +17,6 @@ import { fichasStatus } from './fichas.ts';
 import { homeSearch } from './homeSearch.ts';
 import { TaskRepo } from './tasks.ts';
 import { newsState, refreshNews } from './news.ts';
-import { DiagStore, DiagError } from './diag.ts';
-import { DiagLan } from './diagLan.ts';
-import { UsbWatcher, readDevice, techText } from './usbmux.ts';
 import { ValidationError, type ProductFilter } from '../shared/types.ts';
 
 const MAX_BODY = 5 * 1024 * 1024;
@@ -59,7 +56,7 @@ const SECURITY_HEADERS = {
   'Content-Security-Policy': "default-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; connect-src 'self'",
 };
 
-export function createServer(db: Db, webRoot: string, dataDir: string, opts: { secret?: Secret; syncNow?: () => unknown; canSetup?: () => boolean; tunnelBin?: string | null } = {}) {
+export function createServer(db: Db, webRoot: string, dataDir: string, opts: { secret?: Secret; syncNow?: () => unknown; canSetup?: () => boolean } = {}) {
   const kick = () => { try { void opts.syncNow?.(); } catch {} };
   const auth = new Auth(db, opts.canSetup ?? (() => true));
   // Escrituras que también puede hacer un vendedor (el resto de las escrituras es solo del administrador).
@@ -70,76 +67,19 @@ export function createServer(db: Db, webRoot: string, dataDir: string, opts: { s
     // Inicio: todo el personal maneja los pendientes del local y puede refrescar las novedades.
     ['POST', /^\/api\/tasks$/], ['PATCH', /^\/api\/tasks\/[a-f0-9-]{36}$/], ['DELETE', /^\/api\/tasks\/[a-f0-9-]{36}$/],
     ['POST', /^\/api\/news\/refresh$/],
-    // Diagnóstico: todo el personal con sesión (la configuración de red es del administrador).
-    ['POST', /^\/api\/diag(\/[a-f0-9-]{36}(\/[a-z-]+(\/[a-f0-9-]{36}\/confirm)?)?)?$/], ['PATCH', /^\/api\/diag\/[a-f0-9-]{36}\/device$/],
   ];
   const repo = new CatalogRepo(db);
   const tasks = new TaskRepo(db);
   const photos = new PhotoRepo(db, dataDir);
+  // Restos del módulo Diagnóstico (certificado HTTPS cargado), que se quitó.
+  try { fs.rmSync(path.join(dataDir, 'diag-tls'), { recursive: true, force: true }); } catch { /* nada */ }
   const covers = new CoverStore(dataDir, undefined, webRoot, db);
   const coverJobs = new CoverJobs(db, covers);
   covers.assignKeys(db);
-  const diag = new DiagStore(db);
-  const lan = new DiagLan(db, diag, webRoot, dataDir, opts.secret, opts.tunnelBin ?? process.env.CEL_CLOUDFLARED ?? null);
-  const usb = new UsbWatcher();
-  const D = '([a-f0-9-]{36})';
-  const who = () => auth.current()?.email ?? null;
   const idOf = (s: string) => { const n = Number(s); if (!Number.isInteger(n) || n <= 0) throw new HttpError(400, 'ID inválido'); return n; };
 
   type Handler = (m: RegExpMatchArray, req: http.IncomingMessage, url: URL) => Promise<unknown> | unknown;
   const routes: [string, RegExp, Handler][] = [
-    // Diagnóstico de iPhone
-    ['GET', /^\/api\/diag$/, (_m, _r, u) => diag.list(u.searchParams.get('q') ?? '')],
-    ['POST', /^\/api\/diag$/, async () => { await lan.ensure(); return diag.create(who()); }],
-    ['GET', /^\/api\/diag\/lan$/, async () => { await lan.ensure(); return lan.info(); }],
-    ['PUT', /^\/api\/diag\/lan$/, async (_m, req) => lan.configure(await readJson(req))],
-    ['GET', /^\/api\/diag\/usb$/, () => usb.devices()],
-    ['GET', new RegExp(`^/api/diag/${D}$`), (m, _r, u) => {
-      // Serie e IMEI completos: solo el administrador y a pedido.
-      const reveal = u.searchParams.get('reveal') === '1';
-      if (reveal) auth.require('admin');
-      return diag.get(m[1], { reveal });
-    }],
-    ['PATCH', new RegExp(`^/api/diag/${D}/device$`), async (m, req) => diag.updateDevice(m[1], await readJson(req))],
-    ['POST', new RegExp(`^/api/diag/${D}/results$`), async (m, req) => { diag.addResult(m[1], await readJson(req), who(), 'manual'); return diag.get(m[1]); }],
-    ['POST', new RegExp(`^/api/diag/${D}/repeat$`), async (m, req) => diag.requestRepeat(m[1], String((await readJson(req)).test))],
-    ['POST', new RegExp(`^/api/diag/${D}/observations$`), async (m, req) => diag.saveObservations(m[1], await readJson(req))],
-    ['POST', new RegExp(`^/api/diag/${D}/close$`), async (m, req) => diag.close(m[1], await readJson(req), who())],
-    ['POST', new RegExp(`^/api/diag/${D}/cancel$`), (m) => diag.cancel(m[1])],
-    ['POST', new RegExp(`^/api/diag/${D}/qr$`), async (m) => {
-      await lan.ensure();
-      const i = lan.info();
-      if (!i.running) throw new DiagError(503, i.error ?? 'No se pudo abrir la conexión para el iPhone.');
-      const q = diag.newQr(m[1]);
-      const url = await lan.urlFor(q.token);
-      const secure = url.startsWith('https://');
-      const t = lan.info().tunnel;
-      return { url, expiresAt: q.expiresAt, https: secure,
-        note: secure ? null : t.enabled && t.available ? `${t.error ?? 'El enlace seguro no está listo.'} Se usa la red local: cámara, micrófono y sensores quedan para revisar a mano. Podés tocar «Regenerar» para reintentar.` : i.note };
-    }],
-    ['POST', new RegExp(`^/api/diag/${D}/phone/${D}/confirm$`), async (m, req) => diag.confirmPhone(m[1], m[2], !!(await readJson(req)).accept)],
-    ['POST', new RegExp(`^/api/diag/${D}/disconnect$`), (m) => diag.disconnectPhone(m[1])],
-    ['POST', new RegExp(`^/api/diag/${D}/usb$`), async (m, req) => {
-      const key = String((await readJson(req)).device ?? '');
-      const dev = usb.udidOf(key);
-      if (!dev) throw new DiagError(404, 'El iPhone ya no está conectado. Volvé a conectarlo.');
-      const same = diag.sameDevice(m[1], dev.udid);
-      if (same === false) throw new DiagError(409, 'Es otro iPhone: no coincide con el equipo de este diagnóstico. Conectá el mismo equipo o iniciá un diagnóstico nuevo.');
-      let r;
-      try { r = await readDevice(usb.mux, dev); }
-      catch (e) {
-        const detail = techText(e);
-        diag.setUsbState(m[1], { state: 'error', detail, at: new Date().toISOString() });
-        throw new DiagError(502, `No se pudo leer el iPhone. Revisá el cable (de datos), desbloquealo y volvé a conectarlo. (Detalle técnico: ${detail})`);
-      }
-      const state = { state: r.state, message: r.message, detail: r.detail ?? null, read: r.read, missing: r.missing, at: new Date().toISOString() };
-      // Sin autorización también se guardan modelo e iOS, pero no se fija la identidad del equipo hasta tener la sesión.
-      // Con la sesión autorizada abierta, lo leído (serie, IMEI…) se guarda aunque falte algún dato.
-      if (r.state === 'connected' || r.session) return diag.applyUsb(m[1], dev.udid, r.info, state);
-      diag.setUsbState(m[1], state);
-      if (r.info.productType || r.info.ios) diag.updateDeviceFromUsbBasic(m[1], r.info);
-      return diag.get(m[1]);
-    }],
     ['GET', /^\/api\/health$/, () => ({ ok: true })],
     ['GET', /^\/api\/auth$/, () => auth.status()],
     ['POST', /^\/api\/auth\/setup$/, async (_m, req) => { const r = auth.setupAdmin(await readJson(req)); kick(); return r; }],
@@ -288,7 +228,7 @@ export function createServer(db: Db, webRoot: string, dataDir: string, opts: { s
       serveStatic(url.pathname, res);
     } catch (e) {
       if (e instanceof ValidationError) return send(res, 400, { error: e.message });
-      if (e instanceof HttpError || e instanceof AuthError || e instanceof DiagError) return send(res, e.status, { error: e.message });
+      if (e instanceof HttpError || e instanceof AuthError) return send(res, e.status, { error: e.message });
       const msg = String((e as Error)?.message ?? e);
       if (/UNIQUE|FOREIGN KEY|CHECK constraint/.test(msg)) return send(res, 409, { error: 'Conflicto con datos existentes' });
       // Sin números largos ni URLs con datos en el registro.
@@ -296,7 +236,5 @@ export function createServer(db: Db, webRoot: string, dataDir: string, opts: { s
       send(res, 500, { error: 'Error interno' });
     }
   });
-  // Al cerrar la app se cierra también la conexión para el iPhone.
-  server.on('close', () => { void lan.stop(); });
   return server;
 }

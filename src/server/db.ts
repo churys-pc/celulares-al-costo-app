@@ -141,6 +141,9 @@ const MIGRATIONS: string[] = [
    CREATE TABLE diag_links (id TEXT PRIMARY KEY, diag_id TEXT NOT NULL REFERENCES diagnostics(id) ON DELETE CASCADE, kind TEXT NOT NULL,
      token_hash TEXT NOT NULL UNIQUE, state TEXT NOT NULL, created_at TEXT NOT NULL, expires_at TEXT NOT NULL, used_at TEXT,
      code TEXT, phone_info TEXT, last_seen TEXT);`,
+  // v11: se quitó Diagnóstico (pedido del usuario): se borran los diagnósticos guardados (tenían serie e IMEI) y su configuración.
+  `DROP TABLE IF EXISTS diag_results; DROP TABLE IF EXISTS diag_links; DROP TABLE IF EXISTS diagnostics;
+   DELETE FROM settings WHERE key IN ('diagLan');`,
 ];
 
 function migrate(db: Db) {

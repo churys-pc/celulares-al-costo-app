@@ -1,8 +1,8 @@
 {
   "name": "celulares-al-costo-app",
-  "version": "0.23.0",
+  "version": "0.24.0",
   "private": true,
-  "description": "App Windows + web móvil para local de celulares: catálogo, comparador, diagnóstico iPhone y tasación.",
+  "description": "App Windows para local de celulares: catálogo, comparador y carga de productos.",
   "main": "dist/electron.cjs",
   "scripts": {
     "build": "node scripts/build.mjs",
@@ -12,8 +12,7 @@
     "test": "node --import tsx --test tests/*.test.ts",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "dist:win": "npm run build && electron-builder --win --x64 --publish never",
-    "release": "npm run build && electron-builder --win --x64 --publish always",
-    "check:usb-electron": "esbuild scripts/usb-electron-check.ts --bundle --platform=node --format=cjs --outfile=dist-check/usb-check.cjs --log-level=warning && electron dist-check/usb-check.cjs"
+    "release": "npm run build && electron-builder --win --x64 --publish always"
   },
   "dependencies": {
     "electron-updater": "^6.6.0"
@@ -64,16 +63,6 @@
         "owner": "churys-pc",
         "repo": "celulares-al-costo-releases",
         "releaseType": "release"
-      }
-    ],
-    "extraResources": [
-      {
-        "from": "build/bin",
-        "to": "bin",
-        "filter": [
-          "cloudflared.exe",
-          "cloudflared-LICENSE.txt"
-        ]
       }
     ]
   },

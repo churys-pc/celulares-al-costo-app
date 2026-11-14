@@ -7,7 +7,6 @@ import { Icon } from './icons.tsx';
 import { SECTIONS, type Nav } from './sections.ts';
 import { Catalog } from './components/Catalog.tsx';
 import { Compare } from './components/Compare.tsx';
-import { Diagnostics } from './components/Diagnostics.tsx';
 import { QuickAdd } from './components/QuickAdd.tsx';
 import { Home } from './components/Home.tsx';
 import { SettingsPage } from './components/SettingsPage.tsx';
@@ -17,7 +16,7 @@ import { SessionContext } from './session.ts';
 
 export function App() {
   const [section, setSection] = useState(() => {
-    // Secciones quitadas (Identificar, Tasación, Historial, IMEI Check) u otras desconocidas vuelven a Inicio.
+    // Secciones quitadas (Identificar, Tasación, Historial, IMEI Check, Diagnóstico) u otras desconocidas vuelven a Inicio.
     const h = location.hash.slice(1).split('?')[0];
     return SECTIONS.some((x) => x.id === h) ? h : 'inicio';
   });
@@ -73,8 +72,7 @@ export function App() {
           {section === 'cargar' && isAdmin && <QuickAdd settings={settings} />}
           {section === 'comparador' && <Compare settings={settings} />}
           {section === 'ajustes' && settings && <SettingsPage settings={settings} onChange={setSettings} />}
-          {section === 'diagnostico' && <Diagnostics />}
-          {!['catalogo', 'ajustes', 'inicio', 'comparador', 'cargar', 'diagnostico'].includes(section) && (
+          {!['catalogo', 'ajustes', 'inicio', 'comparador', 'cargar'].includes(section) && (
             <>
               <header className="page-head"><div><h1>{current.label}</h1><p className="sub">{current.desc}</p></div></header>
               <div className="empty"><Icon name={current.icon} size={36} />
