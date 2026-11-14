@@ -92,6 +92,7 @@
 - [x] v0.24.5: **garantía de 1 año también para CPO** (antes 3 meses; `WARRANTY_MONTHS = 12` en `quickProducts.ts`). Migración v12 pasa a 12 meses los CPO guardados con 3. Se muestra «Garantía 1 año» en la presentación y la ficha (`warrantyLabel`).
 - [x] v0.24.6: Modo presentación en la app de Windows: «Automático/Pausar» y «Salir» se corren a la izquierda (deja ≥ 150 px libres arriba a la derecha) para que no los tapen los botones de la ventana (—, ▢, ✕ del titleBarOverlay, que siguen visibles en pantalla completa). Clase `.pres.in-desktop` cuando existe `window.desktop`.
 - [x] v0.24.7: **la barra de tareas ya no tapa la app**: la ventana se crea según el área útil de la pantalla (`screen.workArea`, sin la barra de tareas) en vez de 1360 × 860 fijo; en pantallas de menos de 1400 × 900 útiles abre maximizada; recuerda tamaño, posición y maximizado en `<userData>/window.json` (si la posición guardada ya no entra, se ajusta); al salir de pantalla completa (presentación) se vuelve a encajar en el área útil. No probado en Windows real desde el entorno.
+- [x] v0.24.8: Modo presentación con **selector de marca** arriba («Todas» + marcas de los equipos que se están mostrando, ordenadas por cantidad): al elegir una marca se recorren solo sus equipos (contador, flechas, automático), y «Todas» vuelve a la lista completa. Se oculta si hay una sola marca.
 - [ ] Fase 1 (bloque 3): import/export CSV.
 - [ ] Luego: versión móvil (Safari) con el diseño del mockup.
 - [ ] Fases 2-6 según prompt original.

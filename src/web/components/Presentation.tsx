@@ -17,8 +17,13 @@ const LABEL_GROUP: Record<string, string> = { Procesador: 'Chip', RAM: 'Memoria'
 
 export function Presentation({ items, start = 0, settings, onClose }: { items: Product[]; start?: number; settings: Settings | null; onClose: () => void }) {
   const cover = useCovers();
-  const list = items.filter((p) => p.status === 'disponible' && p.stock > 0);
-  const [i, setI] = useState(() => Math.max(0, list.findIndex((p) => p.id === items[start]?.id)));
+  const all = items.filter((p) => p.status === 'disponible' && p.stock > 0);
+  // Marcas para elegir qué mostrar (de las que hay en la lista), por cantidad de equipos.
+  const brands = [...all.reduce((m, p) => m.set(p.brand, (m.get(p.brand) ?? 0) + 1), new Map<string, number>())].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+  const [brand, setBrand] = useState('');
+  const list = brand ? all.filter((p) => p.brand === brand) : all;
+  const [i, setI] = useState(() => Math.max(0, all.findIndex((p) => p.id === items[start]?.id)));
+  const pickBrand = (b: string) => { setBrand(b); setI(0); setPhoto(0); };
   const [detail, setDetail] = useState<ProductDetail | null>(null);
   const [photo, setPhoto] = useState(0);
   const [auto, setAuto] = useState(false);
@@ -26,7 +31,7 @@ export function Presentation({ items, start = 0, settings, onClose }: { items: P
   const close = useCallback(() => { if (document.fullscreenElement) document.exitFullscreen().catch(() => {}); onClose(); }, [onClose]);
 
   useEffect(() => { document.documentElement.requestFullscreen?.().catch(() => {}); }, []);
-  useEffect(() => { const p = list[i]; if (p) api.product(p.id).then(setDetail).catch(() => setDetail(null)); }, [i, list.length]);
+  useEffect(() => { const p = list[i]; if (p) api.product(p.id).then(setDetail).catch(() => setDetail(null)); }, [i, list.length, brand]);
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') close();
@@ -56,7 +61,12 @@ export function Presentation({ items, start = 0, settings, onClose }: { items: P
     <div className={`pres ${IN_DESKTOP ? 'in-desktop' : ''}`}>
       <header className="pres-top">
         <img src={settings?.logo ?? '/logo.png'} alt="" className="pres-logo" />
-        <span className="pres-count">{i + 1} / {list.length}</span>
+        {brands.length > 1 && (
+          <div className="pres-brands" role="tablist" aria-label="Marca">
+            <button className={!brand ? 'on' : ''} onClick={() => pickBrand('')}>Todas</button>
+            {brands.map(([b]) => <button key={b} className={brand === b ? 'on' : ''} onClick={() => pickBrand(b)}>{b}</button>)}
+          </div>)}
+        <span className="pres-count">{Math.min(i + 1, list.length)} / {list.length}</span>
         <button className={`btn ghost ${auto ? 'on' : ''}`} onClick={() => setAuto(!auto)} title="Espacio">{auto ? '❚❚ Pausar' : '▶ Automático'}</button>
         <button className="btn ghost" onClick={close} title="Esc"><Icon name="x" size={16} /> Salir</button>
       </header>

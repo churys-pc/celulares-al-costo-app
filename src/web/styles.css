@@ -227,6 +227,11 @@ table.specs td:first-child { color: var(--muted); width: 40%; }
 .pres.in-desktop .pres-top { padding-right: max(150px, calc(100vw - env(titlebar-area-x, 0px) - env(titlebar-area-width, 100vw) + 12px)); }
 .pres-logo { height: 64px; object-fit: contain; margin-right: auto; }
 .pres-count { color: var(--muted); font-variant-numeric: tabular-nums; }
+.pres-brands { display: flex; gap: 6px; padding: 4px; border-radius: 999px; background: rgba(13, 28, 56, .7); border: 1px solid var(--line); overflow-x: auto; max-width: 52vw; scrollbar-width: none; }
+.pres-brands::-webkit-scrollbar { display: none; }
+.pres-brands button { flex: none; border: 0; background: none; color: #b4c4e2; font: inherit; font-size: 14px; padding: 6px 14px; border-radius: 999px; cursor: pointer; white-space: nowrap; }
+.pres-brands button:hover { color: #fff; }
+.pres-brands button.on { background: linear-gradient(135deg, #1f7bff, #20a8ff); color: #fff; font-weight: 600; }
 .pres .btn.on { border-color: var(--accent-2); color: var(--accent-2); }
 .pres-body { display: grid; grid-template-columns: 1.05fr 1fr; gap: 48px; align-items: center; padding: 10px 70px; animation: presIn .35s ease; min-height: 0; }
 @keyframes presIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
