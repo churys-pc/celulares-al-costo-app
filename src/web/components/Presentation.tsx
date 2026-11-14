@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import type { Product, ProductDetail, Settings } from '../../shared/types.ts';
 import { api } from '../api.ts';
-import { converted, money, storageLabel, USE_LABEL } from '../format.ts';
+import { dualPrice, num, storageLabel, USE_LABEL } from '../format.ts';
 import { Icon, SPEC_ICON } from '../icons.tsx';
 import { useCovers } from '../covers.ts';
 import { keySpecValues } from '../../shared/keySpecs.ts';
@@ -43,7 +43,7 @@ export function Presentation({ items, start = 0, settings, onClose }: { items: P
 
   const p = detail && detail.id === list[i].id ? detail : null;
   const base = list[i];
-  const conv = converted(base, settings);
+  const price = dualPrice(base, settings);
   // Las 6 especificaciones más importantes (mismo orden que la ficha y el comparador).
   const highlights = p ? keySpecValues(p.specs).map((s) => ({ key: s.label, value: s.value, group: LABEL_GROUP[s.label] ?? 'Otros' })).slice(0, 6) : [];
   const bench = p?.benchmarks.find((b) => b.version === 'v11') ?? p?.benchmarks[0];
@@ -74,6 +74,12 @@ export function Presentation({ items, start = 0, settings, onClose }: { items: P
           <h1>{base.brand === 'Apple' ? base.model : `${base.brand} ${base.model}`}</h1>
           <p className="pres-variant">{[storageLabel(base.storageGb), base.ramGb && `${base.ramGb} GB RAM`, base.color].filter(Boolean).join(' · ')}</p>
 
+          {(price.usd != null || price.uyu != null) && (
+            <div className="pres-price">
+              {price.usd != null && <div><span>Dólares</span><b><small>USD</small> {num(price.usd)}</b></div>}
+              {price.uyu != null && <div className="uyu"><span>Pesos</span><b><small>$</small> {num(price.uyu)}</b></div>}
+            </div>)}
+
           {highlights.length > 0 && (
             <ul className="pres-specs">
               {highlights.map((s) => <li key={s.key}><Icon name={SPEC_ICON[s.group] ?? 'dot'} size={22} /><div><span>{s.key}</span><b>{s.value}</b></div></li>)}
@@ -89,10 +95,6 @@ export function Presentation({ items, start = 0, settings, onClose }: { items: P
 
           {base.uses.length > 0 && <div className="row tight">{base.uses.map((u) => <span key={u} className="tag outline">Ideal para {USE_LABEL[u]}</span>)}</div>}
 
-          <div className="pres-price">
-            <b><small>{base.currency}</small> {money(base.price, base.currency).replace(/^\w+ /, '')}</b>
-            {conv && <span>{conv}</span>}
-          </div>
         </div>
       </main>
       <button className="pres-nav right" onClick={() => go(1)} aria-label="Siguiente"><Icon name="right" size={28} /></button>

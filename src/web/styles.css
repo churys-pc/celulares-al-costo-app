@@ -233,7 +233,14 @@ table.specs td:first-child { color: var(--muted); width: 40%; }
 .pres-dots { position: absolute; bottom: 16px; display: flex; gap: 8px; }
 .pres-dots button { width: 10px; height: 10px; border-radius: 50%; border: 0; background: rgba(255, 255, 255, .3); cursor: pointer; }
 .pres-dots button.on { background: var(--accent-2); }
-.pres-info { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+.pres-info { display: flex; flex-direction: column; gap: 18px; min-width: 0; max-height: 100%; overflow-y: auto; scrollbar-width: none; }
+.pres-info::-webkit-scrollbar { display: none; }
+.pres-body { overflow: hidden; }
+@media (max-height: 820px) {
+  .pres-info { gap: 12px; } .pres-info h1 { font-size: clamp(30px, 3.4vw, 46px); }
+  .pres-specs { gap: 8px; } .pres-specs li { padding: 8px 12px; } .pres-bench { padding: 10px 14px; } .pres-bench b { font-size: 22px; }
+  .pres-photo { height: min(62vh, 560px); }
+}
 .pres-info h1 { font-size: clamp(34px, 4vw, 58px); line-height: 1.05; margin: 0; font-weight: 700; letter-spacing: -.02em; }
 .pres-variant { margin: -8px 0 0; font-size: 20px; color: #b4c4e2; }
 .tag.outline { border: 1px solid var(--line-strong); color: #cfe0ff; }
@@ -246,9 +253,14 @@ table.specs td:first-child { color: var(--muted); width: 40%; }
 .pres-bar { grid-column: 1 / -1; height: 10px; border-radius: 6px; background: rgba(255, 255, 255, .08); overflow: hidden; }
 .pres-bar i { display: block; height: 100%; border-radius: 6px; background: linear-gradient(90deg, #1f7bff, #20c4ff); box-shadow: 0 0 14px rgba(32, 196, 255, .6); }
 .pres-bench small { grid-column: 1 / -1; color: var(--muted); }
-.pres-price b { font-size: clamp(44px, 5vw, 72px); font-weight: 800; letter-spacing: -.02em; }
-.pres-price b small { font-size: .45em; font-weight: 700; color: var(--accent-2); }
-.pres-price span { display: block; font-size: 22px; color: #c9d7f2; }
+.pres-price { display: flex; flex-wrap: wrap; align-items: stretch; border-radius: 18px; flex: none;
+  background: linear-gradient(135deg, rgba(31, 123, 255, .22), rgba(32, 196, 255, .10)); border: 1px solid rgba(32, 196, 255, .45); box-shadow: 0 0 28px rgba(32, 160, 255, .18); }
+.pres-price > div { display: flex; flex-direction: column; justify-content: center; gap: 2px; padding: 12px 24px; min-width: 0; }
+.pres-price > div.uyu { border-left: 1px solid rgba(32, 196, 255, .3); }
+.pres-price span { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: #9fb6dc; }
+.pres-price b { font-size: clamp(36px, 4.2vw, 64px); line-height: 1.05; font-weight: 800; letter-spacing: -.02em; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.pres-price .uyu b { font-size: clamp(28px, 3.2vw, 48px); }
+.pres-price b small { font-size: .5em; font-weight: 700; color: var(--accent-2); margin-right: 4px; }
 .pres-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center;
   border: 1px solid var(--line-strong); background: rgba(10, 24, 52, .85); color: #fff; cursor: pointer; z-index: 2; }
 .pres-nav.left { left: 18px; } .pres-nav.right { right: 18px; }
