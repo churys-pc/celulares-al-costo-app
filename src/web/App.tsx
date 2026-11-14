@@ -9,7 +9,6 @@ import { Catalog } from './components/Catalog.tsx';
 import { Compare } from './components/Compare.tsx';
 import { QuickAdd } from './components/QuickAdd.tsx';
 import { Home } from './components/Home.tsx';
-import { ImeiCheck } from './components/ImeiCheck.tsx';
 import { SettingsPage } from './components/SettingsPage.tsx';
 import { UpdateToast } from './components/UpdateToast.tsx';
 import { Login } from './components/Login.tsx';
@@ -17,7 +16,7 @@ import { SessionContext } from './session.ts';
 
 export function App() {
   const [section, setSection] = useState(() => {
-    // Secciones quitadas (Identificar, Tasación, Historial) u otras desconocidas vuelven a Inicio.
+    // Secciones quitadas (Identificar, Tasación, Historial, IMEI Check) u otras desconocidas vuelven a Inicio.
     const h = location.hash.slice(1).split('?')[0];
     return SECTIONS.some((x) => x.id === h) ? h : 'inicio';
   });
@@ -73,9 +72,7 @@ export function App() {
           {section === 'cargar' && isAdmin && <QuickAdd settings={settings} />}
           {section === 'comparador' && <Compare settings={settings} />}
           {section === 'ajustes' && settings && <SettingsPage settings={settings} onChange={setSettings} />}
-          {section === 'imei' && <ImeiCheck />}
-          {section === 'diagnostico' && <ImeiCheck title="Diagnóstico · IMEI Check" subtitle="Antes de comprar o tomar en parte de pago: verificá si el IMEI figura reportado. Las pruebas del equipo por QR desde Safari se suman más adelante." />}
-          {!['catalogo', 'ajustes', 'inicio', 'comparador', 'cargar', 'imei', 'diagnostico'].includes(section) && (
+          {!['catalogo', 'ajustes', 'inicio', 'comparador', 'cargar'].includes(section) && (
             <>
               <header className="page-head"><div><h1>{current.label}</h1><p className="sub">{current.desc}</p></div></header>
               <div className="empty"><Icon name={current.icon} size={36} />

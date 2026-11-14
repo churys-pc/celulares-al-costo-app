@@ -8,7 +8,6 @@ import { getSettings, updateSettings } from './settings.ts';
 import { PhotoRepo } from './photos.ts';
 import { CoverStore } from './covers.ts';
 import { CoverJobs } from './coverJobs.ts';
-import { ImeiChecker } from './imei.ts';
 import { importOnline, searchOnline } from './lookup.ts';
 import { deleteQuick, preview, saveQuick, updateQuick } from './quickProducts.ts';
 import { repoStatus, setRepoConfig, type Secret } from './repoSync.ts';
@@ -68,15 +67,12 @@ export function createServer(db: Db, webRoot: string, dataDir: string, opts: { s
     // Inicio: todo el personal maneja los pendientes del local y puede refrescar las novedades.
     ['POST', /^\/api\/tasks$/], ['PATCH', /^\/api\/tasks\/[a-f0-9-]{36}$/], ['DELETE', /^\/api\/tasks\/[a-f0-9-]{36}$/],
     ['POST', /^\/api\/news\/refresh$/],
-    // IMEI Check: todo el personal con sesión.
-    ['POST', /^\/api\/imei\/check$/],
   ];
   const repo = new CatalogRepo(db);
   const tasks = new TaskRepo(db);
   const photos = new PhotoRepo(db, dataDir);
   const covers = new CoverStore(dataDir, undefined, webRoot, db);
   const coverJobs = new CoverJobs(db, covers);
-  const imei = new ImeiChecker({ db, secret: opts.secret });
   covers.assignKeys(db);
   const idOf = (s: string) => { const n = Number(s); if (!Number.isInteger(n) || n <= 0) throw new HttpError(400, 'ID inválido'); return n; };
 
@@ -143,10 +139,6 @@ export function createServer(db: Db, webRoot: string, dataDir: string, opts: { s
       kick(); return r;
     }],
     // «Buscar imagen»: búsquedas de portada en segundo plano.
-    ['GET', /^\/api\/imei\/providers$/, () => imei.providers()],
-    ['POST', /^\/api\/imei\/check$/, async (_m, req) => imei.check(await readJson(req))],
-    // Solo el administrador (no está en SELLER_WRITES): clave de API cifrada y confirmación de cobertura.
-    ['PUT', /^\/api\/imei\/config$/, async (_m, req) => imei.configure(await readJson(req))],
     ['GET', /^\/api\/cover-jobs$/, () => coverJobs.list()],
     ['POST', /^\/api\/cover-jobs$/, async (_m, req) => coverJobs.request(await readJson(req))],
     ['PATCH', /^\/api\/cover-jobs\/([a-f0-9-]{36})$/, async (m, req) => coverJobs.update(m[1], await readJson(req))],
@@ -237,7 +229,7 @@ export function createServer(db: Db, webRoot: string, dataDir: string, opts: { s
       if (e instanceof HttpError || e instanceof AuthError) return send(res, e.status, { error: e.message });
       const msg = String((e as Error)?.message ?? e);
       if (/UNIQUE|FOREIGN KEY|CHECK constraint/.test(msg)) return send(res, 409, { error: 'Conflicto con datos existentes' });
-      // Sin números largos (IMEI) ni URLs con datos en el registro.
+      // Sin números largos ni URLs con datos en el registro.
       console.error('[api] error interno:', (e as Error)?.name, msg.replace(/https?:\/\/\S+/g, '<url>').replace(/\d{14,}/g, '•••').slice(0, 200));
       send(res, 500, { error: 'Error interno' });
     }
