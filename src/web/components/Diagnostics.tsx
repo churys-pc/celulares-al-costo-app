@@ -13,7 +13,7 @@ interface Diag {
   phone: { qrExpiresAt: string | null; pending: { id: string; code: string; info: string; since: string }[]; active: { id: string; info: string; lastSeen: string | null } | null };
 }
 interface UsbList { service: 'ok' | 'unavailable'; message: string | null; detail?: string | null; devices: { key: string; model: string | null; productType: string | null; ios: string | null }[] }
-interface Lan { badHost?: string | null; running: boolean; error: string | null; port: number; https: boolean; host: string | null; addresses: string[]; configuredHost: string | null; certName: string | null; note: string | null }
+interface Lan { badHost?: string | null; secure?: boolean; tunnel?: { enabled: boolean; available: boolean; state: string; url: string | null; error: string | null; configured: boolean }; running: boolean; error: string | null; port: number; https: boolean; host: string | null; addresses: string[]; configuredHost: string | null; certName: string | null; note: string | null }
 interface Row { id: string; ref: string; status: string; createdAt: string; closedAt: string | null; createdBy: string | null; model: string | null; ios: string | null; capacityGb: number | null; verdict: string }
 
 async function call<T>(method: string, url: string, body?: unknown): Promise<T> {
@@ -315,8 +315,9 @@ function QrBox({ qr, expiresAt, onNew }: { qr: { url: string; expiresAt: string;
     <div className="dg-qr">
       <div className="dg-qr-img" dangerouslySetInnerHTML={{ __html: svg! }} />
       <div>
-        <ol className="dg-steps"><li>Con el iPhone en la <b>misma red Wi‑Fi</b> que esta PC, abrí la Cámara y escaneá el código.</li><li>Tocá el enlace: se abre Safari.</li><li>Confirmá acá que el código coincide.</li></ol>
+        <ol className="dg-steps"><li>{qr.https ? <>Abrí la Cámara del iPhone y escaneá el código (con Wi‑Fi o datos móviles).</> : <>Con el iPhone en la <b>misma red Wi‑Fi</b> que esta PC, abrí la Cámara y escaneá el código.</>}</li><li>Tocá el enlace: se abre Safari.</li><li>Confirmá acá que el código coincide.</li></ol>
         <p className="muted small">Vence en {Math.floor(left / 60)}:{String(left % 60).padStart(2, '0')} · se usa una sola vez.</p>
+        {qr.https && <p className="dg-linked small"><span><Icon name="check" size={14} /> Enlace seguro: funcionan cámara, micrófono y sensores.</span></p>}
         {qr.note && <p className="dg-note small">{qr.note}</p>}
         <button className="btn ghost" onClick={onNew}><Icon name="refresh" size={14} /> Regenerar</button>
       </div>
@@ -450,23 +451,32 @@ function LanSettings() {
   const [pass, setPass] = useState('');
   const [name, setName] = useState('');
   const [err, setErr] = useState('');
+  const [tunnelOn, setTunnelOn] = useState(true);
   const isAdmin = useIsAdmin();
-  useEffect(() => { call<Lan>('GET', '/api/diag/lan').then((l) => { setLan(l); setHost(l.configuredHost ?? ''); setPort(String(l.port)); }).catch(() => {}); }, []);
+  useEffect(() => {
+    const load = () => call<Lan>('GET', '/api/diag/lan').then((l) => { setLan(l); return l; }).catch(() => null);
+    void load().then((l) => { if (l) { setHost(l.configuredHost ?? ''); setPort(String(l.port)); setTunnelOn(l.tunnel?.configured !== false); } });
+    const t = setInterval(load, 4000); return () => clearInterval(t);
+  }, []);
   async function save(extra: object = {}) {
     setErr('');
-    try { const l = await call<Lan>('PUT', '/api/diag/lan', { host, port: Number(port), ...(pfx ? { pfxBase64: pfx, passphrase: pass, certName: name } : {}), ...extra }); setLan(l); setPfx(null); setPass(''); }
+ try { const l = await call<Lan>('PUT', '/api/diag/lan', { host, port: Number(port), tunnel: tunnelOn, ...(pfx ? { pfxBase64: pfx, passphrase: pass, certName: name } : {}), ...extra }); setLan(l); setPfx(null); setPass(''); }
     catch (e) { setErr((e as Error).message); }
   }
   if (!lan) return null;
   return (
     <section className="dg-card">
-      <h2>Conexión con el iPhone <span className={`dg-usb ${lan.running ? 'connected' : 'off'}`}>{lan.running ? (lan.https ? 'HTTPS activo' : 'HTTP activo') : 'Detenida'}</span></h2>
-      <p className="muted small">El iPhone abre {lan.https ? 'https' : 'http'}://{lan.host ?? '(sin red)'}:{lan.port}/d en la red del local. Si Windows pregunta, permití la app en <b>redes privadas</b>.</p>
+      <h2>Conexión con el iPhone <span className={`dg-usb ${lan.running ? (lan.secure || lan.https ? 'connected' : 'partial') : 'off'}`}>{!lan.running ? 'Detenida' : lan.secure ? 'Enlace seguro (HTTPS) listo' : lan.https ? 'HTTPS propio activo' : lan.tunnel?.state === 'starting' ? 'Preparando enlace seguro…' : 'Solo red local (HTTP)'}</span></h2>
+      {lan.secure ? <p className="muted small">El QR abre un enlace <b>https</b> seguro (Cloudflare) que lleva solo a la página de pruebas: funcionan cámara, micrófono y sensores, y el iPhone puede estar en el Wi‑Fi o con datos móviles.</p>
+        : <p className="muted small">El iPhone abre {lan.https ? 'https' : 'http'}://{lan.host ?? '(sin red)'}:{lan.port}/d en la red del local (mismo Wi‑Fi). Si Windows pregunta, permití la app en <b>redes privadas</b>.</p>}
+      {lan.tunnel?.enabled && !lan.secure && lan.tunnel.error && <p className="dg-note small">{lan.tunnel.error} Mientras tanto se usa la red local.</p>}
+      {lan.tunnel && !lan.tunnel.available && <p className="muted small">El enlace seguro está disponible en la app instalada (no en esta versión de prueba).</p>}
       {lan.error && <p className="err small">{lan.error}</p>}
       {lan.badHost && <p className="dg-note small">La dirección configurada «{lan.badHost}» no la encuentra el iPhone: se usa la IP {lan.host}. Borrala en «Configurar dirección y HTTPS».</p>}
       {lan.note && <p className="dg-note small">{lan.note}</p>}
       {isAdmin && (!open ? <button className="link small" onClick={() => setOpen(true)}>Configurar dirección y HTTPS</button> : (
         <div className="dg-fields">
+          <label className="dg-check"><input type="checkbox" checked={tunnelOn} onChange={(e) => setTunnelOn(e.target.checked)} /> Enlace seguro automático (Cloudflare) para cámara, micrófono y sensores</label>
           <label className="dg-field">Dirección o nombre para el iPhone<input className="input" value={host} placeholder={lan.addresses[0] ?? '192.168.1.10'} onChange={(e) => setHost(e.target.value)} />
             <span className="muted small">Vacío = IP automática ({lan.addresses.join(', ') || 'sin red'}). Con HTTPS usá el nombre del certificado.</span></label>
           <label className="dg-field">Puerto<input className="input" value={port} onChange={(e) => setPort(e.target.value)} /></label>

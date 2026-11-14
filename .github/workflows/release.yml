@@ -53,6 +53,16 @@ jobs:
           ELECTRON_RUN_AS_NODE: '1'
           MSYS2_ARG_CONV_EXCL: '*'
         run: npm run check:usb-electron
+      - name: Incluir cloudflared (enlace seguro de Diagnóstico) con firma de Cloudflare verificada
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force build/bin | Out-Null
+          Invoke-WebRequest -Uri https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-windows-amd64.exe -OutFile build/bin/cloudflared.exe
+          Invoke-WebRequest -Uri https://raw.githubusercontent.com/cloudflare/cloudflared/master/LICENSE -OutFile build/bin/cloudflared-LICENSE.txt
+          $sig = Get-AuthenticodeSignature build/bin/cloudflared.exe
+          Write-Host "Firma: $($sig.Status) · $($sig.SignerCertificate.Subject)"
+          if ($sig.Status -ne 'Valid' -or $sig.SignerCertificate.Subject -notmatch 'Cloudflare') { throw 'cloudflared.exe no tiene una firma válida de Cloudflare' }
+          & build/bin/cloudflared.exe --version
       - name: Generar instalador
         env:
           DATA_REPO_TOKEN: ${{ secrets.DATA_REPO_TOKEN }}

@@ -250,7 +250,7 @@ test('Servidor para Safari: solo la página y la sesión del iPhone; datos invá
   const base = `http://127.0.0.1:${info.port}`;
   try {
     const diagRow = s.create(null);
-    const url = lan.urlFor(s.newQr(diagRow.id).token);
+    const url = await lan.urlFor(s.newQr(diagRow.id).token);
     assert.match(url, new RegExp(`^${base}/d#t=[\\w-]{32}$`), 'el QR solo lleva el token, en el fragmento');
     assert.equal((await fetch(`${base}/d`)).status, 200);
     for (const p of ['/api/catalog/products', '/api/diag', '/', '/p/api/../api/diag', '/d/../celulares.db']) assert.equal((await fetch(base + p)).status, 404, p);
@@ -273,4 +273,37 @@ test('Servidor para Safari: solo la página y la sesión del iPhone; datos invá
     assert.ok(!big || big.status === 413 || big.status === 400);
     assert.equal(s.get(diagRow.id).current.screen.origin, 'safari');
   } finally { await lan.stop(); }
+});
+
+test('Enlace seguro (túnel): el QR usa https cuando está listo; sin cloudflared, la red local', async () => {
+  const d = db();
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'tun-'));
+  fs.mkdirSync(path.join(dir, 'web', 'phone'), { recursive: true });
+  const s = new DiagStore(d);
+  d.prepare(`INSERT INTO settings (key, value) VALUES ('diagLan', ?)`).run(JSON.stringify({ port: 5600 + Math.floor(Math.random() * 300), host: '127.0.0.1' }));
+  const lan = new DiagLan(d, s, path.join(dir, 'web'), dir, undefined, path.resolve('tests/support/fake-cloudflared.sh'));
+  try {
+    await lan.ensure();
+    const x = s.create(null);
+    const url = await lan.urlFor(s.newQr(x.id).token);
+    assert.match(url, /^https:\/\/prueba-enlace-seguro\.trycloudflare\.com\/d#t=[\w-]{32}$/);
+    const i = lan.info();
+    assert.equal(i.secure, true); assert.equal(i.note, null); assert.equal(i.tunnel.state, 'ready');
+    // Pedidos que llegan por el túnel: origen https con el host del túnel.
+    const base = `http://127.0.0.1:${i.port}`;
+    const token = url.split('#t=')[1];
+    const r = await fetch(`${base}/p/api/claim`, { method: 'POST', headers: { 'Content-Type': 'application/json', Origin: `https://127.0.0.1:${i.port}`, 'CF-Connecting-IP': '203.0.113.9' }, body: JSON.stringify({ token }) });
+    assert.equal(r.status, 200);
+    // Apagado por el administrador: vuelve a la red local.
+    await lan.configure({ tunnel: false });
+    assert.match(await lan.urlFor(s.newQr(x.id).token), /^http:\/\/127\.0\.0\.1:/);
+  } finally { await lan.stop(); }
+  const none = new DiagLan(d, s, path.join(dir, 'web'), dir, undefined, path.join(dir, 'no-existe.exe'));
+  try {
+    d.prepare(`UPDATE settings SET value = ? WHERE key = 'diagLan'`).run(JSON.stringify({ port: 5600 + Math.floor(Math.random() * 300), host: '127.0.0.1' }));
+    await none.ensure();
+    const y = s.create(null);
+    assert.match(await none.urlFor(s.newQr(y.id).token), /^http:\/\//);
+    assert.equal(none.info().tunnel.available, false);
+  } finally { await none.stop(); }
 });

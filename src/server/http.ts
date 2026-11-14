@@ -59,7 +59,7 @@ const SECURITY_HEADERS = {
   'Content-Security-Policy': "default-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; connect-src 'self'",
 };
 
-export function createServer(db: Db, webRoot: string, dataDir: string, opts: { secret?: Secret; syncNow?: () => unknown; canSetup?: () => boolean } = {}) {
+export function createServer(db: Db, webRoot: string, dataDir: string, opts: { secret?: Secret; syncNow?: () => unknown; canSetup?: () => boolean; tunnelBin?: string | null } = {}) {
   const kick = () => { try { void opts.syncNow?.(); } catch {} };
   const auth = new Auth(db, opts.canSetup ?? (() => true));
   // Escrituras que también puede hacer un vendedor (el resto de las escrituras es solo del administrador).
@@ -80,7 +80,7 @@ export function createServer(db: Db, webRoot: string, dataDir: string, opts: { s
   const coverJobs = new CoverJobs(db, covers);
   covers.assignKeys(db);
   const diag = new DiagStore(db);
-  const lan = new DiagLan(db, diag, webRoot, dataDir, opts.secret);
+  const lan = new DiagLan(db, diag, webRoot, dataDir, opts.secret, opts.tunnelBin ?? process.env.CEL_CLOUDFLARED ?? null);
   const usb = new UsbWatcher();
   const D = '([a-f0-9-]{36})';
   const who = () => auth.current()?.email ?? null;
@@ -111,7 +111,11 @@ export function createServer(db: Db, webRoot: string, dataDir: string, opts: { s
       const i = lan.info();
       if (!i.running) throw new DiagError(503, i.error ?? 'No se pudo abrir la conexión para el iPhone.');
       const q = diag.newQr(m[1]);
-      return { url: lan.urlFor(q.token), expiresAt: q.expiresAt, https: i.https, note: i.note };
+      const url = await lan.urlFor(q.token);
+      const secure = url.startsWith('https://');
+      const t = lan.info().tunnel;
+      return { url, expiresAt: q.expiresAt, https: secure,
+        note: secure ? null : t.enabled && t.available ? `${t.error ?? 'El enlace seguro no está listo.'} Se usa la red local: cámara, micrófono y sensores quedan para revisar a mano. Podés tocar «Regenerar» para reintentar.` : i.note };
     }],
     ['POST', new RegExp(`^/api/diag/${D}/phone/${D}/confirm$`), async (m, req) => diag.confirmPhone(m[1], m[2], !!(await readJson(req)).accept)],
     ['POST', new RegExp(`^/api/diag/${D}/disconnect$`), (m) => diag.disconnectPhone(m[1])],

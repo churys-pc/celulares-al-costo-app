@@ -8,6 +8,8 @@ let stop: (() => void) | undefined;
 
 async function createWindow() {
   const srv = await startServer({ dataDir: path.join(app.getPath('userData'), 'data'), webRoot: path.join(__dirname, 'web'), log,
+    // Enlace seguro para el iPhone (Diagnóstico): cloudflared incluido en el instalador (resources/bin).
+    tunnelBin: app.isPackaged ? path.join(process.resourcesPath, 'bin', 'cloudflared.exe') : null,
     // La clave de GitHub se guarda cifrada con la protección de Windows del usuario (DPAPI).
     secret: safeStorage.isEncryptionAvailable() ? {
       encrypt: (t: string) => safeStorage.encryptString(t).toString('base64'),

@@ -22,7 +22,7 @@ export function defaultDataDir() {
   return process.env.CELULARES_DATA_DIR ?? path.join(base, 'CelularesAlCosto');
 }
 
-export async function startServer(opts: { dataDir?: string; webRoot: string; port?: number; log?: (m: string) => void; noBackgroundJobs?: boolean; secret?: Secret }) {
+export async function startServer(opts: { dataDir?: string; webRoot: string; port?: number; log?: (m: string) => void; noBackgroundJobs?: boolean; secret?: Secret; tunnelBin?: string | null }) {
   const dataDir = opts.dataDir ?? defaultDataDir();
   const db = openDb(path.join(dataDir, 'celulares.db'));
   applySeedData(db);
@@ -35,7 +35,7 @@ export async function startServer(opts: { dataDir?: string; webRoot: string; por
      { dir: COVERS_DIR, apply: (d, doc) => applyCoverDoc(new CoverStore(dataDir, undefined, opts.webRoot, d), doc),
        remove: (d, key) => new CoverStore(dataDir, undefined, opts.webRoot, d).removeCustom(key) }]);
   const sync = opts.noBackgroundJobs ? { syncNow: () => client.sync() } : startRepoSync(client);
-  const server = createServer(db, opts.webRoot, dataDir, { secret: opts.secret, syncNow: sync.syncNow,
+  const server = createServer(db, opts.webRoot, dataDir, { secret: opts.secret, tunnelBin: opts.tunnelBin, syncNow: sync.syncNow,
     // Crear el admin solo después de bajar el repo (así no se pisa una cuenta creada en otra PC). Sin clave: modo local.
     canSetup: () => !repoConfig(db, opts.secret).token || client.pulledOnce });
   if (!opts.noBackgroundJobs) startPopularImport(db, popular.items, opts.log);
@@ -43,5 +43,5 @@ export async function startServer(opts: { dataDir?: string; webRoot: string; por
   // Solo loopback: la web móvil (Fase 3) tendrá su propio listener HTTPS con sesión QR.
   await new Promise<void>((r) => server.listen(opts.port ?? 0, '127.0.0.1', r));
   const { port } = server.address() as AddressInfo;
-  return { port, url: `http://127.0.0.1:${port}`, close: () => { server.close(); db.close(); } };
+  return { port, url: `http://127.0.0.1:${port}`, close: () => { server.emit('close'); server.close(); db.close(); } };
 }

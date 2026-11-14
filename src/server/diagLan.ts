@@ -13,12 +13,13 @@ import path from 'node:path';
 import type { Db } from './db.ts';
 import type { Secret } from './repoSync.ts';
 import { DiagStore, DiagError } from './diag.ts';
+import { DiagTunnel } from './diagTunnel.ts';
 import { ValidationError } from '../shared/types.ts';
 
 export const DEFAULT_PORT = 5181;
 const MAX_BODY = 16 * 1024;
 const CONF_KEY = 'diagLan';
-interface LanConf { host?: string; port?: number; pfxFile?: string; pass?: string; certName?: string }
+interface LanConf { host?: string; port?: number; pfxFile?: string; pass?: string; certName?: string; tunnel?: boolean }
 const PLAIN: Secret = { encrypt: (s) => s, decrypt: (s) => s };
 
 const HEADERS = {
@@ -50,7 +51,12 @@ export class DiagLan {
   private port = 0;
   private https = false;
   private hits = new Map<string, { n: number; t: number }>();
-  constructor(private db: Db, private store: DiagStore, private webRoot: string, private dataDir: string, private secret: Secret = PLAIN) {}
+  private tunnel: DiagTunnel;
+  constructor(private db: Db, private store: DiagStore, private webRoot: string, private dataDir: string, private secret: Secret = PLAIN, tunnelBin: string | null = null) {
+    this.tunnel = new DiagTunnel(tunnelBin, () => this.port || this.conf().port || DEFAULT_PORT);
+  }
+  /** Enlace seguro automático (Cloudflare): activado salvo que el administrador lo apague o use su propio certificado. */
+  private tunnelOn() { const c = this.conf(); return c.tunnel !== false && !c.pfxFile; }
 
   private conf(): LanConf { try { return JSON.parse((this.db.prepare('SELECT value FROM settings WHERE key = ?').get(CONF_KEY) as any)?.value ?? '{}'); } catch { return {}; } }
   private saveConf(c: LanConf) { this.db.prepare('INSERT INTO settings (key, value) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value').run(CONF_KEY, JSON.stringify(c)); }
@@ -60,20 +66,24 @@ export class DiagLan {
     const addrs = lanAddresses();
     const badHost = !!c.host && !usableHost(c.host);
     const host = (c.host && !badHost ? c.host : null) || addrs[0]?.address || null;
-    return { badHost: badHost ? c.host : null, running: !!this.server, error: this.error, port: this.port || c.port || DEFAULT_PORT, https: this.https || !!c.pfxFile,
+    const t = this.tunnel.info();
+    const secure = this.tunnelOn() && t.state === 'ready';
+    return { badHost: badHost ? c.host : null, tunnel: { enabled: this.tunnelOn(), available: t.state !== 'unavailable', state: t.state, url: t.url, error: t.error, configured: c.tunnel !== false }, secure, running: !!this.server, error: this.error, port: this.port || c.port || DEFAULT_PORT, https: this.https || !!c.pfxFile,
       host, addresses: addrs.map((a) => a.address), configuredHost: c.host ?? null, certName: c.certName ?? null,
-      note: this.https || c.pfxFile ? null : 'Conexión HTTP: Safari no permite cámara, micrófono ni sensores de movimiento sin HTTPS; esas pruebas quedan «No verificado» con su alternativa manual.' };
+      note: this.https || c.pfxFile || secure ? null : 'Conexión HTTP: Safari no permite cámara, micrófono ni sensores de movimiento sin HTTPS; esas pruebas quedan «No verificado» con su alternativa manual.' };
   }
 
-  /** URL del QR: solo el token, en el fragmento (no viaja en pedidos ni queda en registros del servidor). */
-  urlFor(token: string) {
+  /** URL del QR: solo el token, en el fragmento (no viaja en pedidos ni queda en registros del servidor).
+   *  Con el enlace seguro listo (o si aparece en hasta 15 s) se usa HTTPS; si no, la red local. */
+  async urlFor(token: string) {
+    if (this.tunnelOn()) { const u = await this.tunnel.ensure(15_000); if (u) return `${u}/d#t=${token}`; }
     const i = this.info();
     if (!i.host) throw new DiagError(503, 'La PC no tiene una red local activa: conectala al Wi‑Fi o a la red del local.');
     return `${i.https ? 'https' : 'http'}://${i.host}:${i.port}/d#t=${token}`;
   }
 
   async ensure() {
-    if (this.server) return;
+    if (this.server) { if (this.tunnelOn()) void this.tunnel.ensure(0); return; }
     this.starting ??= this.start().finally(() => { this.starting = null; });
     return this.starting;
   }
@@ -92,6 +102,7 @@ export class DiagLan {
       srv.requestTimeout = 15_000; srv.headersTimeout = 10_000;
       await new Promise<void>((ok, ko) => { srv.once('error', ko); srv.listen(port, '0.0.0.0', () => { srv.off('error', ko); ok(); }); });
       this.server = srv; this.port = port; this.error = null;
+      if (this.tunnelOn()) void this.tunnel.ensure(0);
     } catch (e) {
       const code = (e as any)?.code;
       this.error = code === 'EADDRINUSE' ? `El puerto ${port} está ocupado por otro programa: cambialo en la configuración.` :
@@ -102,7 +113,7 @@ export class DiagLan {
   }
 
   async restart() { await this.stop(); await this.ensure(); }
-  async stop() { const s = this.server; this.server = null; this.port = 0; if (s) await new Promise<void>((r) => s.close(() => r())); }
+  async stop() { this.tunnel.stop(); const s = this.server; this.server = null; this.port = 0; if (s) await new Promise<void>((r) => s.close(() => r())); }
 
   /** Configuración (solo administrador): dirección/nombre, puerto y certificado .pfx para HTTPS. */
   async configure(body: any) {
@@ -118,6 +129,7 @@ export class DiagLan {
       if (!Number.isInteger(p) || p < 1024 || p > 65535) throw new ValidationError('Puerto inválido (1024–65535)');
       c.port = p;
     }
+    if (body?.tunnel !== undefined) c.tunnel = !!body.tunnel;
     if (body?.removeCert) { if (c.pfxFile) fs.rmSync(path.join(this.dataDir, c.pfxFile), { force: true }); delete c.pfxFile; delete c.pass; delete c.certName; }
     if (body?.pfxBase64) {
       const buf = Buffer.from(String(body.pfxBase64), 'base64');
@@ -162,10 +174,12 @@ export class DiagLan {
       if (p.startsWith('/p/api/')) {
         // Solo pedidos de la propia página (sin otros orígenes).
         const origin = req.headers.origin;
-        if (req.method !== 'GET' && origin && origin !== `http${this.https ? 's' : ''}://${req.headers.host}`) throw new DiagError(403, 'Origen no permitido');
+        // (por el enlace seguro llega como https://<host> aunque el servidor local sea HTTP)
+        if (req.method !== 'GET' && origin && origin !== `https://${req.headers.host}` && origin !== `http://${req.headers.host}`) throw new DiagError(403, 'Origen no permitido');
         const cred = req.headers['x-diag-session'];
         if (req.method === 'POST' && p === '/p/api/claim') {
-          if (this.limited(req.socket.remoteAddress ?? '?')) throw new DiagError(429, 'Demasiados intentos: esperá un minuto.');
+          const ip = /^(::ffff:)?127\.|^::1$/.test(req.socket.remoteAddress ?? '') ? String(req.headers['cf-connecting-ip'] ?? 'local') : req.socket.remoteAddress ?? '?';
+          if (this.limited(ip)) throw new DiagError(429, 'Demasiados intentos: esperá un minuto.');
           const b = await this.body(req);
           return json(200, this.store.claim(b.token, req.headers['user-agent']));
         }

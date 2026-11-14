@@ -1,6 +1,6 @@
 {
   "name": "celulares-al-costo-app",
-  "version": "0.21.5",
+  "version": "0.22.0",
   "private": true,
   "description": "App Windows + web móvil para local de celulares: catálogo, comparador, diagnóstico iPhone y tasación.",
   "main": "dist/electron.cjs",
@@ -64,6 +64,16 @@
         "owner": "churys-pc",
         "repo": "celulares-al-costo-releases",
         "releaseType": "release"
+      }
+    ],
+    "extraResources": [
+      {
+        "from": "build/bin",
+        "to": "bin",
+        "filter": [
+          "cloudflared.exe",
+          "cloudflared-LICENSE.txt"
+        ]
       }
     ]
   },
