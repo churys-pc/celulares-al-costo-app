@@ -1,6 +1,6 @@
 {
   "name": "celulares-al-costo-app",
-  "version": "0.24.9",
+  "version": "0.24.10",
   "private": true,
   "description": "App Windows para local de celulares: catálogo, comparador y carga de productos.",
   "main": "dist/electron.cjs",

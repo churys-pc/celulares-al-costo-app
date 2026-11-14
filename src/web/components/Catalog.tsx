@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
-import { USES, type Brand, type Product, type ProductDetail, type Settings } from '../../shared/types.ts';
+import { type Brand, type Product, type ProductDetail, type Settings } from '../../shared/types.ts';
 import { api } from '../api.ts';
-import { dualPrice, num, USE_LABEL } from '../format.ts';
+import { dualPrice, num } from '../format.ts';
 import { Icon } from '../icons.tsx';
 import { Presentation } from './Presentation.tsx';
 import { ProductForm } from './ProductForm.tsx';
@@ -17,7 +17,6 @@ export function Catalog({ settings, initialQuery = '', onNew }: { settings: Sett
   const [q, setQ] = useState(initialQuery);
   const [condition, setCondition] = useState<'' | 'nuevo' | 'usado'>('');
   const [brandId, setBrandId] = useState('');
-  const [use, setUse] = useState('');
   const [favorite, setFavorite] = useState(false);
   const [sort, setSort] = useState<'' | 'asc' | 'desc'>(() => { try { return (localStorage.getItem('catalog.sort') as any) || ''; } catch { return ''; } });
   useEffect(() => { try { localStorage.setItem('catalog.sort', sort); } catch {} }, [sort]);
@@ -30,12 +29,12 @@ export function Catalog({ settings, initialQuery = '', onNew }: { settings: Sett
     try {
       const [list, b] = await Promise.all([
         api.products({ q, condition: condition || undefined, brandId: brandId ? Number(brandId) : undefined,
-          use: (use || undefined) as any, favorite, includeDemo: false }),
+          favorite, includeDemo: false }),
         api.brands(),
       ]);
       setItems(list); setBrands(b); setError('');
     } catch (e) { setError((e as Error).message); }
-  }, [q, condition, brandId, use, favorite]);
+  }, [q, condition, brandId, favorite]);
 
   useEffect(() => { const t = setTimeout(load, 150); return () => clearTimeout(t); }, [load]);
 
@@ -56,7 +55,6 @@ export function Catalog({ settings, initialQuery = '', onNew }: { settings: Sett
     if (x === null || y === null) return x === null ? (y === null ? 0 : 1) : -1;
     return sort === 'asc' ? x - y : y - x;
   });
-  const USE_ICON: Record<string, string> = { gaming: 'gamepad', fotos: 'camera', redes: 'chat', trabajo: 'briefcase' };
 
   return (
     <div className="cat2">
@@ -82,7 +80,6 @@ export function Catalog({ settings, initialQuery = '', onNew }: { settings: Sett
           {(['', 'nuevo', 'usado'] as const).map((c) => (
             <button key={c} className={condition === c ? 'on' : ''} onClick={() => setCondition(c)}>{c === '' ? 'Todos' : c === 'nuevo' ? 'Nuevos' : 'CPO'}</button>))}
         </div>
-        {USES.map((u) => <button key={u} className={`cat2-use ${use === u ? 'on' : ''}`} onClick={() => setUse(use === u ? '' : u)}><Icon name={USE_ICON[u]} size={16} /> {USE_LABEL[u]}</button>)}
         <button className={`cat2-fav ${favorite ? 'on' : ''}`} onClick={() => setFavorite(!favorite)}><Icon name="star" size={16} /> Favoritos</button>
       </div>
       <div className="cat2-count"><b>{items.length} equipos</b>
