@@ -26,6 +26,8 @@ export function QuickAdd({ settings }: { settings: Settings | null }) {
   const [hasOwnPhoto, setHasOwnPhoto] = useState(false); // al editar: el producto ya tiene foto propia
   const [match, setMatch] = useState<Match | null>(null);
   const [cands, setCands] = useState<{ slug: string; name: string }[]>([]);
+  const [selSlug, setSelSlug] = useState(''); // variante elegida en la lista (se ve al instante, aunque la ficha siga cargando)
+  const searchSeq = useRef(0); // solo vale la respuesta de la última búsqueda de ficha
   const [searching, setSearching] = useState(false);
   const [searched, setSearched] = useState(false);
   const [pesos, setPesos] = useState<string | null>(null); // null = se muestra el equivalente; texto = se está escribiendo en pesos
@@ -67,15 +69,24 @@ export function QuickAdd({ settings }: { settings: Settings | null }) {
 
   async function search(slug?: string) {
     if (f.name.trim().length < 3) return;
-    setSearching(true); setError('');
+    const seq = ++searchSeq.current;
+    // Mientras carga la ficha nueva no queda ningún modelo «viejo» seleccionado (ni para Buscar imagen ni para guardar).
+    setSearching(true); setError(''); setMatch(null);
+    if (slug) setSelSlug(slug);
     try {
       const r = await api.quickPreview(f.name, slug);
-      setCands(r.candidates); setMatch(r.match); setSearched(true);
+      if (seq !== searchSeq.current) return; // llegó tarde: ya se eligió otro modelo o se cambió el nombre
+      setCands(r.candidates); setMatch(r.match); setSelSlug(r.match?.slug ?? ''); setSearched(true);
       if (r.match && !descTouched.current) setF((x: any) => ({ ...x, description: r.match!.description }));
-    } catch (e) { setError((e as Error).message); } finally { setSearching(false); }
+    } catch (e) { if (seq === searchSeq.current) { setError((e as Error).message); setSearched(true); } }
+    finally { if (seq === searchSeq.current) setSearching(false); }
   }
-  // Busca solo al dejar de escribir el nombre.
-  useEffect(() => { if (f.id) return; setSearched(false); const t = setTimeout(() => search(), 900); return () => clearTimeout(t); }, [f.name]);
+  // Busca solo al dejar de escribir el nombre; lo que estaba cargando para el nombre anterior se descarta.
+  useEffect(() => {
+    if (f.id) return;
+    searchSeq.current++; setSearching(false); setSearched(false);
+    const t = setTimeout(() => search(), 900); return () => clearTimeout(t);
+  }, [f.name]);
 
   /** Cancela la búsqueda del formulario si todavía no está vinculada a un producto guardado. */
   function dropJob(reason: string) {
@@ -83,24 +94,38 @@ export function QuickAdd({ settings }: { settings: Settings | null }) {
     setJobId(null); setCoverNote(null);
   }
   // Si cambia el equipo, el resultado de la búsqueda anterior ya no sirve.
-  const modelKey = match ? `${match.brand}|${normalizeModelName(match.model)}` : '';
+  const keyOf = (brand: string, model: string) => `${brand.toLowerCase()}|${normalizeModelName(model)}`;
+  const modelKey = match ? keyOf(match.brand, match.model) : '';
+  const modelKeyRef = useRef(modelKey); modelKeyRef.current = modelKey;
+  const noteKey = useRef(''); // modelo al que corresponde el aviso de «Buscar imagen»
   useEffect(() => {
-    if (job && isActive(job) && `${job.brand}|${normalizeModelName(job.model)}` !== modelKey) dropJob('Se cambió el equipo');
+    if (job && keyOf(job.brand, job.model) === modelKey) return;
+    if (job && isActive(job) && !job.productRepoId) void cancelJob(job.id, 'Se cambió el equipo').catch(() => {});
+    setJobId(null); setCoverNote(null);
   }, [modelKey]);
+  // Estado que se muestra: solo el de la búsqueda y el aviso del modelo elegido ahora.
+  const shownJob = job && keyOf(job.brand, job.model) === modelKey ? job : null;
+  const shownNote = noteKey.current === modelKey ? coverNote : null;
 
   async function findCover() {
-    if (!match) return;
+    if (!match || searching) return;
     // Usa la variante seleccionada en la lista (la predeterminada o la que se eligió).
+    const key = modelKey; noteKey.current = key;
     if (photo) { setCoverNote({ cls: 'warn', text: 'Ya elegiste una foto manual: quitala para usar la imagen del modelo.' }); return; }
     setCoverNote({ cls: 'busy', text: 'Buscando imagen…' });
     try {
       const r = await requestCover(match.brand, match.model, f.id || null);
-      if (r.status === 'exists') { setJobId(null); setCoverNote({ cls: 'ok', text: 'Este modelo ya tiene portada: se usa la del catálogo.' }); }
+      if (modelKeyRef.current !== key) { // se cambió de modelo mientras se pedía: este resultado no corresponde
+        if (r.status !== 'exists' && isActive(r) && !r.productRepoId) void cancelJob(r.id, 'Se cambió el equipo').catch(() => {});
+        return;
+      }
+      if (r.status === 'exists') { setJobId(null); setCoverNote({ cls: 'ok', text: `${match.brand} ${match.model} ya tiene portada: se usa la del catálogo.` }); }
       else { setJobId(r.id); setCoverNote(null); }
-    } catch (e) { setCoverNote({ cls: 'warn', text: (e as Error).message, retry: true }); }
+    } catch (e) { if (modelKeyRef.current === key) setCoverNote({ cls: 'warn', text: (e as Error).message, retry: true }); }
   }
 
   function reset() {
+    searchSeq.current++; setSearching(false); setSelSlug('');
     setJobId(null); setCoverNote(null);
     setF({ ...EMPTY }); setPhoto(undefined); setHasOwnPhoto(false); setMatch(null); setCands([]); setSearched(false);
     setPesos(null); setDescOpen(false); setError(''); descTouched.current = false;
@@ -108,11 +133,12 @@ export function QuickAdd({ settings }: { settings: Settings | null }) {
 
   async function save(e: React.FormEvent) {
     e.preventDefault(); setError(''); setMsg('');
+    if (searching) { setError('Esperá a que termine de cargar la ficha del modelo elegido.'); return; }
     try {
       const r = await api.quickSave({ ...f, id: f.id || undefined, match, photo });
       // La búsqueda de portada sigue en segundo plano y se asigna sola al terminar.
-      const pending = job && isActive(job) && !photo;
-      if (pending) await linkJob(job!.id, r.id).catch(() => {});
+      const pending = shownJob && isActive(shownJob) && !photo;
+      if (pending) await linkJob(shownJob!.id, r.id).catch(() => {});
       setMsg(`${f.id ? 'Producto actualizado.' : 'Producto cargado. Se sube al repositorio automáticamente.'}${pending ? ' La portada se asigna sola cuando termine la búsqueda.' : ''}`);
       reset(); load();
     } catch (err) { setError((err as Error).message); }
@@ -175,7 +201,7 @@ export function QuickAdd({ settings }: { settings: Settings | null }) {
             {status && <div className={`qa2-status ${status.cls}`}><Icon name={status.icon} size={15} className={searching ? 'spin' : ''} />{status.text}
               {match?.url && !searching && <a href={match.url} target="_blank" rel="noreferrer">Fuente</a>}</div>}
             {cands.length > 1 && (
-              <select ref={candRef} className={`field-select ${coverNote?.cls === 'pick' ? 'attention' : ''}`} value={match?.slug ?? ''} onChange={(e) => { setCoverNote(null); void search(e.target.value); }} aria-label="Coincidencia">
+              <select ref={candRef} className={`field-select ${coverNote?.cls === 'pick' ? 'attention' : ''}`} value={selSlug} onChange={(e) => { setCoverNote(null); void search(e.target.value); }} aria-label="Coincidencia">
                 {cands.map((c) => <option key={c.slug} value={c.slug}>{c.name}</option>)}
               </select>)}
             {(dups.same.length > 0 || dups.similar.length > 0) && (
@@ -227,16 +253,16 @@ export function QuickAdd({ settings }: { settings: Settings | null }) {
               </div>
               <div className="row tight">
                 {(ownPhoto || (f.id && hasOwnPhoto && photo === undefined)) && <button type="button" className="link" onClick={() => setPhoto(f.id ? null : undefined)}>Quitar</button>}
-                <button type="button" className="btn qa2-findimg" onClick={findCover} disabled={!match || (!!job && isActive(job))}
+                <button type="button" className="btn qa2-findimg" onClick={findCover} disabled={!match || searching || (!!shownJob && isActive(shownJob))}
                   title={match ? `Buscar en la web la foto de ${match.brand} ${match.model}` : 'Primero elegí el equipo (Buscar ficha)'}>
-                  <Icon name={job && isActive(job) ? 'refresh' : 'search'} size={15} className={job && isActive(job) ? 'spin' : ''} /> {job && isActive(job) ? 'Buscando…' : 'Buscar imagen'}</button>
+                  <Icon name={shownJob && isActive(shownJob) ? 'refresh' : 'search'} size={15} className={shownJob && isActive(shownJob) ? 'spin' : ''} /> {shownJob && isActive(shownJob) ? 'Buscando…' : 'Buscar imagen'}</button>
                 <label className="btn"><Icon name="image" size={15} /> {thumb || hasOwnPhoto ? 'Cambiar foto' : 'Subir foto'}
                   <input type="file" accept="image/jpeg,image/png,image/webp" hidden onChange={async (e) => {
                     const file = e.target.files?.[0]; e.target.value = '';
-                    if (file) try { setPhoto(await fileToDataUrl(file, 1200, 'image/jpeg')); if (job && isActive(job)) dropJob('Se eligió una foto manual'); } catch (err) { setError((err as Error).message); } }} /></label>
+                    if (file) try { setPhoto(await fileToDataUrl(file, 1200, 'image/jpeg')); if (shownJob && isActive(shownJob)) dropJob('Se eligió una foto manual'); } catch (err) { setError((err as Error).message); } }} /></label>
               </div>
             </div>
-            <CoverStatus job={job} note={coverNote} onRetry={() => void findCover()} />
+            <CoverStatus job={shownJob} note={shownNote} onRetry={() => void findCover()} />
 
             <div className={`qa2-desc ${descOpen ? 'open' : ''}`}>
               <button type="button" className="qa2-desc-head" onClick={() => setDescOpen(!descOpen)} aria-expanded={descOpen}>
