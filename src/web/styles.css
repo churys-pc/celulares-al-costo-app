@@ -787,7 +787,10 @@ table.specs td:first-child { color: var(--muted); width: 40%; }
 }
 @container (max-width: 480px) { .qa2-filters { flex-direction: column; } .qa2-filters .field.sel { width: auto; } }
 /* «Buscar imagen» */
-.qa2-photo .row.tight { flex-wrap: wrap; justify-content: flex-end; }
+.qa2-photo { flex-wrap: wrap; }
+.qa2-photo .txt { flex: 1 1 200px; }
+.qa2-photo .row.tight { flex: 0 1 auto; flex-wrap: wrap; justify-content: flex-end; margin-left: auto; }
+.qa2-photo .btn { white-space: nowrap; }
 .btn.qa2-findimg { border-color: var(--line-strong); background: rgba(47, 139, 255, .22); padding: 9px 16px; }
 .qa2-status.cover { margin-top: 10px; align-items: flex-start; }
 .qa2-status.cover.pick { color: #fbbf24; }

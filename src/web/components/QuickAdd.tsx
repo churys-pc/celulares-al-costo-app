@@ -42,7 +42,6 @@ export function QuickAdd({ settings }: { settings: Settings | null }) {
   const jobs = useCoverJobs();
   const [jobId, setJobId] = useState<string | null>(null);
   const [coverNote, setCoverNote] = useState<{ cls: string; text: string; retry?: boolean } | null>(null);
-  const [variantChosen, setVariantChosen] = useState(false);
   const candRef = useRef<HTMLSelectElement>(null);
   const job = jobId ? jobs.find((j) => j.id === jobId) ?? null : null;
 
@@ -75,7 +74,7 @@ export function QuickAdd({ settings }: { settings: Settings | null }) {
     } catch (e) { setError((e as Error).message); } finally { setSearching(false); }
   }
   // Busca solo al dejar de escribir el nombre.
-  useEffect(() => { if (f.id) return; setSearched(false); setVariantChosen(false); const t = setTimeout(() => search(), 900); return () => clearTimeout(t); }, [f.name]);
+  useEffect(() => { if (f.id) return; setSearched(false); const t = setTimeout(() => search(), 900); return () => clearTimeout(t); }, [f.name]);
 
   /** Cancela la búsqueda del formulario si todavía no está vinculada a un producto guardado. */
   function dropJob(reason: string) {
@@ -90,10 +89,7 @@ export function QuickAdd({ settings }: { settings: Settings | null }) {
 
   async function findCover() {
     if (!match) return;
-    if (cands.length > 1 && !variantChosen && !f.id) {
-      setCoverNote({ cls: 'pick', text: 'Hay varias variantes que coinciden: elegí la correcta en la lista de arriba y después buscá la imagen.' });
-      candRef.current?.focus(); return;
-    }
+    // Usa la variante seleccionada en la lista (la predeterminada o la que se eligió).
     if (photo) { setCoverNote({ cls: 'warn', text: 'Ya elegiste una foto manual: quitala para usar la imagen del modelo.' }); return; }
     setCoverNote({ cls: 'busy', text: 'Buscando imagen…' });
     try {
@@ -104,7 +100,7 @@ export function QuickAdd({ settings }: { settings: Settings | null }) {
   }
 
   function reset() {
-    setJobId(null); setCoverNote(null); setVariantChosen(false);
+    setJobId(null); setCoverNote(null);
     setF({ ...EMPTY }); setPhoto(undefined); setHasOwnPhoto(false); setMatch(null); setCands([]); setSearched(false);
     setPesos(null); setDescOpen(false); setError(''); descTouched.current = false;
   }
@@ -175,7 +171,7 @@ export function QuickAdd({ settings }: { settings: Settings | null }) {
             {status && <div className={`qa2-status ${status.cls}`}><Icon name={status.icon} size={15} className={searching ? 'spin' : ''} />{status.text}
               {match?.url && !searching && <a href={match.url} target="_blank" rel="noreferrer">Fuente</a>}</div>}
             {cands.length > 1 && (
-              <select ref={candRef} className={`field-select ${coverNote?.cls === 'pick' ? 'attention' : ''}`} value={match?.slug ?? ''} onChange={(e) => { setVariantChosen(true); setCoverNote(null); void search(e.target.value); }} aria-label="Coincidencia">
+              <select ref={candRef} className={`field-select ${coverNote?.cls === 'pick' ? 'attention' : ''}`} value={match?.slug ?? ''} onChange={(e) => { setCoverNote(null); void search(e.target.value); }} aria-label="Coincidencia">
                 {cands.map((c) => <option key={c.slug} value={c.slug}>{c.name}</option>)}
               </select>)}
 
