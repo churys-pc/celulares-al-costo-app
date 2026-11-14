@@ -33,7 +33,7 @@ export function App() {
   useEffect(() => { if (user) void startCoverWorker(); }, [user?.email]);
   // La cotización y otros ajustes pueden llegar desde otra PC: se refrescan cada minuto.
   useEffect(() => { if (!user) return; const t = setInterval(() => api.settings().then(setSettings).catch(() => {}), 60_000); return () => clearInterval(t); }, [user?.email]);
-  useEffect(() => { if (!isAdmin && section === 'cargar') setSection('catalogo'); }, [isAdmin, section]);
+  useEffect(() => { if (user && !isAdmin && section === 'cargar') setSection('catalogo'); }, [user, isAdmin, section]);
   useEffect(() => { history.replaceState(null, '', '#' + section); }, [section]);
   useEffect(() => { if (settings) document.documentElement.style.setProperty('--accent', settings.primaryColor); }, [settings]);
 

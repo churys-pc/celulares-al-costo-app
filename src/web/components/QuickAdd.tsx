@@ -2,47 +2,70 @@
 import { useEffect, useRef, useState } from 'react';
 import type { Product, Settings } from '../../shared/types.ts';
 import { api, fileToDataUrl } from '../api.ts';
-import { money } from '../format.ts';
+import { num } from '../format.ts';
 import { Icon } from '../icons.tsx';
 import { useCovers } from '../covers.ts';
 
 type Match = { slug: string; name: string; brand: string; model: string; url: string; specs: { group: string; key: string; value: string; highlight: boolean }[];
   antutu: { version: string; total: number } | null; description: string };
-const EMPTY = { id: '', name: '', price: '', currency: 'USD', condition: 'nuevo', description: '' }; // El precio se carga siempre en dólares.
+const EMPTY = { id: '', name: '', price: '', currency: 'USD', condition: 'nuevo', description: '' }; // El precio se guarda siempre en dólares.
+const PAGE = 6;
+const CONDITIONS = [['nuevo', 'Nuevo'], ['usado', 'CPO']] as const;
+const condLabel = (c: string) => (c === 'nuevo' ? 'Nuevo' : 'CPO');
+const memLabel = (p: Pick<Product, 'ramGb' | 'storageGb'>) =>
+  p.storageGb ? (p.storageGb >= 1024 ? `${p.storageGb / 1024} TB` : `${p.storageGb} GB`) + (p.ramGb ? ` · ${p.ramGb} GB RAM` : '') : p.ramGb ? `${p.ramGb} GB RAM` : '';
 
 export function QuickAdd({ settings }: { settings: Settings | null }) {
   const cover = useCovers();
+  const rate = settings?.usdRate || null;
   const [f, setF] = useState<any>({ ...EMPTY });
-  const [photo, setPhoto] = useState<string | null | undefined>(undefined); // undefined = sin cambios
+  const [photo, setPhoto] = useState<string | null | undefined>(undefined); // undefined = sin cambios, null = quitar la propia
+  const [hasOwnPhoto, setHasOwnPhoto] = useState(false); // al editar: el producto ya tiene foto propia
   const [match, setMatch] = useState<Match | null>(null);
   const [cands, setCands] = useState<{ slug: string; name: string }[]>([]);
   const [searching, setSearching] = useState(false);
+  const [searched, setSearched] = useState(false);
+  const [pesos, setPesos] = useState<string | null>(null); // null = se muestra el equivalente; texto = se está escribiendo en pesos
+  const [descOpen, setDescOpen] = useState(false);
   const [msg, setMsg] = useState(''); const [error, setError] = useState('');
   const [list, setList] = useState<Product[]>([]);
   const [repo, setRepo] = useState<Awaited<ReturnType<typeof api.repoStatus>> | null>(null);
   const descTouched = useRef(false);
+  const nameRef = useRef<HTMLInputElement>(null);
   const [q, setQ] = useState('');
-  // Búsqueda en la lista de cargados: marca, modelo, memoria y estado.
-  const norm = (s: string) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-  const shown = list.filter((p) => norm(`${p.brand} ${p.model} ${p.ramGb ?? ''}/${p.storageGb ?? ''} ${p.storageGb ?? ''}gb ${p.condition}`).includes(norm(q.trim())));
+  const [cond, setCond] = useState('');
+  const [page, setPage] = useState(0);
+  const [menu, setMenu] = useState<number | null>(null);
+
+  // Búsqueda en la lista de cargados: marca, modelo, memoria y condición.
+  const norm = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+  const shown = list.filter((p) => (!cond || p.condition === cond)
+    && norm(`${p.brand} ${p.model} ${p.ramGb ?? ''}/${p.storageGb ?? ''} ${p.storageGb ?? ''}gb ${condLabel(p.condition)}`).includes(norm(q.trim())));
+  const pages = Math.max(1, Math.ceil(shown.length / PAGE));
+  const pg = Math.min(page, pages - 1);
+  const rows = shown.slice(pg * PAGE, pg * PAGE + PAGE);
+  useEffect(() => setPage(0), [q, cond]);
 
   const load = () => { api.products({}).then((l) => setList(l.filter((p) => p.repoId))).catch(() => {}); api.repoStatus().then(setRepo).catch(() => {}); };
   useEffect(() => { load(); const t = setInterval(load, 10_000); return () => clearInterval(t); }, []);
+  useEffect(() => { if (menu === null) return; const close = () => setMenu(null); window.addEventListener('click', close); return () => window.removeEventListener('click', close); }, [menu]);
 
   async function search(slug?: string) {
     if (f.name.trim().length < 3) return;
     setSearching(true); setError('');
     try {
       const r = await api.quickPreview(f.name, slug);
-      setCands(r.candidates); setMatch(r.match);
+      setCands(r.candidates); setMatch(r.match); setSearched(true);
       if (r.match && !descTouched.current) setF((x: any) => ({ ...x, description: r.match!.description }));
-      if (!r.match) setError('No encontré ese equipo en internet. Podés guardarlo igual con tu descripción.');
     } catch (e) { setError((e as Error).message); } finally { setSearching(false); }
   }
   // Busca solo al dejar de escribir el nombre.
-  useEffect(() => { if (f.id) return; const t = setTimeout(() => search(), 900); return () => clearTimeout(t); }, [f.name]);
+  useEffect(() => { if (f.id) return; setSearched(false); const t = setTimeout(() => search(), 900); return () => clearTimeout(t); }, [f.name]);
 
-  function reset() { setF({ ...EMPTY }); setPhoto(undefined); setMatch(null); setCands([]); descTouched.current = false; }
+  function reset() {
+    setF({ ...EMPTY }); setPhoto(undefined); setHasOwnPhoto(false); setMatch(null); setCands([]); setSearched(false);
+    setPesos(null); setDescOpen(false); setError(''); descTouched.current = false;
+  }
 
   async function save(e: React.FormEvent) {
     e.preventDefault(); setError(''); setMsg('');
@@ -54,90 +77,177 @@ export function QuickAdd({ settings }: { settings: Settings | null }) {
   }
   async function edit(p: Product) {
     const d = await api.product(p.id);
-    setF({ id: p.repoId, name: `${p.brand} ${p.model}${p.ramGb && p.storageGb ? ` ${p.ramGb}/${p.storageGb}` : p.storageGb ? ` ${p.storageGb}GB` : ''}`, price: p.currency === 'USD' ? p.price : settings?.usdRate ? Math.round(p.price / settings.usdRate) : p.price, currency: 'USD', condition: p.condition, description: p.description });
-    descTouched.current = true; setPhoto(undefined); setCands([]);
+    reset(); setMsg('');
+    setF({ id: p.repoId, name: `${p.brand} ${p.model}${p.ramGb && p.storageGb ? ` ${p.ramGb}/${p.storageGb}` : p.storageGb ? ` ${p.storageGb}GB` : ''}`,
+      price: p.currency === 'USD' ? p.price : rate ? Math.round(p.price / rate) : p.price, currency: 'USD', condition: p.condition, description: p.description });
+    descTouched.current = true; setHasOwnPhoto(!!p.photoUrl); setSearched(true);
     setMatch(d.specs.length ? { slug: '', name: `${p.brand} ${p.model}`, brand: p.brand, model: p.model, url: d.specs[0].sourceUrl ?? '',
       specs: d.specs.map(({ group, key, value, highlight }) => ({ group, key, value, highlight })), antutu: d.benchmarks[0] ?? null, description: p.description } : null);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    document.querySelector('.main')?.scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(() => nameRef.current?.focus(), 300);
   }
   async function remove(p: Product) {
     if (!confirm(`¿Eliminar ${p.brand} ${p.model} del catálogo? Se borra en todas las PCs.`)) return;
-    await api.quickDelete(p.repoId!); load();
+    await api.quickDelete(p.repoId!); if (f.id === p.repoId) reset(); load();
   }
 
-  const hl = match?.specs.filter((s) => ['Procesador', 'Tamaño y tipo', 'Cámara principal', 'Batería', 'Carga rápida', 'RAM'].includes(s.key)) ?? [];
+  // Precio: se carga en dólares; también se puede escribir en pesos y se convierte con la cotización del catálogo.
+  const usd = Number(f.price);
+  const pesosShown = pesos ?? (rate && usd > 0 ? `$ ${num(usd * rate)}` : '');
+  const coverSrc = match ? cover(match.brand, match.model) : null;
+  const ownPhoto = photo ?? null;
+  const thumb = ownPhoto ?? coverSrc;
+  const status = searching ? { cls: 'busy', icon: 'refresh', text: 'Buscando la ficha…' }
+    : match ? { cls: 'ok', icon: 'check', text: f.id ? `Ficha: ${match.name}` : 'Ficha encontrada' }
+    : searched && f.name.trim().length >= 3 ? { cls: 'warn', icon: 'dot', text: 'No encontré ese equipo en internet. Podés cargarlo igual con tu descripción.' } : null;
+
   return (
-    <>
-      <header className="page-head">
-        <div><h1>Cargar productos</h1><p className="sub">Nombre, precio y foto: la ficha y la descripción se completan solas.</p></div>
+    <div className="qa2">
+      <div className="qa2-top">
+        <nav className="crumbs"><Icon name="grid" size={16} /><span>Catálogo</span><Icon name="right" size={14} /><b>Cargar productos</b></nav>
         {repo && <RepoChip st={repo} onSync={async () => setRepo(await api.repoSync())} />}
+      </div>
+      <header className="qa2-head">
+        <div><h1>Cargar productos</h1><p className="sub">Agregá equipos al catálogo con su ficha, precio y foto.</p></div>
+        <div className="rate-chip"><Icon name="swap" size={16} className="accent" /><span>Cotización del catálogo</span>
+          <b>{rate ? `USD 1 = $ ${rate.toLocaleString('es-UY')}` : 'Sin cargar (Ajustes)'}</b></div>
       </header>
-      <div className="qa">
-        <form className="section qa-form" onSubmit={save}>
-          <h2>{f.id ? 'Editar producto' : 'Nuevo producto'}</h2>
-          <div className="form">
-            <label className="full">Nombre del equipo *
-              <div className="row tight" style={{ flexWrap: 'nowrap' }}>
-                <input className="input" style={{ flex: 1 }} required maxLength={80} value={f.name} placeholder="Ej.: Samsung Galaxy A55 8/256"
-                  onChange={(e) => setF({ ...f, name: e.target.value })} />
-                <button type="button" className="btn" onClick={() => search()} disabled={searching}><Icon name="search" size={14} /> {searching ? 'Buscando…' : 'Buscar ficha'}</button>
-              </div></label>
+
+      <div className="qa2-grid">
+        <form className="qa2-card" onSubmit={save}>
+          <div className="qa2-card-head">
+            <span className="qa2-ico"><Icon name={f.id ? 'edit' : 'plus'} size={20} /></span>
+            <div><h2>{f.id ? 'Editar producto' : 'Nuevo producto'}</h2><p>Buscá el equipo para completar la ficha automáticamente.</p></div>
+          </div>
+          <div className="qa2-body">
+            <label className="fl">Nombre del equipo <i>*</i></label>
+            <div className="qa2-name">
+              <div className="field"><Icon name="search" size={18} />
+                <input ref={nameRef} required maxLength={80} value={f.name} placeholder="Ej.: Samsung Galaxy A55 8/256"
+                  onChange={(e) => setF({ ...f, name: e.target.value })} /></div>
+              <button type="button" className="btn qa2-find" onClick={() => search()} disabled={searching || f.name.trim().length < 3}>Buscar ficha</button>
+            </div>
+            {status && <div className={`qa2-status ${status.cls}`}><Icon name={status.icon} size={15} className={searching ? 'spin' : ''} />{status.text}
+              {match?.url && !searching && <a href={match.url} target="_blank" rel="noreferrer">Fuente</a>}</div>}
             {cands.length > 1 && (
-              <label className="full">Coincidencia
-                <select className="input" value={match?.slug ?? ''} onChange={(e) => search(e.target.value)}>
-                  {cands.map((c) => <option key={c.slug} value={c.slug}>{c.name}</option>)}
-                </select></label>)}
-            <label>Precio en dólares (USD) *<input className="input" type="number" min={1} step="any" required value={f.price} onChange={(e) => setF({ ...f, price: e.target.value })} /></label>
-            <div className="qa-uyu"><span className="muted small">En pesos (catálogo)</span>
-              <b>{settings?.usdRate ? (Number(f.price) > 0 ? `$ ${Math.round(Number(f.price) * settings.usdRate).toLocaleString('es-UY')}` : '—') : 'Falta la cotización en Ajustes'}</b>
-              {settings?.usdRate ? <span className="muted small">Cotización: $ {settings.usdRate.toLocaleString('es-UY')}</span> : null}</div>
-            <label>Condición<select className="input" value={f.condition} onChange={(e) => setF({ ...f, condition: e.target.value })}><option value="nuevo">Nuevo</option><option value="usado">CPO</option></select></label>
-            <label>Foto (opcional)
+              <select className="field-select" value={match?.slug ?? ''} onChange={(e) => search(e.target.value)} aria-label="Coincidencia">
+                {cands.map((c) => <option key={c.slug} value={c.slug}>{c.name}</option>)}
+              </select>)}
+
+            <div className="qa2-two">
+              <div>
+                <label className="fl">Precio en dólares <i>*</i></label>
+                <div className="field money"><span className="cur">USD</span>
+                  <input type="number" min={1} step="any" required value={f.price} inputMode="decimal"
+                    onChange={(e) => { setPesos(null); setF({ ...f, price: e.target.value }); }} /></div>
+              </div>
+              <div>
+                <label className="fl">Equivalente en pesos (UYU)</label>
+                <div className={`field money alt ${pesos !== null ? 'editing' : ''}`}>
+                  <input value={pesos ?? pesosShown} readOnly={!rate} placeholder={rate ? '$ 0' : 'Falta la cotización en Ajustes'} aria-label="Equivalente en pesos"
+                    onFocus={() => rate && setPesos(pesosShown)}
+                    onChange={(e) => {
+                      const v = e.target.value.replace(/[^\d]/g, ''); setPesos(v ? `$ ${num(Number(v))}` : '');
+                      if (rate && v) setF({ ...f, price: String(Math.round((Number(v) / rate) * 100) / 100) });
+                    }} onBlur={() => setPesos(null)} />
+                  <button type="button" className="icon-btn" disabled={!rate} title="Escribir el precio en pesos"
+                    onClick={(e) => (e.currentTarget.previousSibling as HTMLInputElement).focus()}><Icon name="swap" size={18} /></button>
+                </div>
+              </div>
+            </div>
+
+            <label className="fl">Condición</label>
+            <div className="seg" role="radiogroup" aria-label="Condición">
+              {CONDITIONS.map(([v, l]) => (
+                <button key={v} type="button" role="radio" aria-checked={f.condition === v} className={f.condition === v ? 'on' : ''}
+                  onClick={() => setF({ ...f, condition: v })}>{f.condition === v && <Icon name="check" size={15} />}{l}</button>))}
+            </div>
+
+            <label className="fl">Foto de portada <span className="opt">· Opcional</span></label>
+            <div className="qa2-photo">
+              <div className="ph">{thumb ? <img src={thumb} alt="" /> : <Icon name="image" size={22} />}</div>
+              <div className="txt">
+                <b>{ownPhoto ? 'Foto propia' : hasOwnPhoto && photo === undefined ? 'Foto propia (guardada)' : coverSrc ? 'Foto del catálogo' : 'Sin foto'}</b>
+                <span>{ownPhoto || (hasOwnPhoto && photo === undefined) ? 'Se muestra en la galería de la unidad.' : coverSrc ? 'Podés usar esta imagen o subir una propia.' : 'Al encontrar la ficha se usa la imagen del modelo.'}</span>
+              </div>
               <div className="row tight">
-                <label className="btn"><Icon name="image" size={14} /> {photo ? 'Cambiar' : 'Elegir foto'}
+                {(ownPhoto || (f.id && hasOwnPhoto && photo === undefined)) && <button type="button" className="link" onClick={() => setPhoto(f.id ? null : undefined)}>Quitar</button>}
+                <label className="btn"><Icon name="image" size={15} /> {thumb || hasOwnPhoto ? 'Cambiar foto' : 'Subir foto'}
                   <input type="file" accept="image/jpeg,image/png,image/webp" hidden onChange={async (e) => {
                     const file = e.target.files?.[0]; e.target.value = '';
                     if (file) try { setPhoto(await fileToDataUrl(file, 1200, 'image/jpeg')); } catch (err) { setError((err as Error).message); } }} /></label>
-                {photo && <img src={photo} alt="" className="qa-thumb" />}
-                {f.id && photo !== null && <button type="button" className="link" onClick={() => setPhoto(null)}>Quitar foto</button>}
-              </div></label>
-            <label className="full">Descripción (generada, podés editarla)
-              <textarea className="input" rows={4} maxLength={1500} value={f.description} placeholder="Se completa al encontrar la ficha."
-                onChange={(e) => { descTouched.current = true; setF({ ...f, description: e.target.value }); }} /></label>
+              </div>
+            </div>
+
+            <div className={`qa2-desc ${descOpen ? 'open' : ''}`}>
+              <button type="button" className="qa2-desc-head" onClick={() => setDescOpen(!descOpen)} aria-expanded={descOpen}>
+                <Icon name="doc" size={18} className="accent" /><b>Descripción</b><span className="spacer" />
+                <span className="muted">{descTouched.current && f.description ? 'Editada' : 'Autogenerada'} · Editable</span><Icon name="down" size={16} className="chev" />
+              </button>
+              {descOpen && <div className="qa2-desc-body">
+                <textarea className="input" rows={4} maxLength={1500} value={f.description} placeholder="Se completa al encontrar la ficha."
+                  onChange={(e) => { descTouched.current = true; setF({ ...f, description: e.target.value }); }} />
+                {match && <div className="qa2-specs">
+                  <span className="muted small">{match.specs.length} especificaciones se guardan con el producto{match.antutu ? ` · AnTuTu ${match.antutu.version.toUpperCase()}: ${num(match.antutu.total)}` : ''}.</span>
+                </div>}
+              </div>}
+            </div>
+            {error && <p className="error">{error}</p>}
+            {msg && <p className="qa2-ok">{msg}</p>}
           </div>
-          {match && (
-            <div className="qa-match">
-              <div className="row"><Icon name="layers" size={16} className="accent" /><b>{match.name}</b>
-                {match.antutu && <span className="tag outline">AnTuTu {match.antutu.version.toUpperCase()}: {match.antutu.total.toLocaleString('es-UY')}</span>}
-                {match.url && <a href={match.url} target="_blank" rel="noreferrer" className="small">Fuente</a>}</div>
-              <ul>{hl.map((s) => <li key={s.key}><span>{s.key}</span>{s.value}</li>)}</ul>
-              <span className="muted small">{match.specs.length} especificaciones se guardan con el producto.</span>
-            </div>)}
-          {error && <p className="error">{error}</p>}
-          {msg && <p style={{ color: 'var(--ok)' }}>{msg}</p>}
-          <div className="row" style={{ justifyContent: 'flex-end', marginTop: 12 }}>
-            {f.id && <button type="button" className="btn ghost" onClick={reset}>Cancelar edición</button>}
-            <button type="submit" className="btn primary"><Icon name="plus" size={16} /> {f.id ? 'Guardar cambios' : 'Cargar producto'}</button>
+          <div className="qa2-foot">
+            <button type="button" className="link-muted" onClick={() => { reset(); setMsg(''); }}><Icon name="undo" size={16} /> {f.id ? 'Cancelar edición' : 'Limpiar formulario'}</button>
+            <button type="submit" className="btn primary big"><Icon name={f.id ? 'check' : 'plus'} size={18} /> {f.id ? 'Guardar cambios' : 'Cargar producto'}</button>
           </div>
         </form>
 
-        <section className="qa-list">
-          <h2>Cargados ({q ? `${shown.length} de ${list.length}` : list.length})</h2>
-          {list.length > 0 && <div className="searchbar inline qa-search"><Icon name="search" size={18} />
-            <input placeholder="Buscar en los cargados (marca, modelo, memoria…)" value={q} onChange={(e) => setQ(e.target.value)} /></div>}
-          {!list.length && <div className="empty small-empty">Todavía no cargaste productos.</div>}
-          {list.length > 0 && !shown.length && <div className="empty small-empty">Ningún producto coincide con «{q}».</div>}
-          {shown.map((p) => (
-            <div key={p.id} className="qa-item">
-              <div className="qa-img">{(cover(p.brand, p.model, p.coverKey) ?? p.photoUrl) ? <img src={cover(p.brand, p.model, p.coverKey) ?? p.photoUrl!} alt="" /> : <Icon name="phone" size={22} className="ph-icon" />}</div>
-              <div className="qa-info"><b>{p.brand} {p.model}</b><span className="muted small">{[p.ramGb && `${p.ramGb} GB RAM`, p.storageGb && `${p.storageGb} GB`, p.condition === 'nuevo' ? 'Nuevo' : 'CPO'].filter(Boolean).join(' · ')}</span></div>
-              <b className="qa-price">{money(p.price, p.currency)}{p.currency === 'USD' && settings?.usdRate ? <small className="muted"> · $ {Math.round(p.price * settings.usdRate).toLocaleString('es-UY')}</small> : null}</b>
-              <button className="icon-btn" title="Editar" onClick={() => edit(p)}><Icon name="edit" size={16} /></button>
-              <button className="icon-btn" title="Eliminar" onClick={() => remove(p)}><Icon name="trash" size={16} /></button>
-            </div>))}
+        <section className="qa2-card">
+          <div className="qa2-card-head">
+            <span className="qa2-ico"><Icon name="list" size={20} /></span>
+            <div><h2>Productos cargados</h2><p>Buscá y editá equipos del catálogo.</p></div>
+            <span className="spacer" /><span className="count">{list.length}</span>
+          </div>
+          <div className="qa2-filters">
+            <div className="field"><Icon name="search" size={18} /><input placeholder="Marca, modelo o memoria" value={q} onChange={(e) => setQ(e.target.value)} /></div>
+            <label className="field sel"><Icon name="list" size={16} />
+              <select value={cond} onChange={(e) => setCond(e.target.value)} aria-label="Filtrar por condición">
+                <option value="">Condición</option>{CONDITIONS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+              </select><Icon name="down" size={16} /></label>
+          </div>
+          <div className="qa2-table">
+            <div className="th"><span>Equipo</span><span>Condición</span><span className="r">Precio</span><span /></div>
+            {!list.length && <div className="empty small-empty">Todavía no cargaste productos.</div>}
+            {list.length > 0 && !shown.length && <div className="empty small-empty">Ningún producto coincide con la búsqueda.</div>}
+            {rows.map((p) => {
+              const img = cover(p.brand, p.model, p.coverKey) ?? p.photoUrl;
+              return (
+                <div key={p.id} className={`tr ${f.id === p.repoId ? 'editing' : ''}`}>
+                  <div className="eq"><span className="ph">{img ? <img src={img} alt="" /> : <Icon name="phone" size={20} />}</span>
+                    <span className="nm"><b>{p.brand} {p.model}</b><small>{memLabel(p) || '—'}</small></span></div>
+                  <span><span className={`cond ${p.condition}`}>{condLabel(p.condition)}</span></span>
+                  <span className="r pr"><b>{p.currency} {num(p.price)}</b>{p.currency === 'USD' && rate ? <small>$ {num(p.price * rate)}</small> : null}</span>
+                  <span className="acts">
+                    <button className="icon-btn" title="Editar" aria-label="Editar" onClick={() => edit(p)}><Icon name="edit" size={17} /></button>
+                    <span className="more">
+                      <button className="icon-btn" title="Más opciones" aria-label="Más opciones" onClick={(e) => { e.stopPropagation(); setMenu(menu === p.id ? null : p.id); }}>⋯</button>
+                      {menu === p.id && <div className="menu" onClick={(e) => e.stopPropagation()}>
+                        <button onClick={() => { setMenu(null); void edit(p); }}><Icon name="edit" size={15} /> Editar</button>
+                        <button className="danger" onClick={() => { setMenu(null); void remove(p); }}><Icon name="trash" size={15} /> Eliminar</button>
+                      </div>}
+                    </span>
+                  </span>
+                </div>);
+            })}
+          </div>
+          {shown.length > 0 && <div className="qa2-pager">
+            <span>Mostrando {rows.length} de {shown.length} productos</span>
+            <span className="spacer" />
+            <button className="pg" disabled={pg === 0} onClick={() => setPage(pg - 1)} aria-label="Anterior"><Icon name="left" size={16} /></button>
+            <button className="pg" disabled={pg >= pages - 1} onClick={() => setPage(pg + 1)} aria-label="Siguiente"><Icon name="right" size={16} /></button>
+          </div>}
         </section>
       </div>
-    </>
+    </div>
   );
 }
 
