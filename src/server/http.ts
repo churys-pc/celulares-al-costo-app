@@ -8,6 +8,7 @@ import { getSettings, updateSettings } from './settings.ts';
 import { PhotoRepo } from './photos.ts';
 import { CoverStore } from './covers.ts';
 import { CoverJobs } from './coverJobs.ts';
+import { ImeiChecker } from './imei.ts';
 import { importOnline, searchOnline } from './lookup.ts';
 import { deleteQuick, preview, saveQuick, updateQuick } from './quickProducts.ts';
 import { repoStatus, setRepoConfig, type Secret } from './repoSync.ts';
@@ -67,12 +68,15 @@ export function createServer(db: Db, webRoot: string, dataDir: string, opts: { s
     // Inicio: todo el personal maneja los pendientes del local y puede refrescar las novedades.
     ['POST', /^\/api\/tasks$/], ['PATCH', /^\/api\/tasks\/[a-f0-9-]{36}$/], ['DELETE', /^\/api\/tasks\/[a-f0-9-]{36}$/],
     ['POST', /^\/api\/news\/refresh$/],
+    // IMEI Check: todo el personal con sesión.
+    ['POST', /^\/api\/imei\/check$/],
   ];
   const repo = new CatalogRepo(db);
   const tasks = new TaskRepo(db);
   const photos = new PhotoRepo(db, dataDir);
   const covers = new CoverStore(dataDir, undefined, webRoot, db);
   const coverJobs = new CoverJobs(db, covers);
+  const imei = new ImeiChecker();
   covers.assignKeys(db);
   const idOf = (s: string) => { const n = Number(s); if (!Number.isInteger(n) || n <= 0) throw new HttpError(400, 'ID inválido'); return n; };
 
@@ -139,6 +143,8 @@ export function createServer(db: Db, webRoot: string, dataDir: string, opts: { s
       kick(); return r;
     }],
     // «Buscar imagen»: búsquedas de portada en segundo plano.
+    ['GET', /^\/api\/imei\/providers$/, () => imei.providers()],
+    ['POST', /^\/api\/imei\/check$/, async (_m, req) => imei.check(await readJson(req))],
     ['GET', /^\/api\/cover-jobs$/, () => coverJobs.list()],
     ['POST', /^\/api\/cover-jobs$/, async (_m, req) => coverJobs.request(await readJson(req))],
     ['PATCH', /^\/api\/cover-jobs\/([a-f0-9-]{36})$/, async (m, req) => coverJobs.update(m[1], await readJson(req))],

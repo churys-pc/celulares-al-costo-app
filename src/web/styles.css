@@ -833,3 +833,42 @@ table.specs td:first-child { color: var(--muted); width: 40%; }
 }
 @media (max-height: 760px) and (min-width: 1101px) { .home3 .h3-art { display: none; } .home3 .h3-head h1 { font-size: 40px; } .home3 .h3-head { margin-bottom: 14px; } }
 @media (max-width: 1500px) { .home3 .h3-card-head h2 { font-size: 21px; } .home3 .h3-card-head { padding: 16px 20px; gap: 12px; } .home3 .h3-card-body { padding-left: 20px; padding-right: 20px; } .home3 .h3-card-foot { padding: 14px 20px; } }
+
+/* IMEI Check */
+.imei-grid { display: grid; grid-template-columns: minmax(320px, 420px) minmax(0, 1fr); gap: 20px; align-items: start; }
+.imei-card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--glow); padding: 20px 22px; min-width: 0; display: flex; flex-direction: column; gap: 12px; }
+.imei-card h2 { margin: 0; font-size: 19px; display: flex; align-items: center; gap: 10px; }
+.imei-help { margin: 0; display: flex; align-items: center; gap: 8px; color: #c9d7f2; }
+.imei-label { display: flex; flex-direction: column; gap: 6px; font-size: 14px; }
+.imei-input { font-size: 20px; letter-spacing: .08em; font-variant-numeric: tabular-nums; }
+.imei-input.bad { border-color: var(--bad); } .imei-input.ok { border-color: rgba(34, 197, 94, .6); }
+.ok-txt { color: #4ade80; display: inline-flex; align-items: center; gap: 4px; }
+.imei-sources { padding: 12px 14px; border-radius: 10px; background: rgba(5, 12, 28, .55); border: 1px solid var(--line); font-size: 14px; }
+.imei-sources ul { margin: 6px 0 0; padding-left: 18px; } .imei-sources p { margin: 6px 0 0; }
+.btn.imei-go { justify-content: center; height: 48px; font-size: 16px; }
+.imei-sum { display: flex; flex-direction: column; gap: 4px; padding: 14px 16px; border-radius: 12px; border: 1px solid; }
+.imei-sum b { font-size: 18px; }
+.imei-sum.reported { color: #fecaca; border-color: rgba(239, 68, 68, .6); background: rgba(239, 68, 68, .12); }
+.imei-sum.clean { color: #bbf7d0; border-color: rgba(34, 197, 94, .5); background: rgba(34, 197, 94, .1); }
+.imei-sum.partial { color: #fde68a; border-color: rgba(245, 158, 11, .5); background: rgba(245, 158, 11, .1); }
+.imei-sum.unverified { color: #cbd5e1; border-color: rgba(148, 163, 184, .5); background: rgba(100, 116, 139, .14); }
+.imei-sum small { color: #c9d7f2; }
+.imei-block { display: flex; flex-direction: column; gap: 8px; padding-top: 6px; }
+.imei-block code { font-size: 15px; letter-spacing: .06em; color: #dbe6fb; }
+.imei-pill { font-size: 12px; padding: 3px 10px; border-radius: 999px; border: 1px solid; }
+.imei-pill.reported { color: #fca5a5; border-color: rgba(239, 68, 68, .6); } .imei-pill.clean { color: #86efac; border-color: rgba(34, 197, 94, .5); }
+.imei-pill.partial { color: #fcd34d; border-color: rgba(245, 158, 11, .5); } .imei-pill.unverified { color: #cbd5e1; border-color: rgba(148, 163, 184, .5); }
+.imei-note { margin: 0; color: #fcd34d; font-size: 13px; }
+.imei-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.imei-table th { text-align: left; font-weight: 500; color: #9fb3d6; padding: 6px 8px; border-bottom: 1px solid var(--line); font-size: 12px; }
+.imei-table td { padding: 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.imei-table small { color: var(--muted); }
+.src-st { display: inline-flex; align-items: center; gap: 4px; font-weight: 600; }
+.src-st.reported { color: #fca5a5; } .src-st.clean { color: #86efac; } .src-st.history { color: #fcd34d; }
+.src-st.timeout, .src-st.error, .src-st.unexpected { color: #fdba74; } .src-st.not_configured { color: #cbd5e1; } .src-st.pending { color: var(--accent-2); }
+.imei-model { padding: 10px 12px; border-radius: 10px; border: 1px solid var(--line); }
+.imei-model.warn { border-color: rgba(245, 158, 11, .6); color: #fde68a; }
+.imei-apple { padding: 12px 14px; border-radius: 10px; border: 1px solid var(--line); background: rgba(5, 12, 28, .5); font-size: 14px; }
+.imei-apple ul { margin: 6px 0; padding-left: 18px; }
+.imei-provs { margin-top: 20px; }
+@media (max-width: 1100px) { .imei-grid { grid-template-columns: minmax(0, 1fr); } .imei-table { display: block; overflow-x: auto; } }
