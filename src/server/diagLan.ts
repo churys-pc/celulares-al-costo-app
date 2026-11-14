@@ -52,8 +52,9 @@ export class DiagLan {
   private https = false;
   private hits = new Map<string, { n: number; t: number }>();
   private tunnel: DiagTunnel;
-  constructor(private db: Db, private store: DiagStore, private webRoot: string, private dataDir: string, private secret: Secret = PLAIN, tunnelBin: string | null = null) {
-    this.tunnel = new DiagTunnel(tunnelBin, () => this.port || this.conf().port || DEFAULT_PORT);
+  constructor(private db: Db, private store: DiagStore, private webRoot: string, private dataDir: string, private secret: Secret = PLAIN, tunnelBin: string | null = null,
+    tunnelVerify?: (url: string, signal: AbortSignal) => Promise<boolean>) {
+    this.tunnel = new DiagTunnel(tunnelBin, () => this.port || this.conf().port || DEFAULT_PORT, tunnelVerify);
   }
   /** Enlace seguro automático (Cloudflare): activado salvo que el administrador lo apague o use su propio certificado. */
   private tunnelOn() { const c = this.conf(); return c.tunnel !== false && !c.pfxFile; }
@@ -76,7 +77,7 @@ export class DiagLan {
   /** URL del QR: solo el token, en el fragmento (no viaja en pedidos ni queda en registros del servidor).
    *  Con el enlace seguro listo (o si aparece en hasta 15 s) se usa HTTPS; si no, la red local. */
   async urlFor(token: string) {
-    if (this.tunnelOn()) { const u = await this.tunnel.ensure(15_000); if (u) return `${u}/d#t=${token}`; }
+    if (this.tunnelOn()) { const u = await this.tunnel.ensure(30_000); if (u) return `${u}/d#t=${token}`; }
     const i = this.info();
     if (!i.host) throw new DiagError(503, 'La PC no tiene una red local activa: conectala al Wi‑Fi o a la red del local.');
     return `${i.https ? 'https' : 'http'}://${i.host}:${i.port}/d#t=${token}`;

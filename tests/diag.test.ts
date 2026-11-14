@@ -281,12 +281,16 @@ test('Enlace seguro (túnel): el QR usa https cuando está listo; sin cloudflare
   fs.mkdirSync(path.join(dir, 'web', 'phone'), { recursive: true });
   const s = new DiagStore(d);
   d.prepare(`INSERT INTO settings (key, value) VALUES ('diagLan', ?)`).run(JSON.stringify({ port: 5600 + Math.floor(Math.random() * 300), host: '127.0.0.1' }));
-  const lan = new DiagLan(d, s, path.join(dir, 'web'), dir, undefined, path.resolve('tests/support/fake-cloudflared.cjs'));
+  // Verificación simulada: el enlace «aparece» en internet recién en el segundo intento.
+  let checks = 0;
+  const lan = new DiagLan(d, s, path.join(dir, 'web'), dir, undefined, path.resolve('tests/support/fake-cloudflared.cjs'),
+    async (_u, signal) => { while (!signal.aborted) { if (++checks >= 2) return true; await new Promise((r) => setTimeout(r, 200)); } return false; });
   try {
     await lan.ensure();
     const x = s.create(null);
     const url = await lan.urlFor(s.newQr(x.id).token);
     assert.match(url, /^https:\/\/prueba-enlace-seguro\.trycloudflare\.com\/d#t=[\w-]{32}$/);
+    assert.ok(checks >= 2, 'el QR espera a que el enlace responda');
     const i = lan.info();
     assert.equal(i.secure, true); assert.equal(i.note, null); assert.equal(i.tunnel.state, 'ready');
     // Pedidos que llegan por el túnel: origen https con el host del túnel.
