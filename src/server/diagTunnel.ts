@@ -34,7 +34,10 @@ export class DiagTunnel {
 
   private start() {
     this.stopping = false; this.state = 'starting'; this.error = null; this.url = null;
-    const p = spawn(this.bin!, ['tunnel', '--no-autoupdate', '--url', `http://127.0.0.1:${this.localPort()}`], { windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'] });
+    const args = ['tunnel', '--no-autoupdate', '--url', `http://127.0.0.1:${this.localPort()}`];
+    // Un .cjs es el simulador de las pruebas (corre con Node en cualquier sistema).
+    const p = this.bin!.endsWith('.cjs') ? spawn(process.execPath, [this.bin!, ...args], { windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'] })
+      : spawn(this.bin!, args, { windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'] });
     this.proc = p;
     // Al cerrar la app (o si el proceso termina por cualquier motivo) no queda cloudflared corriendo en Windows.
     const kill = () => { try { p.kill(); } catch {} };

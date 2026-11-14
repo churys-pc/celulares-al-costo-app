@@ -281,7 +281,7 @@ test('Enlace seguro (túnel): el QR usa https cuando está listo; sin cloudflare
   fs.mkdirSync(path.join(dir, 'web', 'phone'), { recursive: true });
   const s = new DiagStore(d);
   d.prepare(`INSERT INTO settings (key, value) VALUES ('diagLan', ?)`).run(JSON.stringify({ port: 5600 + Math.floor(Math.random() * 300), host: '127.0.0.1' }));
-  const lan = new DiagLan(d, s, path.join(dir, 'web'), dir, undefined, path.resolve('tests/support/fake-cloudflared.sh'));
+  const lan = new DiagLan(d, s, path.join(dir, 'web'), dir, undefined, path.resolve('tests/support/fake-cloudflared.cjs'));
   try {
     await lan.ensure();
     const x = s.create(null);
