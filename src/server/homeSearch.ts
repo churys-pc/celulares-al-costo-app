@@ -12,7 +12,7 @@ export interface SearchHit {
   modelId: number;
   brand: string;
   model: string;
-  /** Variante legible: «8/256 GB · Negro · CPO». */
+  /** Variante legible: «256 GB · CPO». */
   variant: string;
   price: number | null;
   currency: Currency | null;
@@ -59,7 +59,7 @@ export function homeSearch(db: Db, repo: CatalogRepo, q: string, limit = 8): Sea
     const label = available ? 'Disponible' : p.status === 'reservado' ? 'Reservado' : p.status === 'en_revision' ? 'En revisión' : 'Sin stock';
     hits.push({
       type: 'product', productId: p.id, modelId: p.modelId, brand: p.brand, model: p.model,
-      variant: [mem && `${mem} GB`, p.color, cond].filter(Boolean).join(' · '),
+      variant: [p.storageGb ? (p.storageGb >= 1024 && p.storageGb % 1024 === 0 ? `${p.storageGb / 1024} TB` : `${p.storageGb} GB`) : '', cond].filter(Boolean).join(' · '),
       price: p.price > 0 ? p.price : null, currency: p.price > 0 ? p.currency : null,
       available, availabilityLabel: label, availability: available ? (p.availability ?? '').trim() : '',
       coverKey: p.coverKey ?? null, photoUrl: p.photoUrl, score: rank(p.brand, p.model, toks) + (available ? 100 : 0),

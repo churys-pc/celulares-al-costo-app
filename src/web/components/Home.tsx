@@ -103,10 +103,8 @@ function HomeSearch({ settings, onPick, onAll }: { settings: Settings | null; on
                   <button key={`${h.type}-${h.productId ?? h.modelId}`} role="option" aria-selected={i === sel} className={`hs-item ${i === sel ? 'on' : ''}`}
                     onMouseEnter={() => setSel(i)} onMouseDown={(e) => e.preventDefault()} onClick={() => void pick(h)}>
                     <span className="hs-img">{img ? <img src={img} alt="" /> : <Icon name="phone" size={22} />}</span>
-                    <span className="hs-name"><b>{h.brand} {h.model}</b><small className="muted">{h.variant || (h.type === 'model' ? 'Modelo sin producto cargado' : '')}</small></span>
+                    <span className="hs-name"><b>{h.brand} {h.model}</b><small className="muted">{h.type === 'model' ? 'Sin unidades cargadas · ver ficha del modelo' : [h.variant, h.availability].filter(Boolean).join(' · ')}</small></span>
                     <span className="hs-price">{pr?.usd != null ? <><b>USD {num(pr.usd)}</b>{pr.uyu != null && <small className="muted">$ {num(pr.uyu)}</small>}</> : <small className="muted">—</small>}</span>
-                    <span className="hs-av"><span className={`hs-pill ${h.available ? 'ok' : h.availabilityLabel === 'Sin stock' ? 'out' : 'warn'}`}>{h.availabilityLabel}</span>
-                      {h.availability && <small className="muted">{h.availability}</small>}</span>
                   </button>);
               })}
               {hits!.length > 0 && <button className="hs-all link" onMouseDown={(e) => e.preventDefault()} onClick={() => onAll(q.trim())}>Ver todos los resultados en el catálogo <Icon name="arrow" size={14} /></button>}

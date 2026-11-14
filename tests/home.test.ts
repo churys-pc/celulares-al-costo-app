@@ -32,6 +32,8 @@ test('buscador de Inicio: marca, modelo, variante y código; agotados con «Sin 
   const [a56] = homeSearch(db, repo, 'a56 8/256');
   assert.equal(a56.type, 'product'); assert.equal(a56.model, 'Galaxy A56 5G'); assert.equal(a56.price, 420); assert.equal(a56.available, true);
   assert.equal(a56.coverKey, 'samsung-galaxy-a56-5g');
+  assert.equal(a56.variant, '256 GB · Nuevo', 'GB y condición (sin color)');
+  assert.equal(homeSearch(db, repo, 'iphone 15 pro cpo')[0]?.variant, '128 GB · CPO');
   // Código de modelo de Samsung (SM-A566…) encuentra el mismo equipo.
   assert.equal(homeSearch(db, repo, 'SM-A566')[0]?.productId, a56.productId);
   assert.equal(homeSearch(db, repo, 'iphone 15 pro cpo')[0]?.model, 'iPhone 15 Pro');
