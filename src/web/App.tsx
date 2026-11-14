@@ -36,7 +36,6 @@ export function App() {
   useEffect(() => { if (!user) return; const t = setInterval(() => api.settings().then(setSettings).catch(() => {}), 60_000); return () => clearInterval(t); }, [user?.email]);
   useEffect(() => { if (user && !isAdmin && section === 'cargar') setSection('catalogo'); }, [user, isAdmin, section]);
   useEffect(() => { history.replaceState(null, '', '#' + section); }, [section]);
-  useEffect(() => { if (settings) document.documentElement.style.setProperty('--accent', settings.primaryColor); }, [settings]);
 
   const go: Nav['go'] = (s, q) => { setQuery(q ?? ''); setSection(SECTIONS.some((x) => x.id === s) ? s : 'inicio'); };
   const current = SECTIONS.find((s) => s.id === section) ?? SECTIONS[0];

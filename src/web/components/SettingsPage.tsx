@@ -5,6 +5,7 @@ import { UpdatesSection } from './UpdatesSection.tsx';
 import { AccountSection, UsersSection } from './UsersSection.tsx';
 import { useIsAdmin } from '../session.ts';
 import { RepoSection } from './RepoSection.tsx';
+import { ThemeSection } from './ThemeSection.tsx';
 
 export function SettingsPage({ settings, onChange }: { settings: Settings; onChange: (s: Settings) => void }) {
   const admin = useIsAdmin();
@@ -38,6 +39,7 @@ export function SettingsPage({ settings, onChange }: { settings: Settings; onCha
     <>
       <header className="page-head"><div><h1>Ajustes</h1><p className="sub">{admin ? 'Marca, cotización, usuarios y datos del catálogo' : 'Tu cuenta y la app'}</p></div></header>
       <AccountSection />
+      <ThemeSection />
       {!admin && <div className="section"><h2>Cotización del dólar</h2>
         <p style={{ margin: 0 }}>{settings.usdRate ? <>1 USD = <b>$ {settings.usdRate.toLocaleString('es-UY')}</b></> : 'Todavía no está definida.'}</p>
         <p className="muted small">La define el administrador y llega sola a todas las PCs.</p></div>}
@@ -53,7 +55,6 @@ export function SettingsPage({ settings, onChange }: { settings: Settings; onCha
             {f.logo && <button className="btn ghost" onClick={() => setF({ ...f, logo: null })}>Usar logo por defecto</button>}
             <span className="muted small">PNG con fondo transparente recomendado. Se guarda al tocar «Guardar».</span>
           </div>
-          <label>Color de acento<input className="input color-input" type="color" value={f.primaryColor} onChange={(e) => setF({ ...f, primaryColor: e.target.value })} /></label>
           <label>Cotización del dólar (pesos por 1 USD)<input className="input" type="number" step="any" min={0} placeholder="Ej.: 40" value={f.usdRate} onChange={(e) => setF({ ...f, usdRate: e.target.value })} />
             <span className="muted small">Precio en pesos = dólares × cotización. Al guardar llega a todas las PCs.</span></label>
         </div>
