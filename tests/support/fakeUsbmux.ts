@@ -1,7 +1,9 @@
 // Simulador del servicio de Apple (usbmuxd + lockdownd + diagnostics_relay) SOLO para pruebas y desarrollo.
 // Habla el mismo protocolo que el servicio real, sin TLS (EnableSessionSSL: false).
 import net from 'node:net';
-import { toXml, parseAny } from '../../src/server/plist.ts';
+import { toXml as rawXml, parseAny } from '../../src/server/plist.ts';
+// Como el servicio real de Apple: plist «formateado», con saltos de línea y tabulaciones entre etiquetas.
+const toXml = (v: unknown) => rawXml(v).replace(/(<\/[a-z]+>|<(?:dict|array|plist[^>]*)>)(?=<)/g, '$1\n\t');
 
 export interface FakeDevice {
   udid: string; deviceId: number; paired: boolean; locked?: boolean; values: Record<string, any>;

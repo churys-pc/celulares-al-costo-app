@@ -103,6 +103,9 @@ test('plist: XML ida y vuelta, y lectura de plist binario', () => {
   const back: any = parseXml(toXml(v));
   assert.equal(back.a, 'x & <y>'); assert.equal(back.n, 42); assert.equal(back.big, 2n ** 60n); assert.equal(back.f, 1.5); assert.equal(back.t, true);
   assert.equal(back.d.toString(), 'hola'); assert.deepEqual(back.arr, [1, 'dos', { k: false }]);
+  // Formato de Apple: espacio entre etiquetas (se ignora) y espacios dentro de <string> (se conservan).
+  const apple = '<?xml version="1.0" encoding="UTF-8"?>\n<plist version="1.0">\n<dict>\n\t<key>DeviceList</key>\n\t<array>\n\t\t<dict>\n\t\t\t<key>DeviceID</key>\n\t\t\t<integer>3</integer>\n\t\t\t<key>Name</key>\n\t\t\t<string>  dos  espacios </string>\n\t\t\t<key>Empty</key>\n\t\t\t<string></string>\n\t\t</dict>\n\t</array>\n</dict>\n</plist>\n';
+  assert.deepEqual(parseXml(apple), { DeviceList: [{ DeviceID: 3, Name: '  dos  espacios ', Empty: '' }] });
   // bplist00 armado a mano: { "HostID": "H1", "N": 7, "B": true }
   const objs = [Buffer.from([0xd3, 1, 2, 3, 4, 5, 6]), Buffer.from([0x56, ...Buffer.from('HostID')]), Buffer.from([0x51, ...Buffer.from('N')]), Buffer.from([0x51, ...Buffer.from('B')]),
     Buffer.from([0x52, ...Buffer.from('H1')]), Buffer.from([0x10, 7]), Buffer.from([0x09])];

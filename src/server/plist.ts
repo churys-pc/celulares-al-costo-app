@@ -32,12 +32,15 @@ export function parseXml(text: string): PlistValue {
   const toks: { close: boolean; name: string; self: boolean; text?: string }[] = [];
   let m: RegExpExecArray | null;
   while ((m = re.exec(body))) {
-    if (m[5] !== undefined) { if (m[5].trim() || toks.at(-1)?.name === 'string' || toks.at(-1)?.name === 'key') toks.push({ close: false, name: '#text', self: false, text: m[5] }); }
+    // El texto solo importa dentro de una etiqueta abierta (<string> o <key> conservan espacios); el espacio entre
+    // etiquetas (saltos de línea y tabulaciones de los plist «lindos» de Apple) se descarta.
+    if (m[5] !== undefined) { const prev = toks.at(-1); if (m[5].trim() || (prev && !prev.close && !prev.self && (prev.name === 'string' || prev.name === 'key'))) toks.push({ close: false, name: '#text', self: false, text: m[5] }); }
     else toks.push({ close: m[1] === '/', name: m[2], self: m[4] === '/' });
   }
   let i = 0;
   const textUntil = (name: string) => { let s = ''; while (i < toks.length && !(toks[i].close && toks[i].name === name)) { s += toks[i].text ?? ''; i++; } i++; return s; };
   const val = (): PlistValue => {
+    while (toks[i]?.name === '#text' && !toks[i].text!.trim()) i++; // por las dudas: espacio suelto
     const t = toks[i++];
     if (!t) throw new Error('plist incompleto');
     if (t.name === 'plist') { const v = val(); while (i < toks.length && !(toks[i].close && toks[i].name === 'plist')) i++; i++; return v; }
@@ -52,10 +55,11 @@ export function parseXml(text: string): PlistValue {
       case 'real': return Number(textUntil('real').trim());
       case 'date': return new Date(textUntil('date').trim());
       case 'data': return Buffer.from(textUntil('data').replace(/\s+/g, ''), 'base64');
-      case 'array': { const a: PlistValue[] = []; while (!(toks[i].close && toks[i].name === 'array')) a.push(val()); i++; return a; }
+      case 'array': { const a: PlistValue[] = []; while (!(toks[i].close && toks[i].name === 'array')) { if (toks[i].name === '#text' && !toks[i].text!.trim()) { i++; continue; } a.push(val()); } i++; return a; }
       case 'dict': {
         const o: Record<string, PlistValue> = {};
         while (!(toks[i].close && toks[i].name === 'dict')) {
+          if (toks[i].name === '#text' && !toks[i].text!.trim()) { i++; continue; }
           const k = toks[i++]; if (k.name !== 'key') throw new Error('dict sin clave');
           const key = unesc(textUntil('key'));
           o[key] = val();
