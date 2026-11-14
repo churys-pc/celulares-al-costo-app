@@ -1,9 +1,9 @@
 // Inicio para el personal del local: buscador de equipos, pendientes del local y novedades de celulares.
 import { useEffect, useRef, useState } from 'react';
 import type { CompareModel, ProductDetail, Settings, Stats } from '../../shared/types.ts';
-import { api, type NewsState, type SearchHit, type Task } from '../api.ts';
+import { api, type NewsItem, type NewsState, type SearchHit, type Task } from '../api.ts';
 import { Icon } from '../icons.tsx';
-import { SECTIONS, type Nav } from '../sections.ts';
+import type { Nav } from '../sections.ts';
 import { useCovers } from '../covers.ts';
 import { dualPrice, num } from '../format.ts';
 import { iosSupport, IOS_SOURCE } from '../../shared/iosSupport.ts';
@@ -25,10 +25,10 @@ export function Home({ settings, go }: { settings: Settings | null } & Nav) {
   }
 
   return (
-    <div className="home2">
-      <header className="page-head">
-        <div><h1>Inicio</h1><p className="sub">{settings?.slogan}</p></div>
-        {stats && <div className="home-stats muted small">{nf(stats.products)} productos · {nf(stats.stockTotal)} unidades en stock</div>}
+    <div className="home3">
+      <header className="h3-head">
+        <div><h1>Inicio</h1><p>Encontrá equipos y organizá el día en el local.</p></div>
+        {stats && <div className="h3-stock"><Icon name="box" size={18} className="accent" />{nf(stats.stockTotal)} unidades en stock</div>}
       </header>
 
       <HomeSearch settings={settings} onPick={choose} onAll={(q) => go('catalogo', q)} />
@@ -38,19 +38,17 @@ export function Home({ settings, go }: { settings: Settings | null } & Nav) {
         <NewsPanel />
       </div>
 
-      <section className="home-tools">
-        <div className="sec-head"><h2><Icon name="layers" size={20} className="accent" />Herramientas</h2></div>
-        <div className="tools">
-          {(['comparador', 'diagnostico', 'imei'] as const).map((id) => {
-            const s = SECTIONS.find((x) => x.id === id)!;
-            const title = { comparador: 'Comparador avanzado', diagnostico: 'Diagnóstico iPhone (vía QR)', imei: 'Verificación de IMEI' }[id];
-            return (
-              <button key={id} className="tool" onClick={() => go(id)}>
-                <Icon name={id === 'diagnostico' ? 'qr' : s.icon} size={30} className="accent" />
-                <b>{title}</b><span>{s.desc}</span>
-                <Icon name="arrow" size={16} className="tool-arrow" />
-              </button>);
-          })}
+      <section className="h3-quick">
+        <h2>Accesos rápidos</h2>
+        <div className="h3-quick-grid">
+          {([['comparador', 'layers', 'Comparar equipos', 'Poné dos modelos lado a lado.'],
+             ['imei', 'barcode', 'Verificar IMEI', 'Consultá el estado de un equipo.'],
+             ['diagnostico', 'pulse', 'Abrir diagnóstico', 'Entrá a las pruebas del equipo.']] as const).map(([id, icon, t, d]) => (
+            <button key={id} className="h3-q" onClick={() => go(id)}>
+              <span className="h3-tile"><Icon name={icon} size={22} /></span>
+              <span className="h3-q-txt"><b>{t}</b><small>{d}</small></span>
+              <Icon name="arrow" size={18} className="h3-q-arrow" />
+            </button>))}
         </div>
       </section>
 
@@ -89,42 +87,80 @@ function HomeSearch({ settings, onPick, onAll }: { settings: Settings | null; on
   const pick = async (h: SearchHit) => { setFocus(false); ref.current?.blur(); await onPick(h); };
   const show = focus && q.trim() && hits !== null;
 
+  const run = () => { if (hits?.[sel]) void pick(hits[sel]); else if (q.trim()) { ref.current?.focus(); setFocus(true); } };
   return (
-    <section className="home-search">
-      <h2 className="home-h"><Icon name="search" size={20} className="accent" />Buscá un equipo</h2>
-      <div className="hs-wrap">
-        <form className="searchbar hs-bar" onSubmit={(e) => { e.preventDefault(); if (hits?.[sel]) void pick(hits[sel]); }}>
-          <Icon name="search" size={18} />
-          <input ref={ref} value={q} placeholder="Marca, modelo, variante o código (ej. A56 8/256, iPhone 15 Pro, SM-A566B)"
-            onChange={(e) => setQ(e.target.value)} onFocus={() => setFocus(true)} onBlur={() => setTimeout(() => setFocus(false), 150)}
-            onKeyDown={(e) => {
-              if (!hits?.length) return;
-              if (e.key === 'ArrowDown') { e.preventDefault(); setSel((s) => Math.min(hits.length - 1, s + 1)); }
-              if (e.key === 'ArrowUp') { e.preventDefault(); setSel((s) => Math.max(0, s - 1)); }
-              if (e.key === 'Escape') { setQ(''); }
-            }} aria-label="Buscar un equipo" role="combobox" aria-expanded={!!show} />
-          {q ? <button type="button" className="icon-btn" onClick={() => { setQ(''); ref.current?.focus(); }} aria-label="Borrar"><Icon name="x" size={16} /></button> : <kbd>Ctrl + K</kbd>}
-        </form>
-        {show && (
-          <div className="hs-list" role="listbox">
-            {hits!.length === 0 && <div className="hs-empty muted">No hay equipos que coincidan con «{q.trim()}».</div>}
-            {hits!.map((h, i) => {
-              const img = cover(h.brand, h.model, h.coverKey) ?? h.photoUrl;
-              const pr = h.price && h.currency ? dualPrice({ price: h.price, currency: h.currency }, settings) : null;
-              return (
-                <button key={`${h.type}-${h.productId ?? h.modelId}`} role="option" aria-selected={i === sel} className={`hs-item ${i === sel ? 'on' : ''}`}
-                  onMouseEnter={() => setSel(i)} onMouseDown={(e) => e.preventDefault()} onClick={() => void pick(h)}>
-                  <span className="hs-img">{img ? <img src={img} alt="" /> : <Icon name="phone" size={22} />}</span>
-                  <span className="hs-name"><b>{h.brand} {h.model}</b><small className="muted">{h.variant || (h.type === 'model' ? 'Modelo sin producto cargado' : '')}</small></span>
-                  <span className="hs-price">{pr?.usd != null ? <><b>USD {num(pr.usd)}</b>{pr.uyu != null && <small className="muted">$ {num(pr.uyu)}</small>}</> : <small className="muted">—</small>}</span>
-                  <span className="hs-av"><span className={`hs-pill ${h.available ? 'ok' : h.availabilityLabel === 'Sin stock' ? 'out' : 'warn'}`}>{h.availabilityLabel}</span>
-                    {h.availability && <small className="muted">{h.availability}</small>}</span>
-                </button>);
-            })}
-            {hits!.length > 0 && <button className="hs-all link" onMouseDown={(e) => e.preventDefault()} onClick={() => onAll(q.trim())}>Ver todos los resultados en el catálogo <Icon name="arrow" size={14} /></button>}
-          </div>)}
+    <section className="h3-search">
+      <div className="h3-search-main">
+        <div className="h3-title"><span className="h3-tile big"><Icon name="search" size={20} /></span><h2>Buscá un equipo</h2></div>
+        <div className="hs-wrap">
+          <form className="h3-bar" onSubmit={(e) => { e.preventDefault(); run(); }}>
+            <Icon name="search" size={20} />
+            <input ref={ref} value={q} placeholder="Marca, modelo, memoria o código"
+              onChange={(e) => setQ(e.target.value)} onFocus={() => setFocus(true)} onBlur={() => setTimeout(() => setFocus(false), 150)}
+              onKeyDown={(e) => {
+                if (e.key === 'Escape') { setQ(''); return; }
+                if (!hits?.length) return;
+                if (e.key === 'ArrowDown') { e.preventDefault(); setSel((s) => Math.min(hits.length - 1, s + 1)); }
+                if (e.key === 'ArrowUp') { e.preventDefault(); setSel((s) => Math.max(0, s - 1)); }
+              }} aria-label="Buscar un equipo" role="combobox" aria-expanded={!!show} />
+            {q ? <button type="button" className="icon-btn" onClick={() => { setQ(''); ref.current?.focus(); }} aria-label="Borrar"><Icon name="x" size={16} /></button>
+              : <span className="keys"><kbd>Ctrl</kbd><kbd>K</kbd></span>}
+            <button type="submit" className="btn primary h3-go">Buscar</button>
+          </form>
+          {show && (
+            <div className="hs-list" role="listbox">
+              {hits!.length === 0 && <div className="hs-empty muted">No hay equipos que coincidan con «{q.trim()}».</div>}
+              {hits!.map((h, i) => {
+                const img = cover(h.brand, h.model, h.coverKey) ?? h.photoUrl;
+                const pr = h.price && h.currency ? dualPrice({ price: h.price, currency: h.currency }, settings) : null;
+                return (
+                  <button key={`${h.type}-${h.productId ?? h.modelId}`} role="option" aria-selected={i === sel} className={`hs-item ${i === sel ? 'on' : ''}`}
+                    onMouseEnter={() => setSel(i)} onMouseDown={(e) => e.preventDefault()} onClick={() => void pick(h)}>
+                    <span className="hs-img">{img ? <img src={img} alt="" /> : <Icon name="phone" size={22} />}</span>
+                    <span className="hs-name"><b>{h.brand} {h.model}</b><small className="muted">{h.variant || (h.type === 'model' ? 'Modelo sin producto cargado' : '')}</small></span>
+                    <span className="hs-price">{pr?.usd != null ? <><b>USD {num(pr.usd)}</b>{pr.uyu != null && <small className="muted">$ {num(pr.uyu)}</small>}</> : <small className="muted">—</small>}</span>
+                    <span className="hs-av"><span className={`hs-pill ${h.available ? 'ok' : h.availabilityLabel === 'Sin stock' ? 'out' : 'warn'}`}>{h.availabilityLabel}</span>
+                      {h.availability && <small className="muted">{h.availability}</small>}</span>
+                  </button>);
+              })}
+              {hits!.length > 0 && <button className="hs-all link" onMouseDown={(e) => e.preventDefault()} onClick={() => onAll(q.trim())}>Ver todos los resultados en el catálogo <Icon name="arrow" size={14} /></button>}
+            </div>)}
+        </div>
+        <div className="h3-try"><span>Probá con</span>
+          {['iPhone 15 Pro', 'Galaxy A56 8/256', 'SM-A566B'].map((t) => (
+            <button key={t} type="button" onMouseDown={(e) => e.preventDefault()} onClick={() => { setQ(t); setFocus(true); ref.current?.focus(); }}>{t}</button>))}
+        </div>
       </div>
+      <SearchArt />
     </section>
+  );
+}
+
+/** Ilustración del buscador (celular + lupa), dibujada con SVG propio. */
+function SearchArt() {
+  const dots = [];
+  for (let y = 0; y < 9; y++) for (let x = 0; x < 17; x++) dots.push(<circle key={`${x}-${y}`} cx={8 + x * 25} cy={10 + y * 25} r={1.3} />);
+  return (
+    <svg className="h3-art" viewBox="0 0 430 230" aria-hidden="true">
+      <g fill="rgba(110,160,255,.28)">{dots}</g>
+      <g fill="none" stroke="rgba(110,170,255,.35)" strokeWidth="1.2">
+        <ellipse cx="240" cy="112" rx="150" ry="100" /><ellipse cx="240" cy="112" rx="112" ry="78" />
+      </g>
+      <g fill="#3f86ff"><circle cx="96" cy="94" r="4" /><circle cx="370" cy="48" r="4" /><circle cx="388" cy="135" r="4" /><circle cx="150" cy="196" r="4" /></g>
+      <g transform="rotate(14 230 112)">
+        <rect x="185" y="20" width="96" height="180" rx="18" fill="rgba(20,50,110,.55)" stroke="#5aa2ff" strokeWidth="3" />
+        <rect x="193" y="30" width="80" height="160" rx="12" fill="rgba(30,70,150,.35)" stroke="rgba(120,180,255,.5)" />
+        <rect x="218" y="36" width="30" height="5" rx="2.5" fill="#5aa2ff" />
+        <rect x="208" y="62" width="50" height="40" rx="8" fill="rgba(110,170,255,.35)" stroke="#6eaaff" />
+        <path d="M206 120h52M206 132h52M206 144h34" stroke="#6eaaff" strokeWidth="4" strokeLinecap="round" />
+        <path d="M222 178h22" stroke="#6eaaff" strokeWidth="4" strokeLinecap="round" />
+      </g>
+      <rect x="128" y="128" width="40" height="40" rx="8" fill="rgba(30,70,150,.6)" stroke="#5aa2ff" />
+      <path d="M140 148l6 6 11-12" fill="none" stroke="#8cc2ff" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" />
+      <rect x="300" y="82" width="70" height="70" rx="14" fill="url(#h3g)" stroke="#7fb8ff" />
+      <circle cx="331" cy="113" r="13" fill="none" stroke="#fff" strokeWidth="3.4" /><path d="M341 123l11 11" stroke="#fff" strokeWidth="3.6" strokeLinecap="round" />
+      <defs><linearGradient id="h3g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#3d8cff" /><stop offset="1" stopColor="#1d5fd6" /></linearGradient></defs>
+    </svg>
   );
 }
 
@@ -166,54 +202,69 @@ function TasksPanel() {
   const [error, setError] = useState('');
   const [editing, setEditing] = useState<Task | 'new' | null>(null);
   const [showDone, setShowDone] = useState(false);
+  const [menu, setMenu] = useState<string | null>(null);
   const load = () => api.tasks().then((t) => { setTasks(t); setError(''); }).catch((e) => setError(e.message));
   useEffect(() => { void load(); const t = setInterval(load, 30_000); return () => clearInterval(t); }, []);
+  useEffect(() => { if (!menu) return; const c = () => setMenu(null); window.addEventListener('click', c); return () => window.removeEventListener('click', c); }, [menu]);
 
   const run = async (p: Promise<unknown>) => { try { await p; } catch (e) { setError((e as Error).message); } await load(); };
   const open = (tasks ?? []).filter((t) => !t.done);
   const done = (tasks ?? []).filter((t) => t.done);
+  const row = (t: Task) => <TaskRow key={t.id} t={t} menuOpen={menu === t.id} onMenu={() => setMenu(menu === t.id ? null : t.id)}
+    onToggle={() => run(api.updateTask(t.id, { done: !t.done }))} onEdit={() => { setMenu(null); setEditing(t); }}
+    onDelete={() => { setMenu(null); if (confirm(`¿Eliminar «${t.title}»?`)) void run(api.deleteTask(t.id)); }} />;
 
   return (
-    <section className="home-panel">
-      <div className="hp-head">
-        <h2 className="home-h"><Icon name="task" size={20} className="accent" />Pendientes del local</h2>
-        <button className="btn primary small-btn" onClick={() => setEditing('new')}><Icon name="plus" size={15} /> Agregar pendiente</button>
+    <section className="h3-card">
+      <div className="h3-card-head">
+        <span className="h3-tile"><Icon name="clipcheck" size={20} /></span>
+        <h2>Pendientes del local</h2>
+        <button className="btn primary h3-add" onClick={() => setEditing('new')}><Icon name="plus" size={16} /> Agregar pendiente</button>
       </div>
-      {error && <p className="err small">{error}</p>}
-      {editing && <TaskForm task={editing === 'new' ? null : editing} onCancel={() => setEditing(null)}
-        onSave={async (b) => { await run(editing === 'new' ? api.addTask(b) : api.updateTask(editing.id, b)); setEditing(null); }} />}
-      {tasks === null ? <p className="muted small">Cargando…</p> : open.length === 0 && !editing
-        ? <div className="hp-empty muted">No hay pendientes abiertos.</div>
-        : <ul className="tasks">{open.map((t) => <TaskRow key={t.id} t={t} onToggle={() => run(api.updateTask(t.id, { done: true }))}
-            onEdit={() => setEditing(t)} onDelete={() => confirm(`¿Eliminar «${t.title}»?`) && run(api.deleteTask(t.id))} />)}</ul>}
-      {done.length > 0 && (
-        <div className="tasks-done">
-          <button className="td-toggle" onClick={() => setShowDone(!showDone)} aria-expanded={showDone}>
-            <Icon name="down" size={16} className={showDone ? 'rot' : ''} /> Completadas ({done.length})
-          </button>
-          {showDone && <ul className="tasks">{done.map((t) => <TaskRow key={t.id} t={t} onToggle={() => run(api.updateTask(t.id, { done: false }))}
-            onEdit={() => setEditing(t)} onDelete={() => confirm(`¿Eliminar «${t.title}»?`) && run(api.deleteTask(t.id))} />)}</ul>}
-        </div>)}
+      <div className="h3-card-body">
+        {error && <p className="err small">{error}</p>}
+        {editing && <TaskForm task={editing === 'new' ? null : editing} onCancel={() => setEditing(null)}
+          onSave={async (b) => { await run(editing === 'new' ? api.addTask(b) : api.updateTask(editing.id, b)); setEditing(null); }} />}
+        {tasks === null ? <p className="muted small h3-pad">Cargando…</p> : open.length === 0 && !editing
+          ? <div className="hp-empty muted">No hay pendientes abiertos.</div>
+          : <ul className="tasks3">{open.map(row)}</ul>}
+        {showDone && done.length > 0 && <>
+          <div className="h3-sub">Completadas</div>
+          <ul className="tasks3 done">{done.map(row)}</ul>
+        </>}
+      </div>
+      <div className="h3-card-foot">
+        <span>{open.length} {open.length === 1 ? 'pendiente' : 'pendientes'}</span>
+        <span className="spacer" />
+        {done.length > 0 && <button className="link" onClick={() => setShowDone(!showDone)} aria-expanded={showDone}>
+          {showDone ? 'Ocultar completados' : `Ver completados (${done.length})`} <Icon name={showDone ? 'down' : 'right'} size={15} /></button>}
+      </div>
     </section>
   );
 }
 
-function TaskRow({ t, onToggle, onEdit, onDelete }: { t: Task; onToggle: () => void; onEdit: () => void; onDelete: () => void }) {
+const isToday = (iso: string) => new Date(iso).toDateString() === new Date().toDateString();
+
+function TaskRow({ t, menuOpen, onMenu, onToggle, onEdit, onDelete }: { t: Task; menuOpen: boolean; onMenu: () => void; onToggle: () => void; onEdit: () => void; onDelete: () => void }) {
   return (
-    <li className={`task ${t.done ? 'done' : ''}`}>
+    <li className={`task3 ${t.done ? 'done' : ''}`}>
       <button className="task-check" onClick={onToggle} aria-label={t.done ? 'Reabrir' : 'Marcar como completada'} title={t.done ? 'Reabrir' : 'Completar'}>
         {t.done && <Icon name="check" size={14} />}
       </button>
       <div className="task-body">
         <b>{t.title}</b>
         {t.description && <p>{t.description}</p>}
-        <small className="muted">{t.done && t.completedAt ? `Completada el ${fecha(t.completedAt)}` : `Creada el ${fecha(t.createdAt)}`}{t.createdBy ? ` · ${t.createdBy.split('@')[0]}` : ''}</small>
+        {t.done && t.completedAt && <small className="muted">Completada el {fecha(t.completedAt)}{t.createdBy ? ` · ${t.createdBy.split('@')[0]}` : ''}</small>}
       </div>
-      <div className="task-actions">
-        {t.done && <button className="icon-btn" onClick={onToggle} title="Reabrir" aria-label="Reabrir"><Icon name="undo" size={15} /></button>}
-        <button className="icon-btn" onClick={onEdit} title="Editar" aria-label="Editar"><Icon name="edit" size={15} /></button>
-        <button className="icon-btn" onClick={onDelete} title="Eliminar" aria-label="Eliminar"><Icon name="trash" size={15} /></button>
-      </div>
+      {!t.done && isToday(t.createdAt) && <span className="h3-today" title={`Creado hoy${t.createdBy ? ` por ${t.createdBy.split('@')[0]}` : ''}`}>Hoy</span>}
+      <span className="more">
+        <button className="icon-btn dots" onClick={(e) => { e.stopPropagation(); onMenu(); }} title="Opciones" aria-label="Opciones">⋯</button>
+        {menuOpen && <div className="menu" onClick={(e) => e.stopPropagation()}>
+          <button onClick={onToggle}><Icon name={t.done ? 'undo' : 'check'} size={15} /> {t.done ? 'Reabrir' : 'Completar'}</button>
+          <button onClick={onEdit}><Icon name="edit" size={15} /> Editar</button>
+          <button className="danger" onClick={onDelete}><Icon name="trash" size={15} /> Eliminar</button>
+        </div>}
+      </span>
     </li>
   );
 }
@@ -234,6 +285,16 @@ function TaskForm({ task, onSave, onCancel }: { task: Task | null; onSave: (b: {
   );
 }
 
+const BRAND_CLS: Record<string, string> = { Apple: 'apple', Samsung: 'samsung', Xiaomi: 'xiaomi', Motorola: 'motorola', Honor: 'honor' };
+/** Ícono según el tema de la nota: actualización/seguridad, IA/funciones nuevas, ubicación o lanzamiento. */
+function newsIcon(n: NewsItem) {
+  const t = `${n.title} ${n.summary}`;
+  if (/ubicaci|gps|mapa|location/i.test(t)) return 'pin';
+  if (/\b(ia|ai)\b|intelligence|gemini|galaxy ai|inteligencia/i.test(t)) return 'sparkle';
+  if (/actualiz|update|corrige|parche|seguridad|ios \d|one ui|hyperos|android \d/i.test(t)) return 'shieldcheck';
+  return 'phone';
+}
+
 /** «Novedades de celulares»: hasta tres notas recientes con fuente; sin conexión muestra las guardadas. */
 function NewsPanel() {
   const [st, setSt] = useState<NewsState | null>(null);
@@ -249,25 +310,30 @@ function NewsPanel() {
   const offline = !!st?.error && !!st.lastAttemptAt && (!st.fetchedAt || st.lastAttemptAt > st.fetchedAt);
 
   return (
-    <section className="home-panel">
-      <div className="hp-head">
-        <h2 className="home-h"><Icon name="news" size={20} className="accent" />Novedades de celulares</h2>
-        <button className="icon-btn" onClick={refresh} disabled={busy} title="Actualizar novedades" aria-label="Actualizar novedades">
-          <Icon name="refresh" size={16} className={busy ? 'spin' : ''} /></button>
+    <section className="h3-card">
+      <div className="h3-card-head">
+        <span className="h3-tile"><Icon name="news" size={20} /></span>
+        <h2>Novedades de celulares</h2>
+        <button className="h3-refresh" onClick={refresh} disabled={busy} title="Actualizar novedades" aria-label="Actualizar novedades">
+          <Icon name="refresh" size={17} className={busy ? 'spin' : ''} /></button>
       </div>
-      {offline && st!.items.length > 0 && <p className="hp-note small">Sin conexión: se muestran las últimas novedades guardadas{st!.fetchedAt ? ` (actualizadas el ${fecha(st!.fetchedAt)})` : ''}.</p>}
-      {!st ? <p className="muted small">Cargando…</p> : st.items.length === 0
-        ? <div className="hp-empty muted">{busy ? 'Buscando novedades…' : 'No hay novedades disponibles'}</div>
-        : <div className="news">
-            {st.items.map((n) => (
-              <article key={n.url} className="news-item">
-                <div className="row tight"><span className="news-brand">{n.brand}</span><small className="muted">{fecha(n.date)}</small></div>
-                <h3><a href={n.url} target="_blank" rel="noreferrer">{n.title}</a></h3>
-                {n.summary && <p>{n.summary}</p>}
-                <a className="news-src small" href={n.url} target="_blank" rel="noreferrer">{n.source} <Icon name="external" size={13} /></a>
-              </article>))}
-          </div>}
-      {st?.fetchedAt && !offline && <p className="muted small hp-foot">Actualizado el {fecha(st.fetchedAt)} {new Date(st.fetchedAt).toLocaleTimeString('es-UY', { hour: '2-digit', minute: '2-digit' })}</p>}
+      <div className="h3-card-body">
+        {offline && st!.items.length > 0 && <p className="hp-note small">Sin conexión: se muestran las últimas novedades guardadas{st!.fetchedAt ? ` (actualizadas el ${fecha(st!.fetchedAt)})` : ''}.</p>}
+        {!st ? <p className="muted small h3-pad">Cargando…</p> : st.items.length === 0
+          ? <div className="hp-empty muted">{busy ? 'Buscando novedades…' : 'No hay novedades disponibles'}</div>
+          : <ul className="news3">
+              {st.items.map((n) => (
+                <li key={n.url} className={`n3 ${BRAND_CLS[n.brand] ?? 'other'}`}>
+                  <span className="n3-ico"><Icon name={newsIcon(n)} size={20} /></span>
+                  <div className="n3-body">
+                    <div className="n3-meta"><b className="n3-brand">{n.brand}</b><span>· {fecha(n.date, false)}</span>
+                      <span className="spacer" /><a className="n3-src" href={n.url} target="_blank" rel="noreferrer">{n.source} <Icon name="external" size={14} /></a></div>
+                    <a className="n3-title" href={n.url} target="_blank" rel="noreferrer">{n.title}</a>
+                    {n.summary && <p>{n.summary}</p>}
+                  </div>
+                </li>))}
+            </ul>}
+      </div>
     </section>
   );
 }

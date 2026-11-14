@@ -58,9 +58,11 @@ export function App() {
               <Icon name={s.icon} size={22} /><span>{s.label}</span>
             </button>))}
           <div className="side-user">
-            <span title={user.email}>{user.email}</span>
-            <small>{isAdmin ? 'Administrador' : 'Vendedor'}</small>
-            <button className="link" onClick={async () => setAuth(await api.logout())}>Cerrar sesión</button>
+            <button className="su-ico" onClick={async () => setAuth(await api.logout())} title="Cerrar sesión" aria-label="Cerrar sesión"><Icon name="logout" size={20} /></button>
+            <div className="su-txt">
+              <b title={user.email}>{isAdmin ? 'Administrador' : 'Vendedor'}</b>
+              <button className="link" onClick={async () => setAuth(await api.logout())}>Cerrar sesión</button>
+            </div>
           </div>
         </nav>
         <main className="main">
