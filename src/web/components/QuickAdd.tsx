@@ -215,7 +215,7 @@ export function QuickAdd({ settings }: { settings: Settings | null }) {
               </select><Icon name="down" size={16} /></label>
           </div>
           <div className="qa2-table">
-            <div className="th"><span>Equipo</span><span>Condición</span><span className="r">Precio</span><span /></div>
+            <div className="th"><span>Equipo</span><span className="cond-col">Condición</span><span className="r">Precio</span><span /></div>
             {!list.length && <div className="empty small-empty">Todavía no cargaste productos.</div>}
             {list.length > 0 && !shown.length && <div className="empty small-empty">Ningún producto coincide con la búsqueda.</div>}
             {rows.map((p) => {
@@ -223,8 +223,8 @@ export function QuickAdd({ settings }: { settings: Settings | null }) {
               return (
                 <div key={p.id} className={`tr ${f.id === p.repoId ? 'editing' : ''}`}>
                   <div className="eq"><span className="ph">{img ? <img src={img} alt="" /> : <Icon name="phone" size={20} />}</span>
-                    <span className="nm"><b>{p.brand} {p.model}</b><small>{memLabel(p) || '—'}</small></span></div>
-                  <span><span className={`cond ${p.condition}`}>{condLabel(p.condition)}</span></span>
+                    <span className="nm"><b>{p.brand} {p.model}</b><small>{memLabel(p) || '—'}<span className={`cond cond-inline ${p.condition}`}>{condLabel(p.condition)}</span></small></span></div>
+                  <span className="cond-col"><span className={`cond ${p.condition}`}>{condLabel(p.condition)}</span></span>
                   <span className="r pr"><b>{p.currency} {num(p.price)}</b>{p.currency === 'USD' && rate ? <small>$ {num(p.price * rate)}</small> : null}</span>
                   <span className="acts">
                     <button className="icon-btn" title="Editar" aria-label="Editar" onClick={() => edit(p)}><Icon name="edit" size={17} /></button>

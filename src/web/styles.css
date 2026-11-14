@@ -762,3 +762,27 @@ table.specs td:first-child { color: var(--muted); width: 40%; }
 .n3-meta { flex-wrap: wrap; row-gap: 2px; } .n3-meta > span:nth-child(2) { white-space: nowrap; }
 .h3-card-head h2 { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 @media (max-width: 1360px) { .home3 .home-cols { grid-template-columns: minmax(0, 1fr); } }
+/* Tabla de «Productos cargados» según el ancho de la tarjeta (no de la ventana). */
+.qa2-card { container-type: inline-size; }
+.cond-inline { display: none; }
+@container (max-width: 640px) {
+  .qa2-table .th, .qa2-table .tr { grid-template-columns: minmax(0, 1fr) auto auto; padding: 0 18px; gap: 10px; }
+  .qa2-table .cond-col { display: none; }
+  .cond-inline { display: inline-block; margin-left: 8px; padding: 2px 8px; font-size: 11px; vertical-align: middle; }
+  .qa2-table .nm small { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 0; }
+  .qa2-table .ph { width: 46px; height: 46px; }
+  .qa2-table .eq { gap: 12px; }
+  .qa2-table .acts { gap: 2px; }
+}
+@container (max-width: 380px) {
+  .qa2-table .ph { display: none; }
+  .qa2-table .acts .icon-btn:not(.more .icon-btn) { display: none; }
+}
+@container (max-width: 640px) {
+  .cond-inline { margin-left: 0; }
+  .qa2-table .nm small { gap: 4px 8px; }
+  .qa2-filters { padding: 18px 18px 14px; }
+  .qa2-card-head { padding: 20px 18px; }
+  .qa2-pager { padding: 16px 18px; }
+}
+@container (max-width: 480px) { .qa2-filters { flex-direction: column; } .qa2-filters .field.sel { width: auto; } }
