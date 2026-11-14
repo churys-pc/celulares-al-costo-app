@@ -222,6 +222,9 @@ table.specs td:first-child { color: var(--muted); width: 40%; }
 .pres { position: fixed; inset: 0; z-index: 50; display: grid; grid-template-rows: auto 1fr auto; padding: 18px 28px;
   background: radial-gradient(1200px 700px at 70% 0%, rgba(32, 110, 255, .28), transparent 60%), radial-gradient(900px 600px at 0% 100%, rgba(0, 170, 255, .14), transparent 60%), #040a18; }
 .pres-top { display: flex; align-items: center; gap: 12px; }
+/* App de Windows: se deja libre la zona de los botones de la ventana (≈ 140 × 36 px) para que no tapen «Pausar» y «Salir». */
+.pres.in-desktop .pres-top { min-height: 36px; }
+.pres.in-desktop .pres-top { padding-right: max(150px, calc(100vw - env(titlebar-area-x, 0px) - env(titlebar-area-width, 100vw) + 12px)); }
 .pres-logo { height: 64px; object-fit: contain; margin-right: auto; }
 .pres-count { color: var(--muted); font-variant-numeric: tabular-nums; }
 .pres .btn.on { border-color: var(--accent-2); color: var(--accent-2); }

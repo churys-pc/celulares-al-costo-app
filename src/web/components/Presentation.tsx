@@ -8,6 +8,8 @@ import { useCovers } from '../covers.ts';
 import { keySpecValues } from '../../shared/keySpecs.ts';
 
 const AUTO_MS = 8000;
+/** En la app de Windows los botones de la ventana (—, ▢, ✕) quedan siempre arriba a la derecha, aun en pantalla completa. */
+const IN_DESKTOP = !!(window as unknown as { desktop?: unknown }).desktop;
 const nf = (n: number) => n.toLocaleString('es-UY');
 
 const LABEL_GROUP: Record<string, string> = { Procesador: 'Chip', RAM: 'Memoria', Almacenamiento: 'Memoria', Pantalla: 'Pantalla',
@@ -51,7 +53,7 @@ export function Presentation({ items, start = 0, settings, onClose }: { items: P
   const photos = [...(coverSrc ? [{ id: -1, url: coverSrc }] : []), ...(p?.photos ?? [])];
 
   return (
-    <div className="pres">
+    <div className={`pres ${IN_DESKTOP ? 'in-desktop' : ''}`}>
       <header className="pres-top">
         <img src={settings?.logo ?? '/logo.png'} alt="" className="pres-logo" />
         <span className="pres-count">{i + 1} / {list.length}</span>

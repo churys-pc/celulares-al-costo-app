@@ -90,6 +90,7 @@
 - [x] v0.24.3: buscador de Inicio sin la columna de disponibilidad («Sin stock», «Disponible»…): cada resultado muestra almacenamiento y condición («256 GB · Nuevo», «128 GB · CPO»; la disponibilidad por local, si existe, va al lado) y a la derecha el precio en USD y debajo en pesos. Modelos sin producto: «Sin unidades cargadas · ver ficha del modelo».
 - [x] v0.24.4: Modo presentación: el precio pasa arriba (debajo del nombre y la memoria) en un recuadro destacado con **dólares y pesos** lado a lado («USD 900 | $ 36.450»; sin cotización solo USD). Antes estaba al final de la columna y quedaba tapado en pantallas bajas. La columna de datos se compacta en alturas ≤ 820 px y, si igual no entra, se desplaza sin cortar el precio. Verificado en 1920×1080, 1366×768, 1280×680 y 900×800.
 - [x] v0.24.5: **garantía de 1 año también para CPO** (antes 3 meses; `WARRANTY_MONTHS = 12` en `quickProducts.ts`). Migración v12 pasa a 12 meses los CPO guardados con 3. Se muestra «Garantía 1 año» en la presentación y la ficha (`warrantyLabel`).
+- [x] v0.24.6: Modo presentación en la app de Windows: «Automático/Pausar» y «Salir» se corren a la izquierda (deja ≥ 150 px libres arriba a la derecha) para que no los tapen los botones de la ventana (—, ▢, ✕ del titleBarOverlay, que siguen visibles en pantalla completa). Clase `.pres.in-desktop` cuando existe `window.desktop`.
 - [ ] Fase 1 (bloque 3): import/export CSV.
 - [ ] Luego: versión móvil (Safari) con el diseño del mockup.
 - [ ] Fases 2-6 según prompt original.
