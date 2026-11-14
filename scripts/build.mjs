@@ -7,6 +7,10 @@ fs.mkdirSync('dist/web', { recursive: true });
 fs.copyFileSync('src/web/index.html', 'dist/web/index.html');
 fs.copyFileSync('src/web/styles.css', 'dist/web/styles.css');
 fs.copyFileSync('src/web/logo.png', 'dist/web/logo.png');
+// Página de pruebas para Safari (Diagnóstico): la sirve solo el listener de la red del local.
+fs.mkdirSync('dist/web/phone', { recursive: true });
+fs.copyFileSync('src/phone/phone.html', 'dist/web/phone/phone.html');
+fs.copyFileSync('src/phone/phone.css', 'dist/web/phone/phone.css');
 // Portadas por modelo incluidas en la app (WebP 768 × 768, fondo transparente).
 fs.rmSync('dist/web/covers', { recursive: true, force: true });
 if (fs.existsSync('src/web/covers')) fs.cpSync('src/web/covers', 'dist/web/covers', { recursive: true });
@@ -23,6 +27,7 @@ const node = { ...common, loader: { '.txt': 'text' }, platform: 'node', format: 
 const configs = [
   { ...common, entryPoints: ['src/web/main.tsx'], outfile: 'dist/web/app.js', platform: 'browser', format: 'esm',
     target: 'safari16', jsx: 'automatic', define: { 'process.env.NODE_ENV': '"production"' }, minify: !watch },
+  { ...common, entryPoints: ['src/phone/main.ts'], outfile: 'dist/web/phone/phone.js', platform: 'browser', format: 'esm', target: 'safari15', minify: !watch, sourcemap: false },
   { ...node, entryPoints: ['src/server/cli.ts'], outfile: 'dist/server.cjs' },
   { ...node, entryPoints: ['electron/main.ts'], outfile: 'dist/electron.cjs', sourcemap: false,
     define: { 'process.env.CEL_BUILTIN_REPO_TOKEN': JSON.stringify(builtinToken) } },

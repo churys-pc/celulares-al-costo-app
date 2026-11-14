@@ -1,4 +1,4 @@
-import { app, BrowserWindow, dialog, safeStorage, shell } from 'electron';
+import { app, BrowserWindow, dialog, ipcMain, safeStorage, shell } from 'electron';
 import fs from 'node:fs';
 import path from 'node:path';
 import { startServer } from '../src/server/main.ts';
@@ -38,6 +38,18 @@ const logFile = () => path.join(app.getPath('userData'), 'error.log');
 function log(msg: string) {
   try { fs.mkdirSync(path.dirname(logFile()), { recursive: true }); fs.appendFileSync(logFile(), `${new Date().toISOString()} ${msg}\n`); } catch {}
 }
+
+// Diagnóstico → «Exportar PDF»: imprime a PDF la vista del informe y pide dónde guardarlo.
+ipcMain.handle('diag:pdf', async (e, name: unknown) => {
+  const win = BrowserWindow.fromWebContents(e.sender);
+  if (!win) return { error: 'Ventana no disponible' };
+  const safe = String(name ?? 'Diagnostico.pdf').replace(/[^\w.-]/g, '_').slice(0, 80) || 'Diagnostico.pdf';
+  const r = await dialog.showSaveDialog(win, { defaultPath: path.join(app.getPath('documents'), safe), filters: [{ name: 'PDF', extensions: ['pdf'] }] });
+  if (r.canceled || !r.filePath) return { canceled: true };
+  const pdf = await e.sender.printToPDF({ printBackground: true, pageSize: 'A4', preferCSSPageSize: true });
+  fs.writeFileSync(r.filePath, pdf);
+  return { ok: true };
+});
 
 app.whenReady().then(async () => { setupUpdates(log); await createWindow(); }).catch((e: Error) => {
   // Error claro en vez de cierre silencioso; se guarda un log local sin datos sensibles.

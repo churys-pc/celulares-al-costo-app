@@ -130,6 +130,17 @@ const MIGRATIONS: string[] = [
    CREATE TABLE cover_jobs (id TEXT PRIMARY KEY, key TEXT NOT NULL, brand TEXT NOT NULL, model TEXT NOT NULL,
      product_repo_id TEXT, status TEXT NOT NULL, message TEXT, candidates TEXT, created_at TEXT NOT NULL, updated_at TEXT NOT NULL);
    CREATE INDEX ix_cover_jobs_key ON cover_jobs(key, status);`,
+  // v10: Diagnóstico de iPhone (Windows + Safari por QR). Solo local: no se sube al repo de datos.
+  `CREATE TABLE diagnostics (id TEXT PRIMARY KEY, ref TEXT NOT NULL UNIQUE, status TEXT NOT NULL, created_at TEXT NOT NULL, updated_at TEXT NOT NULL,
+     closed_at TEXT, created_by TEXT, device TEXT NOT NULL DEFAULT '{}', udid_hash TEXT, usb_state TEXT, observations TEXT NOT NULL DEFAULT '',
+     verdict TEXT, requests TEXT NOT NULL DEFAULT '[]');
+   CREATE TABLE diag_results (id INTEGER PRIMARY KEY AUTOINCREMENT, diag_id TEXT NOT NULL REFERENCES diagnostics(id) ON DELETE CASCADE,
+     test TEXT NOT NULL, status TEXT NOT NULL, origin TEXT NOT NULL, detail TEXT NOT NULL DEFAULT '', data TEXT, created_at TEXT NOT NULL,
+     created_by TEXT, nonce TEXT, UNIQUE (diag_id, nonce));
+   CREATE INDEX ix_diag_results ON diag_results(diag_id, test, id);
+   CREATE TABLE diag_links (id TEXT PRIMARY KEY, diag_id TEXT NOT NULL REFERENCES diagnostics(id) ON DELETE CASCADE, kind TEXT NOT NULL,
+     token_hash TEXT NOT NULL UNIQUE, state TEXT NOT NULL, created_at TEXT NOT NULL, expires_at TEXT NOT NULL, used_at TEXT,
+     code TEXT, phone_info TEXT, last_seen TEXT);`,
 ];
 
 function migrate(db: Db) {
