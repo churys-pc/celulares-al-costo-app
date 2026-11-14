@@ -27,3 +27,16 @@ video { width: 100%; border-radius: 12px; background: #000; max-height: 50vh; ob
 .grid { position: absolute; inset: 0; display: grid; }
 .grid div { border: 1px solid rgba(255,255,255,.08); background: #102347; } .grid div.on { background: #22c55e; }
 .done-btn { position: absolute; right: 12px; top: max(12px, env(safe-area-inset-top)); z-index: 2; padding: 10px 14px; border-radius: 10px; border: 0; background: rgba(0,0,0,.6); color: #fff; font: 600 15px inherit; }
+.btn.big { padding: 18px; font-size: 18px; }
+.btn.small-btn { padding: 10px; font-size: 14px; font-weight: 500; }
+.problem { border-top: 1px solid var(--line); margin-top: 6px; padding-top: 8px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 6px 0 10px; }
+.chip { padding: 10px 14px; border-radius: 999px; border: 1px solid rgba(239,68,68,.55); background: rgba(239,68,68,.1); color: #fecaca; font: 500 15px inherit; }
+.chk-row { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 12px; margin: 10px 0; }
+.chk-row.done { opacity: .8; }
+.chk-head { display: flex; align-items: center; gap: 8px; } .chk-head b { flex: 1; }
+.chk-row p { margin: 4px 0 8px; }
+.chk-btns { display: flex; gap: 6px; flex-wrap: wrap; }
+.chk { flex: 1 1 auto; padding: 10px 8px; border-radius: 10px; border: 1px solid var(--line); background: #13284f; color: var(--text); font: 600 14px inherit; }
+.chk.on { background: var(--accent); border-color: var(--accent); } .chk.ok.on { background: rgba(34,197,94,.35); border-color: #22c55e; } .chk.bad.on { background: rgba(239,68,68,.35); border-color: #ef4444; }
+.input { width: 100%; margin-top: 8px; padding: 10px; border-radius: 10px; border: 1px solid var(--line); background: #06102a; color: var(--text); font: inherit; -webkit-user-select: text; user-select: text; }

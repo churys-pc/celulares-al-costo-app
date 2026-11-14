@@ -49,11 +49,12 @@ function cleanDevice(input: any, prev: DeviceInfo, origin: 'usb' | 'manual'): De
     const b = input.battery ?? {}; const pb = prev.battery ?? {};
     const num = (x: any, lo: number, hi: number) => (x === null || x === '' || x === undefined ? null : Number.isFinite(Number(x)) && Number(x) >= lo && Number(x) <= hi ? Math.round(Number(x)) : (() => { throw new ValidationError('Dato de batería inválido'); })());
     out.battery = { ...pb };
-    for (const [k, lo, hi] of [['chargePct', 0, 100], ['cycles', 0, 5000], ['estimatedMaxPct', 1, 150], ['settingsMaxPct', 1, 100]] as const) {
+    for (const [k, lo, hi] of [['chargePct', 0, 100], ['cycles', 0, 5000], ['estimatedMaxPct', 1, 150], ['iosMaxPct', 1, 100], ['settingsMaxPct', 1, 100]] as const) {
       if (b[k] !== undefined) { (out.battery as any)[k] = num(b[k], lo, hi); if (b[k] === null || b[k] === '') delete out.sources![`battery.${k}`]; else out.sources![`battery.${k}`] = origin; }
     }
     if (b.charging !== undefined) out.battery.charging = b.charging === null ? null : !!b.charging;
   }
+  if (input?.findMy !== undefined) { out.findMy = input.findMy === null ? null : !!input.findMy; if (input.findMy === null) delete out.sources!.findMy; else out.sources!.findMy = origin; }
   if (!out.model && out.productType) out.model = modelName(out.productType);
   return out;
 }
@@ -132,8 +133,16 @@ export class DiagStore {
 
   updateDevice(id: string, body: any) {
     const r = this.open(id);
-    const d = cleanDevice(body, JSON.parse(r.device), 'manual');
+    const prev: DeviceInfo = JSON.parse(r.device);
+    const d = cleanDevice(body, prev, 'manual');
     this.db.prepare('UPDATE diagnostics SET device = ?, updated_at = ? WHERE id = ?').run(JSON.stringify(d), nowIso(this.now()), id);
+    // La capacidad máxima copiada de Configuración → Batería completa sola la prueba de batería.
+    const pct = d.battery?.settingsMaxPct;
+    if (pct != null && pct !== prev.battery?.settingsMaxPct) {
+      const cyc = d.battery?.cycles != null ? ` · ${d.battery.cycles} ciclos` : '';
+      this.addResult(id, { test: 'battery_health', status: pct >= 80 ? 'ok' : 'observations',
+        detail: `Capacidad máxima ${pct} % (Configuración → Batería)${cyc}${pct < 80 ? ' · por debajo de 80 %: Apple recomienda cambiar la batería' : ''}` }, null, 'manual');
+    }
     return this.get(id);
   }
 
@@ -149,12 +158,33 @@ export class DiagStore {
     for (const k of DEVICE_FIELDS) if ((info as any)[k] != null && !keep(k)) patch[k] = (info as any)[k];
     if (info.battery) {
       patch.battery = {};
-      for (const k of ['chargePct', 'cycles', 'estimatedMaxPct', 'charging'] as const) if (info.battery[k] != null && !keep(`battery.${k}`)) patch.battery[k] = info.battery[k];
+      for (const k of ['chargePct', 'cycles', 'estimatedMaxPct', 'iosMaxPct', 'charging'] as const) if (info.battery[k] != null && !keep(`battery.${k}`)) patch.battery[k] = info.battery[k];
     }
+    if (typeof info.findMy === 'boolean') patch.findMy = info.findMy;
     const d = cleanDevice(patch, prev, 'usb');
     this.db.prepare('UPDATE diagnostics SET device = ?, udid_hash = ?, usb_state = ?, updated_at = ? WHERE id = ?')
       .run(JSON.stringify(d), h, JSON.stringify(usbState), nowIso(this.now()), id);
+    this.autoFromUsb(id, d);
     return this.get(id);
+  }
+
+  /** Resultados que salen solos de lo leído por USB. Nunca pisan lo que el técnico registró a mano. */
+  private autoFromUsb(id: string, d: DeviceInfo) {
+    const cur = this.current(id);
+    const put = (test: string, status: TestStatus, detail: string, data: Record<string, unknown>) => {
+      const c = cur[test];
+      if (c && c.origin !== 'usb') return;
+      if (c && c.status === status && c.detail === detail) return;
+      this.addResult(id, { test, status, detail, data }, 'USB', 'usb');
+    };
+    const b = d.battery ?? {};
+    const cyc = b.cycles != null ? ` · ${b.cycles} ciclos` : '';
+    const pct = b.settingsMaxPct ?? b.iosMaxPct ?? null;
+    if (pct != null) put('battery_health', pct >= 80 ? 'ok' : 'observations', `Capacidad máxima ${pct} %${cyc}${pct < 80 ? ' · por debajo de 80 %: Apple recomienda cambiar la batería' : ''}`, { maxPct: pct, cycles: b.cycles ?? null });
+    else if (b.estimatedMaxPct != null) put('battery_health', b.estimatedMaxPct >= 80 ? 'ok' : 'observations', `Capacidad estimada por USB ${Math.min(100, b.estimatedMaxPct)} %${cyc} (confirmala en Configuración → Batería)`, { estimatedMaxPct: b.estimatedMaxPct, cycles: b.cycles ?? null });
+    if (b.charging === true) put('charging', 'ok', 'Cargando por el cable USB', { charging: true });
+    if (d.findMy === true) put('activation_lock', 'fail', '«Buscar mi iPhone» está ACTIVADO: el equipo tiene Bloqueo de activación. El cliente tiene que desactivarlo (cerrar sesión de su Apple ID) antes de recibirlo.', { findMy: true });
+    if (d.findMy === false) put('activation_lock', 'ok', '«Buscar mi iPhone» desactivado (leído por USB)', { findMy: false });
   }
   /** Modelo e iOS leídos sin autorización (sin fijar la identidad del equipo). No pisa lo cargado a mano. */
   updateDeviceFromUsbBasic(id: string, info: DeviceInfo) {

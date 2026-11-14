@@ -247,6 +247,11 @@ export async function readDevice(mux: Usbmux, dev: { deviceId: number; udid: str
       if (Number.isFinite(Number(bat.BatteryCurrentCapacity))) { info.battery!.chargePct = Number(bat.BatteryCurrentCapacity); read.push('battery.chargePct'); }
       if (typeof bat.BatteryIsCharging === 'boolean') info.battery!.charging = bat.BatteryIsCharging;
     });
+    // «Buscar mi iPhone» (Bloqueo de activación): lockdown lo informa en el dominio com.apple.fmip.
+    await opt('Buscar mi iPhone', async () => {
+      const v = (await ld.request({ Request: 'GetValue', Domain: 'com.apple.fmip', Key: 'IsAssociated' })).Value;
+      if (typeof v === 'boolean') { info.findMy = v; read.push('findMy'); }
+    });
     // Ciclos y capacidad estimada desde el registro de energía (servicio de diagnóstico, conexión aparte).
     await opt('ciclos de batería', async () => {
       const svc = await ld.request({ Request: 'StartService', Service: 'com.apple.mobile.diagnostics_relay' });
@@ -261,7 +266,10 @@ export async function readDevice(mux: Usbmux, dev: { deviceId: number; udid: str
         }
         if (!reg) throw new Error('el iPhone no entregó el registro de energía');
         if (Number.isFinite(Number(reg.CycleCount))) { info.battery!.cycles = Number(reg.CycleCount); read.push('battery.cycles'); }
-        const design = Number(reg.DesignCapacity); const max = Number(reg.NominalChargeCapacity ?? reg.AppleRawMaxCapacity);
+        const bd = (reg.BatteryData ?? {}) as Record<string, any>;
+        const iosPct = Number(reg.MaximumCapacityPercent ?? bd.MaximumCapacityPercent);
+        if (iosPct > 0 && iosPct <= 100) { info.battery!.iosMaxPct = Math.round(iosPct); read.push('battery.iosMaxPct'); }
+        const design = Number(reg.DesignCapacity ?? bd.DesignCapacity); const max = Number(reg.NominalChargeCapacity ?? reg.AppleRawMaxCapacity ?? bd.NominalChargeCapacity);
         if (design > 0 && max > 0) { info.battery!.estimatedMaxPct = Math.round((max / design) * 100); read.push('battery.estimatedMaxPct'); }
         await ch.send({ Request: 'Goodbye' }).catch(() => {});
       } finally { ch.close(); }

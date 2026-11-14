@@ -376,9 +376,10 @@ function DeviceCard({ d, editable, isAdmin, onSaved, startEditing }: { d: Diag; 
         <dt>IMEI 1</dt><dd>{dev.imei1 ?? '—'} <Badge k="imei1" /></dd>
         <dt>IMEI 2</dt><dd>{dev.imei2 ?? '—'} <Badge k="imei2" /></dd>
         <dt>Carga actual</dt><dd>{b.chargePct != null ? `${b.chargePct} %${b.charging ? ' (cargando)' : ''}` : '—'} <Badge k="battery.chargePct" /></dd>
-        <dt>Capacidad máxima</dt><dd>{b.settingsMaxPct != null ? `${b.settingsMaxPct} % (Configuración → Batería)` : '— (copiala de Configuración → Batería)'} <Badge k="battery.settingsMaxPct" />
+        <dt>Capacidad máxima</dt><dd>{b.settingsMaxPct != null ? <>{b.settingsMaxPct} % (Configuración → Batería) <Badge k="battery.settingsMaxPct" /></> : b.iosMaxPct != null ? <>{b.iosMaxPct} % <Badge k="battery.iosMaxPct" /></> : '— (copiala de Configuración → Batería)'}
           {b.estimatedMaxPct != null && <div className="muted small">Estimada por USB: {b.estimatedMaxPct} % (puede diferir de lo que muestra iOS)</div>}</dd>
         <dt>Ciclos</dt><dd>{b.cycles != null ? b.cycles : '—'} <Badge k="battery.cycles" /></dd>
+        <dt>Buscar mi iPhone</dt><dd>{dev.findMy === true ? <b className="dg-bad">Activado (Bloqueo de activación)</b> : dev.findMy === false ? 'Desactivado' : '—'} <Badge k="findMy" /></dd>
       </dl>
       {missing.length > 0 && d.usbState?.state === 'connected' && <p className="muted small">No se pudo leer por USB: {missing.map((k) => FIELD_LABEL[k] ?? (k.startsWith('battery') ? 'datos de batería' : k)).join(', ')}. Cargalos con «Editar».</p>}
       {d.masked && (dev.serial || dev.imei1) && (isAdmin ? (!full ? <button className="link small" onClick={reveal}>Mostrar serie e IMEI completos</button> : <button className="link small" onClick={() => setFull(null)}>Ocultar</button>)
@@ -389,9 +390,18 @@ function DeviceCard({ d, editable, isAdmin, onSaved, startEditing }: { d: Diag; 
 
 /* ---------------- Informe ---------------- */
 
+const VERDICT_SIMPLE: Record<Verdict['key'], { icon: string; title: string; sub: string }> = {
+  pass: { icon: '✓', title: 'Sin problemas', sub: 'Todas las pruebas dieron bien.' },
+  observations: { icon: '!', title: 'Funciona, con observaciones', sub: 'No hay fallas, pero hay detalles a tener en cuenta.' },
+  fail: { icon: '✕', title: 'Tiene fallas', sub: 'Revisá los problemas encontrados antes de comprar o tomar en parte de pago.' },
+  incomplete: { icon: '…', title: 'Diagnóstico incompleto', sub: 'Faltan pruebas: no hay aprobación hasta completarlas.' },
+};
+
+/** Informe simple de leer: veredicto, datos clave y tres listas. El detalle de cada prueba es opcional. */
 function Report({ id, onBack }: { id: string; onBack: () => void }) {
   const [d, setD] = useState<Diag | null>(null);
   const [full, setFull] = useState(false);
+  const [detail, setDetail] = useState(false);
   const [err, setErr] = useState('');
   const isAdmin = useIsAdmin();
   useEffect(() => { call<Diag>('GET', `/api/diag/${id}${full ? '?reveal=1' : ''}`).then(setD).catch((e) => setErr((e as Error).message)); }, [id, full]);
@@ -402,39 +412,58 @@ function Report({ id, onBack }: { id: string; onBack: () => void }) {
   }
   if (!d) return <div className="dg">{err ? <p className="err">{err}</p> : <p className="muted">Cargando…</p>}</div>;
   const b = d.device.battery ?? {};
+  const cur = d.current;
+  const problems = TESTS.filter((t) => cur[t.key]?.status === 'fail' || cur[t.key]?.status === 'observations');
+  const okList = TESTS.filter((t) => cur[t.key]?.status === 'ok');
+  const naList = TESTS.filter((t) => cur[t.key]?.status === 'na');
+  const missing = TESTS.filter((t) => !cur[t.key] || cur[t.key].status === 'unverified');
+  const v = VERDICT_SIMPLE[d.verdict.key];
+  const health = b.settingsMaxPct ?? b.iosMaxPct ?? null;
+  const battery = health != null ? `${health} %` : b.estimatedMaxPct != null ? `≈ ${Math.min(100, b.estimatedMaxPct)} %` : '—';
+  const batteryBad = (health ?? b.estimatedMaxPct ?? 100) < 80;
+  const findMy = d.device.findMy === true ? 'Activado' : d.device.findMy === false ? 'Desactivado' : cur.activation_lock?.status === 'ok' ? 'Desactivado' : 'Sin verificar';
+  const id2 = (x?: string | null) => (x ? (full ? x : maskId(x)) : '—');
   return (
     <div className="dg-report-wrap">
       <div className="dg-report-bar no-print">
         <button className="btn ghost" onClick={onBack}><Icon name="left" size={14} /> Volver</button>
-        {isAdmin && <label className="dg-check"><input type="checkbox" checked={full} onChange={(e) => setFull(e.target.checked)} /> Incluir serie e IMEI completos</label>}
+        <label className="dg-check"><input type="checkbox" checked={detail} onChange={(e) => setDetail(e.target.checked)} /> Incluir el detalle de cada prueba</label>
+        {isAdmin && <label className="dg-check"><input type="checkbox" checked={full} onChange={(e) => setFull(e.target.checked)} /> Serie e IMEI completos</label>}
         <button className="btn" onClick={() => window.print()}>Imprimir</button>
         <button className="btn primary" onClick={pdf}>Exportar PDF</button>
         {err && <span className="err">{err}</span>}
       </div>
-      <article className="dg-report">
-        <header><img src="/logo.png" alt="" /><div><h1>Informe de diagnóstico</h1><p>Referencia interna <b>{d.ref}</b> · {STATE_LABEL[d.status]}</p></div></header>
-        <section className="dg-r-grid">
-          <div><span>Modelo</span><b>{d.device.model ?? d.device.productType ?? '—'}</b></div>
-          <div><span>iOS</span><b>{d.device.ios ?? '—'}</b></div>
-          <div><span>Capacidad</span><b>{d.device.capacityGb ? `${d.device.capacityGb} GB` : '—'}</b></div>
-          <div><span>Fecha</span><b>{when(d.closedAt ?? d.createdAt)}</b></div>
-          <div><span>Número de serie</span><b>{full ? d.device.serial ?? '—' : d.device.serial ? maskId(d.device.serial) : '—'}</b></div>
-          <div><span>IMEI</span><b>{[d.device.imei1, d.device.imei2].filter(Boolean).map((x) => (full ? x : maskId(x))).join(' / ') || '—'}</b></div>
-          <div><span>Batería</span><b>{b.settingsMaxPct != null ? `Capacidad máxima ${b.settingsMaxPct} %` : b.estimatedMaxPct != null ? `Estimada por USB ${b.estimatedMaxPct} %` : '—'}{b.cycles != null ? ` · ${b.cycles} ciclos` : ''}</b></div>
-          <div><span>Técnico</span><b>{d.createdBy ?? '—'}</b></div>
+      <article className="dg-report simple">
+        <header>
+          <img src="/logo.png" alt="" />
+          <div><h1>Informe de diagnóstico</h1><p>{d.ref} · {when(d.closedAt ?? d.createdAt)}{d.status !== 'closed' ? ' · en curso' : ''}</p></div>
+        </header>
+        <div className="r-device"><b>{d.device.model ?? d.device.productType ?? 'iPhone'}</b>{d.device.capacityGb ? ` · ${d.device.capacityGb} GB` : ''}{d.device.ios ? ` · iOS ${d.device.ios}` : ''}</div>
+        <div className={`r-verdict ${d.verdict.key}`}><span className="r-icon">{v.icon}</span><div><b>{v.title}</b><span>{v.sub}</span></div></div>
+        <div className="r-tiles">
+          <div className={batteryBad ? 'warn' : ''}><span>Batería</span><b>{battery}</b><small>{b.cycles != null ? `${b.cycles} ciclos` : health != null ? 'capacidad máxima' : ''}{batteryBad ? ' · conviene cambiarla' : ''}</small></div>
+          <div className={findMy === 'Activado' ? 'bad' : ''}><span>Buscar mi iPhone</span><b>{findMy}</b><small>{findMy === 'Activado' ? 'tiene Bloqueo de activación' : findMy === 'Desactivado' ? 'sin Bloqueo de activación' : ''}</small></div>
+          <div><span>Pruebas</span><b>{okList.length + naList.length} / {TESTS.length}</b><small>{problems.length ? `${problems.length} con problemas` : 'sin problemas'}</small></div>
+        </div>
+        <section className="r-list bad-list">
+          <h2>Problemas encontrados</h2>
+          {problems.length ? <ul>{problems.map((t) => <li key={t.key} className={cur[t.key].status}><b>{t.label}</b>{cur[t.key].status === 'observations' ? ' (observación)' : ''}{cur[t.key].detail ? `: ${cur[t.key].detail}` : ''}</li>)}</ul> : <p className="r-none">Ninguno.</p>}
         </section>
-        <div className={`dg-verdict ${d.verdict.key}`}><b>{d.verdict.label}</b>{d.verdict.missing.length > 0 && <span>Sin verificar: {d.verdict.missing.join(', ')}.</span>}</div>
-        <table className="dg-r-table">
-          <thead><tr><th>Prueba</th><th>Estado</th><th>Origen</th><th>Fecha</th><th>Detalle</th></tr></thead>
-          <tbody>{TESTS.map((t) => { const r = d.current[t.key]; return (
-            <tr key={t.key} className={r?.status ?? 'none'}><td>{t.label}</td><td>{r ? STATUS_LABEL[r.status] : 'No verificado'}</td><td>{r ? ORIGIN_LABEL[r.origin] : '—'}</td><td>{r ? when(r.createdAt) : '—'}</td><td>{r?.detail || '—'}</td></tr>); })}</tbody>
-        </table>
-        <section><h2>Observaciones</h2><p className="dg-r-obs">{d.observations || 'Sin observaciones.'}</p></section>
-        <footer>
-          <p>El resultado refleja el estado al momento de las pruebas. «No verificado» indica que la prueba no se pudo realizar o no hubo evidencia válida.
-            La ausencia del Historial de piezas y servicio no certifica que el equipo nunca haya sido reparado. La lista negra de IMEI y el bloqueo de activación se verifican por separado.
-            La capacidad de batería «estimada por USB» puede diferir de la que muestra iOS.</p>
-        </footer>
+        <section className="r-list ok-list">
+          <h2>Funciona bien</h2>
+          <p>{okList.length ? okList.map((t) => t.label).join(' · ') : '—'}</p>
+          {naList.length > 0 && <p className="r-muted">No aplica a este modelo: {naList.map((t) => t.label).join(' · ')}</p>}
+        </section>
+        {missing.length > 0 && <section className="r-list miss-list"><h2>Sin probar</h2><p>{missing.map((t) => t.label).join(' · ')}</p></section>}
+        {d.observations && <section className="r-list"><h2>Observaciones</h2><p className="dg-r-obs">{d.observations}</p></section>}
+        <p className="r-ids">Serie {id2(d.device.serial)} · IMEI {[d.device.imei1, d.device.imei2].filter(Boolean).map(id2).join(' / ') || '—'}{d.device.modelNumber ? ` · Modelo ${d.device.modelNumber}` : ''} · Técnico: {d.createdBy ?? '—'}</p>
+        {detail && (
+          <table className="dg-r-table">
+            <thead><tr><th>Prueba</th><th>Estado</th><th>Origen</th><th>Fecha</th><th>Detalle</th></tr></thead>
+            <tbody>{TESTS.map((t) => { const r = cur[t.key]; return (
+              <tr key={t.key} className={r?.status ?? 'none'}><td>{t.label}</td><td>{r ? STATUS_LABEL[r.status] : 'No verificado'}</td><td>{r ? ORIGIN_LABEL[r.origin] : '—'}</td><td>{r ? when(r.createdAt) : '—'}</td><td>{r?.detail || '—'}</td></tr>); })}</tbody>
+          </table>)}
+        <footer><p>Resultado al momento de las pruebas. «Sin probar» = no se pudo comprobar o no hubo evidencia. La lista negra de IMEI se verifica por separado. Que no aparezca el historial de piezas no certifica que el equipo nunca fue reparado.</p></footer>
       </article>
     </div>
   );

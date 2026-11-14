@@ -120,7 +120,10 @@ export function maskId(v: string | null | undefined): string {
 export interface DeviceInfo {
   model?: string | null; productType?: string | null; modelNumber?: string | null; ios?: string | null; build?: string | null;
   capacityGb?: number | null; serial?: string | null; imei1?: string | null; imei2?: string | null;
-  battery?: { chargePct?: number | null; charging?: boolean | null; cycles?: number | null; estimatedMaxPct?: number | null; settingsMaxPct?: number | null } | null;
+  /** iosMaxPct: la «Capacidad máxima» que calcula iOS, cuando el registro de energía la trae; estimatedMaxPct: cálculo propio. */
+  battery?: { chargePct?: number | null; charging?: boolean | null; cycles?: number | null; estimatedMaxPct?: number | null; iosMaxPct?: number | null; settingsMaxPct?: number | null } | null;
+  /** «Buscar mi iPhone» activado (implica Bloqueo de activación), leído por USB. */
+  findMy?: boolean | null;
   /** Origen de cada campo: «usb» si lo leyó la conexión autorizada, «manual» si lo cargó el técnico. */
   sources?: Record<string, 'usb' | 'manual'>;
 }

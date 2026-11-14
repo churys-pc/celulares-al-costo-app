@@ -212,6 +212,32 @@ test('USB: si la primera dirección falla, prueba la siguiente; un iPhone solo p
   } finally { await mux.close(); }
 });
 
+test('USB: resultados automáticos (batería, carga, Buscar mi iPhone) sin pisar lo manual', async () => {
+  const s = new DiagStore(db());
+  const d = s.create(null);
+  const mux = await startFakeMux([SAMPLE_IPHONE({ findMy: true, ioreg: { CycleCount: 937, BatteryData: { MaximumCapacityPercent: 84, DesignCapacity: 4422 } } })]);
+  try {
+    const m = new Usbmux({ host: '127.0.0.1', port: mux.port });
+    const [dev] = await m.listDevices();
+    const r = await readDevice(m, dev);
+    assert.equal(r.info.findMy, true); assert.equal(r.info.battery!.iosMaxPct, 84);
+    s.addResult(d.id, { test: 'charging', status: 'fail', detail: 'No carga con cargador de pared' }, 'tec', 'manual');
+    const g = s.applyUsb(d.id, dev.udid, r.info, { state: 'connected' });
+    assert.equal(g.current.battery_health.status, 'ok'); assert.equal(g.current.battery_health.origin, 'usb');
+    assert.match(g.current.battery_health.detail, /84 % · 937 ciclos/);
+    assert.equal(g.current.activation_lock.status, 'fail'); assert.match(g.current.activation_lock.detail, /ACTIVADO/);
+    assert.equal(g.current.charging.status, 'fail', 'lo manual no se pisa');
+    // Releer no duplica resultados iguales.
+    s.applyUsb(d.id, dev.udid, r.info, { state: 'connected' });
+    assert.equal(s.get(d.id).history.battery_health.length, 1);
+    // Capacidad copiada de Configuración por el técnico: manda.
+    const g2 = s.updateDevice(d.id, { battery: { settingsMaxPct: 76 } });
+    assert.equal(g2.current.battery_health.status, 'observations'); assert.equal(g2.current.battery_health.origin, 'manual');
+    s.applyUsb(d.id, dev.udid, r.info, { state: 'connected' });
+    assert.equal(s.get(d.id).current.battery_health.origin, 'manual');
+  } finally { await mux.close(); }
+});
+
 test('USB: al reconectar se verifica que sea el mismo equipo', async () => {
   const s = new DiagStore(db());
   const d = s.create(null);

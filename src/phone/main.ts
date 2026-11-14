@@ -50,8 +50,91 @@ async function flush() {
 }
 async function submit(test: string, status: Status, detail: string, origin: 'safari' | 'manual', data?: unknown) {
   store.set(QUEUE, JSON.stringify([...queue(), { test, status, detail, origin, data, nonce: nonce() }]));
+  stopMedia(); closeOverlay();
   await flush();
-  busy = false; closeOverlay(); await refresh();
+  if (wizard) return nextStep();
+  busy = false; await refresh();
+}
+
+/* ---------- Recorrido automático ---------- */
+// «Empezar» corre las pruebas una tras otra; cada una se responde con un toque. Después, el checklist en una pantalla.
+let wizard: { queue: PhoneTest[]; i: number } | null = null;
+let actx: AudioContext | null = null;
+let motionPerm: 'granted' | 'denied' | 'none' | null = null;
+const AUTO_ORDER = ['screen', 'touch', 'camera_back', 'camera_front', 'microphone', 'speaker', 'motion'];
+
+async function startWizard(tests: PhoneTest[]) {
+  busy = true;
+  // Lo que Safari solo permite desde un toque se habilita acá: audio y permiso de movimiento.
+  const AC: any = (window as any).AudioContext ?? (window as any).webkitAudioContext;
+  try { if (AC) { actx ??= new AC(); await actx!.resume(); } } catch { actx = null; }
+  const DME: any = (window as any).DeviceMotionEvent;
+  if (window.isSecureContext && DME && typeof DME.requestPermission === 'function' && motionPerm === null) {
+    try { motionPerm = (await DME.requestPermission()) === 'granted' ? 'granted' : 'denied'; } catch { motionPerm = 'denied'; }
+  } else if (motionPerm === null) motionPerm = window.isSecureContext && DME ? 'none' : 'denied';
+  const req = new Set(last?.requests ?? []);
+  const auto = tests.filter((t) => AUTO_ORDER.includes(t.key));
+  let todo = auto.filter((t) => !t.status || req.has(t.key));
+  if (!todo.length) todo = auto;
+  todo.sort((a, b) => AUTO_ORDER.indexOf(a.key) - AUTO_ORDER.indexOf(b.key));
+  wizard = { queue: todo, i: -1 };
+  nextStep();
+}
+
+function nextStep() {
+  if (!wizard) return;
+  wizard.i++;
+  if (wizard.i < wizard.queue.length) return openTest(wizard.queue[wizard.i]);
+  wizard = null;
+  checklistPage();
+}
+
+function stepHeader(t: PhoneTest): Node[] {
+  if (!wizard) return [h('h1', {}, t.label)];
+  return [h('p', { class: 'muted small' }, `Prueba ${wizard.i + 1} de ${wizard.queue.length}`), h('div', { class: 'bar' }, h('i', { style: `width:${(wizard.i / wizard.queue.length) * 100}%` })), h('h1', {}, t.label)];
+}
+
+/** Checklist rápido: todo en una pantalla, un toque por ítem. */
+function checklistPage() {
+  busy = true;
+  const items = (last?.tests ?? []).filter((t) => !AUTO_ORDER.includes(t.key));
+  const answers = new Map<string, { status: Status; detail: string }>();
+  const rows = items.map((t) => {
+    const detail = h('input', { class: 'input', placeholder: '¿Qué falla? (obligatorio)', hidden: true }) as HTMLInputElement;
+    const btns: HTMLButtonElement[] = [];
+    const pick = (st: Status, b: HTMLButtonElement) => {
+      btns.forEach((x) => x.classList.remove('on')); b.classList.add('on');
+      detail.hidden = st !== 'fail'; if (st === 'fail') detail.focus();
+      answers.set(t.key, { status: st, detail: '' });
+    };
+    const mk = (st: Status, label: string, cls: string) => { const b = h('button', { class: `chk ${cls}` }, label) as HTMLButtonElement; b.onclick = () => pick(st, b); btns.push(b); return b; };
+    return h('div', { class: `chk-row ${t.status ? 'done' : ''}` },
+      h('div', { class: 'chk-head' }, h('b', {}, t.label), t.status ? h('span', { class: `pill ${t.status}` }, STATUS_LABEL[t.status]) : null),
+      h('p', { class: 'muted small' }, t.how),
+      h('div', { class: 'chk-btns' }, mk('ok', '✓ Funciona', 'ok'), mk('fail', '✗ Falla', 'bad'), t.naAllowed ? mk('na', 'No tiene', '') : null, mk('unverified', 'No probé', '')),
+      detail);
+  });
+  const err = h('p', { class: 'err small' });
+  const send = async () => {
+    for (const [k, a] of answers) {
+      if (a.status !== 'fail') continue;
+      const inp = rows[items.findIndex((t) => t.key === k)].querySelector('input') as HTMLInputElement;
+      a.detail = inp.value.trim();
+      if (a.detail.length < 3) { err.textContent = `Contá qué falla en «${items.find((t) => t.key === k)!.label}».`; inp.focus(); return; }
+    }
+    for (const [k, a] of answers) store.set(QUEUE, JSON.stringify([...queue(), { test: k, status: a.status, detail: a.status === 'unverified' ? 'No se probó' : a.detail, origin: 'manual', nonce: nonce() }]));
+    await flush();
+    doneScreen();
+  };
+  render(h('h1', {}, 'Checklist rápido'), h('p', { class: 'muted' }, 'Marcá cada ítem. Lo que no marques queda pendiente.'), ...rows, err,
+    h('button', { class: 'btn primary', onClick: () => void send() }, 'Enviar y terminar'),
+    h('button', { class: 'btn', onClick: () => { busy = false; void refresh(); } }, 'Volver a la lista'));
+}
+
+function doneScreen() {
+  busy = true;
+  render(h('div', { class: 'card center' }, h('h1', {}, '¡Listo!'), h('p', {}, 'Los resultados ya están en la PC. El informe se ve en «Diagnóstico» → «Informe».'),
+    h('button', { class: 'btn', onClick: () => { busy = false; void refresh(); } }, 'Ver la lista de pruebas')));
 }
 
 /* ---------- Ciclo principal ---------- */
@@ -96,6 +179,10 @@ function renderList(s: State) {
   if (req.size) nodes.push(h('p', { class: 'note' }, `La PC pidió repetir: ${tests.filter((t) => req.has(t.key)).map((t) => t.label).join(', ')}.`));
   const done = tests.filter((t) => t.status).length;
   nodes.push(h('p', { class: 'muted small' }, `${done} de ${tests.length} registradas`), h('div', { class: 'bar' }, h('i', { style: `width:${tests.length ? (done / tests.length) * 100 : 0}%` })));
+  const autoLeft = tests.filter((t) => AUTO_ORDER.includes(t.key) && (!t.status || req.has(t.key))).length;
+  nodes.push(h('button', { class: 'btn primary big', onClick: () => void startWizard(tests) }, autoLeft ? `▶ Empezar diagnóstico (${autoLeft} pruebas)` : '▶ Repetir pruebas automáticas'),
+    h('button', { class: 'btn', onClick: checklistPage }, 'Checklist rápido'),
+    h('p', { class: 'muted small center' }, 'Subí el volumen y sacá el modo silencio antes de empezar.'));
   for (const g of Object.keys(GROUPS)) {
     const list = tests.filter((t) => t.group === g);
     if (!list.length) continue;
@@ -108,31 +195,53 @@ function renderList(s: State) {
 
 /* ---------- Pruebas ---------- */
 function closeOverlay() { overlay.hidden = true; overlay.replaceChildren(); overlay.style.background = ''; }
-function back() { busy = false; closeOverlay(); stopMedia(); if (last) renderList(last); }
+function back() { busy = false; wizard = null; closeOverlay(); stopMedia(); if (last) renderList(last); }
 let media: MediaStream | null = null;
 function stopMedia() { media?.getTracks().forEach((t) => t.stop()); media = null; }
 
-/** Botones de confirmación humana. «Falla» y «Con observaciones» piden describir lo observado. */
+/** Problemas frecuentes por prueba: un toque registra la falla con ese texto. */
+const PROBLEMS: Record<string, string[]> = {
+  screen: ['Manchas', 'Líneas', 'Píxeles muertos', 'Tinte o color raro', 'Brillo desparejo'],
+  touch: ['Una zona no responde', 'Toques fantasma', 'Responde con demora'],
+  camera_back: ['Imagen borrosa', 'No enfoca', 'Manchas en la imagen', 'No abre'],
+  camera_front: ['Imagen borrosa', 'No enfoca', 'Manchas en la imagen', 'No abre'],
+  microphone: ['No se escucha', 'Ruido o distorsión', 'Muy bajo'],
+  speaker: ['No suena', 'Distorsiona', 'Muy bajo'],
+  earpiece: ['No se escucha', 'Distorsiona', 'Muy bajo'], mics_specific: ['Uno no graba', 'Ruido o distorsión'], lenses: ['No enfoca', 'Imagen borrosa', 'No cambia de lente'],
+  flash: ['No enciende', 'Muy débil'],
+};
+
+/** Respuesta de un toque: «Funciona bien» o «Tiene un problema» (con atajos para describirlo). */
 function confirmBox(t: PhoneTest, origin: 'safari' | 'manual', data?: unknown, extra: Node[] = [], defaultDetail = ''): HTMLElement {
-  const ta = h('textarea', { placeholder: 'Describí lo que viste (obligatorio para «Falla» u «Observaciones»)' }) as HTMLTextAreaElement;
+  const ta = h('textarea', { placeholder: 'Contá qué viste (o tocá una opción de arriba)' }) as HTMLTextAreaElement;
   ta.value = defaultDetail;
   const err = h('p', { class: 'err small' });
-  const send = (st: Status) => {
-    const d = ta.value.trim();
-    if ((st === 'fail' || st === 'observations') && d.length < 3) { err.textContent = st === 'fail' ? 'Describí la falla observada.' : 'Describí la observación.'; ta.focus(); return; }
-    stopMedia(); void submit(t.key, st, d, origin, data);
+  const send = (st: Status, d = ta.value.trim()) => {
+    if ((st === 'fail' || st === 'observations') && d.length < 3) { err.textContent = 'Contá qué viste.'; ta.focus(); return; }
+    void submit(t.key, st, d, origin, data);
   };
-  return h('div', { class: 'card' }, ...extra,
-    h('button', { class: 'btn ok', onClick: () => send('ok') }, t.perception ? 'Funciona bien' : 'OK'),
-    h('button', { class: 'btn warn', onClick: () => send('observations') }, 'Con observaciones'),
-    h('button', { class: 'btn bad', onClick: () => send('fail') }, 'Falla'),
-    t.naAllowed ? h('button', { class: 'btn', onClick: () => send('na') }, 'No aplica (el modelo no lo tiene)') : null,
+  const problem = h('div', { class: 'problem', hidden: true },
+    h('p', { class: 'small' }, '¿Qué problema tiene?'),
+    h('div', { class: 'chips' }, ...(PROBLEMS[t.key] ?? []).map((p) => h('button', { class: 'chip', onClick: () => send('fail', ta.value.trim() ? `${p}: ${ta.value.trim()}` : p) }, p))),
     ta, err,
-    h('button', { class: 'btn', onClick: () => { stopMedia(); void submit(t.key, 'unverified', ta.value.trim() || 'No se pudo comprobar', origin, data); } }, 'No se pudo verificar'),
-    h('button', { class: 'btn', onClick: back }, 'Volver sin guardar'));
+    h('div', { class: 'row' }, h('button', { class: 'btn bad', onClick: () => send('fail') }, 'Registrar falla'), h('button', { class: 'btn warn', onClick: () => send('observations') }, 'Es leve')));
+  return h('div', { class: 'card' }, ...extra,
+    h('button', { class: 'btn ok big', onClick: () => send('ok', defaultDetail) }, '✓ Funciona bien'),
+    h('button', { class: 'btn bad', onClick: () => { problem.hidden = false; problem.scrollIntoView({ behavior: 'smooth' }); } }, '✗ Tiene un problema'),
+    problem,
+    t.naAllowed ? h('button', { class: 'btn', onClick: () => send('na') }, 'El modelo no lo tiene') : null,
+    h('div', { class: 'row' },
+      h('button', { class: 'btn small-btn', onClick: () => void submit(t.key, 'unverified', 'No se pudo probar', origin, data) }, 'Saltar'),
+      h('button', { class: 'btn small-btn', onClick: back }, wizard ? 'Salir' : 'Volver')));
 }
 
 function unsupported(t: PhoneTest, why: string, manual: string) {
+  // En el recorrido automático se registra «No verificado» solo y se sigue; la PC muestra la alternativa manual.
+  if (wizard) {
+    render(...stepHeader(t), h('p', { class: 'note' }, why), h('p', { class: 'muted small' }, 'Se registra como «No verificado» y se sigue con la próxima prueba.'));
+    setTimeout(() => void submit(t.key, 'unverified', why, 'safari'), 1400);
+    return;
+  }
   render(h('h1', {}, t.label), h('p', { class: 'note' }, why), h('div', { class: 'card' }, h('p', {}, h('b', {}, 'Alternativa manual: '), manual)),
     h('button', { class: 'btn', onClick: () => void submit(t.key, 'unverified', why, 'safari') }, 'Registrar «No verificado»'),
     h('p', { class: 'muted small center' }, 'Si lo comprobaste a mano, registralo:'), confirmBox(t, 'manual', { method: 'manual' }));
@@ -142,7 +251,7 @@ function openTest(t: PhoneTest) {
   busy = true; window.scrollTo(0, 0);
   const run: Record<string, () => void> = { screen: () => screenTest(t), touch: () => touchTest(t), camera_back: () => cameraTest(t, 'environment'),
     camera_front: () => cameraTest(t, 'user'), microphone: () => micTest(t), speaker: () => speakerTest(t), motion: () => motionTest(t) };
-  (run[t.key] ?? (() => render(h('h1', {}, t.label), h('div', { class: 'card' }, h('p', {}, t.how)), confirmBox(t, 'manual'))))();
+  (run[t.key] ?? (() => render(...stepHeader(t), h('div', { class: 'card' }, h('p', {}, t.how)), confirmBox(t, 'manual'))))();
 }
 
 function screenTest(t: PhoneTest) {
@@ -156,7 +265,7 @@ function screenTest(t: PhoneTest) {
     i++;
     if (i < colors.length) return show();
     overlay.onclick = null; closeOverlay();
-    render(h('h1', {}, t.label), h('div', { class: 'card' }, h('p', {}, '¿Viste manchas, líneas, píxeles muertos o tinte en algún color?'),
+    render(...stepHeader(t), h('div', { class: 'card' }, h('p', {}, '¿Viste manchas, líneas, píxeles muertos o tinte en algún color?'),
       h('p', { class: 'muted small' }, 'Safari no cubre los bordes ni la zona de la cámara frontal: revisalos a mano con un fondo blanco.')),
       h('button', { class: 'btn', onClick: () => screenTest(t) }, 'Ver los colores de nuevo'), confirmBox(t, 'safari', { colors: colors.length }));
   };
@@ -182,7 +291,7 @@ function touchTest(t: PhoneTest) {
   const finish = () => {
     closeOverlay();
     const pct = Math.round((on.size / total) * 100);
-    render(h('h1', {}, t.label), h('div', { class: 'card' }, h('p', {}, `Área recorrida: ${on.size} de ${total} celdas (${pct} %).`),
+    render(...stepHeader(t), h('div', { class: 'card' }, h('p', {}, `Área recorrida: ${on.size} de ${total} celdas (${pct} %).`),
       h('div', { class: 'bar' }, h('i', { style: `width:${pct}%` })),
       h('p', { class: 'muted small' }, pct < 100 ? 'Hay celdas sin recorrer: repetí o anotá la zona en observaciones.' : 'Se recorrió toda la cuadrícula.'),
       h('p', { class: 'muted small' }, 'Los bordes y la barra superior no se pueden probar desde Safari: revisalos a mano (por ejemplo, deslizando el Centro de control).')),
@@ -203,37 +312,48 @@ async function cameraTest(t: PhoneTest, facing: 'user' | 'environment') {
   }
   const v = h('video', { autoplay: true, playsinline: true, muted: true }) as HTMLVideoElement;
   v.srcObject = media;
-  render(h('h1', {}, t.label), v, h('p', { class: 'muted small' }, `${facing === 'environment' ? 'Safari elige la lente principal. ' : ''}Confirmá que la imagen se ve nítida y enfoca. ${facing === 'environment' ? 'Las demás lentes se prueban en «Lentes adicionales».' : ''}`),
+  render(...stepHeader(t), v, h('p', { class: 'muted small' }, `${facing === 'environment' ? 'Safari elige la lente principal. ' : ''}Confirmá que la imagen se ve nítida y enfoca. ${facing === 'environment' ? 'Las demás lentes se prueban en «Lentes adicionales».' : ''}`),
     confirmBox(t, 'safari', { facing }));
 }
 
 async function micTest(t: PhoneTest) {
   const alt = 'Grabá una nota de voz en la app Notas de voz y reproducila.';
   if (!window.isSecureContext || !navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === 'undefined') return unsupported(t, 'Safari no permite el micrófono en esta conexión (requiere HTTPS).', alt);
-  const status = h('p', { class: 'muted' }, 'Tocá «Grabar» y hablá 3 segundos. La grabación se reproduce solo en este iPhone y no se envía.');
+  const status = h('p', { class: 'muted' }, 'Hablá cerca del iPhone: se graban 3 segundos y se reproducen acá (no se envía nada).');
   const audio = h('audio', { controls: true }) as HTMLAudioElement;
-  const recBtn = h('button', { class: 'btn primary' }, 'Grabar 3 segundos') as HTMLButtonElement;
-  recBtn.onclick = async () => {
+  const recBtn = h('button', { class: 'btn' }, 'Grabar de nuevo') as HTMLButtonElement;
+  const record = async () => {
     try { media = await navigator.mediaDevices.getUserMedia({ audio: true }); }
     catch (e: any) { return unsupported(t, e?.name === 'NotAllowedError' ? 'Permiso de micrófono denegado.' : 'No se pudo abrir el micrófono.', alt); }
     const chunks: Blob[] = []; const rec = new MediaRecorder(media);
     rec.ondataavailable = (e) => chunks.push(e.data);
-    rec.onstop = () => { stopMedia(); audio.src = URL.createObjectURL(new Blob(chunks, { type: rec.mimeType || 'audio/mp4' })); void audio.play().catch(() => {}); status.textContent = 'Escuchá la grabación y confirmá.'; recBtn.disabled = false; recBtn.textContent = 'Grabar de nuevo'; };
-    recBtn.disabled = true; status.textContent = 'Grabando…'; rec.start(); setTimeout(() => rec.state !== 'inactive' && rec.stop(), 3000);
+    rec.onstop = async () => {
+      stopMedia();
+      const blob = new Blob(chunks, { type: rec.mimeType || 'audio/mp4' });
+      audio.src = URL.createObjectURL(blob);
+      status.textContent = 'Escuchá la grabación y respondé.'; recBtn.disabled = false;
+      // Reproducción automática con el audio habilitado al tocar «Empezar»; si no, con el reproductor.
+      try { if (actx) { const buf = await actx.decodeAudioData(await blob.arrayBuffer()); const src = actx.createBufferSource(); src.buffer = buf; src.connect(actx.destination); src.start(); } else await audio.play(); } catch { /* queda el reproductor */ }
+    };
+    recBtn.disabled = true; status.textContent = '● Grabando… hablá ahora'; rec.start(); setTimeout(() => rec.state !== 'inactive' && rec.stop(), 3000);
   };
-  render(h('h1', {}, t.label), status, recBtn, audio, confirmBox(t, 'safari', { recordSeconds: 3 }));
+  recBtn.onclick = () => void record();
+  render(...stepHeader(t), status, audio, recBtn, confirmBox(t, 'safari', { recordSeconds: 3 }));
+  if (wizard) void record(); else { recBtn.textContent = 'Grabar 3 segundos'; recBtn.className = 'btn primary'; }
 }
 
 function speakerTest(t: PhoneTest) {
-  const AC: typeof AudioContext | undefined = (window as any).AudioContext ?? (window as any).webkitAudioContext;
+  const AC: any = (window as any).AudioContext ?? (window as any).webkitAudioContext;
   if (!AC) return unsupported(t, 'Este navegador no puede reproducir el tono.', 'Reproducí un video o música con el volumen alto.');
   const play = () => {
-    const ctx = new AC(); const o = ctx.createOscillator(); const g = ctx.createGain();
+    const ctx: AudioContext = actx ?? new AC(); void ctx.resume();
+    const o = ctx.createOscillator(); const g = ctx.createGain();
     o.frequency.value = 1000; g.gain.value = 0.25; o.connect(g); g.connect(ctx.destination);
-    o.start(); o.stop(ctx.currentTime + 1.5); o.onended = () => void ctx.close();
+    o.start(); o.stop(ctx.currentTime + 1.5); if (ctx !== actx) o.onended = () => void ctx.close();
   };
-  render(h('h1', {}, t.label), h('p', { class: 'muted' }, 'Subí el volumen, quitá el modo silencio y tocá «Reproducir tono». Debe sonar por el altavoz inferior sin distorsión.'),
-    h('button', { class: 'btn primary', onClick: play }, 'Reproducir tono'), confirmBox(t, 'safari', { hz: 1000 }));
+  render(...stepHeader(t), h('p', { class: 'muted' }, 'Tiene que sonar un tono por el altavoz inferior, sin distorsión. Volumen alto y sin modo silencio.'),
+    h('button', { class: 'btn', onClick: play }, '🔊 Reproducir tono'), confirmBox(t, 'safari', { hz: 1000 }));
+  if (wizard && actx) play();
 }
 
 async function motionTest(t: PhoneTest) {
@@ -243,7 +363,8 @@ async function motionTest(t: PhoneTest) {
   const out = h('p', { class: 'muted' }, 'Tocá «Empezar» y mové el equipo en todas direcciones durante 4 segundos.');
   const go = h('button', { class: 'btn primary' }, 'Empezar') as HTMLButtonElement;
   go.onclick = async () => {
-    if (typeof DME.requestPermission === 'function') {
+    if (motionPerm === 'denied') return unsupported(t, 'Permiso de movimiento denegado.', alt);
+    if (typeof DME.requestPermission === 'function' && motionPerm !== 'granted') {
       try { if ((await DME.requestPermission()) !== 'granted') return unsupported(t, 'Permiso de movimiento denegado.', alt); }
       catch { return unsupported(t, 'No se pudo pedir el permiso de movimiento.', alt); }
     }
@@ -262,7 +383,8 @@ async function motionTest(t: PhoneTest) {
       void submit(t.key, st, detail, 'safari', { events: n, accelerometer: acc, gyroscope: gyro });
     }, 4000);
   };
-  render(h('h1', {}, t.label), out, go, h('button', { class: 'btn', onClick: back }, 'Volver'));
+  render(...stepHeader(t), out, go, h('button', { class: 'btn', onClick: back }, wizard ? 'Salir' : 'Volver'));
+  if (wizard && motionPerm !== null) { out.textContent = 'Mové el iPhone en todas direcciones…'; go.click(); }
 }
 
 void start();
