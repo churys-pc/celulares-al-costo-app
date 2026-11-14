@@ -27,7 +27,7 @@ export function Home({ settings, go }: { settings: Settings | null } & Nav) {
   return (
     <div className="home3">
       <header className="h3-head">
-        <div><h1>Inicio</h1><p>Encontrá equipos y organizá el día en el local.</p></div>
+        <div><h1>Inicio</h1></div>
         {stats && <div className="h3-stock"><Icon name="box" size={18} className="accent" />{nf(stats.stockTotal)} unidades en stock</div>}
       </header>
 
@@ -37,20 +37,6 @@ export function Home({ settings, go }: { settings: Settings | null } & Nav) {
         <TasksPanel />
         <NewsPanel />
       </div>
-
-      <section className="h3-quick">
-        <h2>Accesos rápidos</h2>
-        <div className="h3-quick-grid">
-          {([['comparador', 'layers', 'Comparar equipos', 'Poné dos modelos lado a lado.'],
-             ['imei', 'barcode', 'Verificar IMEI', 'Consultá el estado de un equipo.'],
-             ['diagnostico', 'pulse', 'Abrir diagnóstico', 'Entrá a las pruebas del equipo.']] as const).map(([id, icon, t, d]) => (
-            <button key={id} className="h3-q" onClick={() => go(id)}>
-              <span className="h3-tile"><Icon name={icon} size={22} /></span>
-              <span className="h3-q-txt"><b>{t}</b><small>{d}</small></span>
-              <Icon name="arrow" size={18} className="h3-q-arrow" />
-            </button>))}
-        </div>
-      </section>
 
       {open && <ProductSheet key={open.id} product={open} settings={settings} onClose={() => setOpen(null)}
         onEdit={() => { setOpen(null); go('catalogo', `${open.brand} ${open.model}`); }} onChanged={() => {}} />}
@@ -91,7 +77,7 @@ function HomeSearch({ settings, onPick, onAll }: { settings: Settings | null; on
   return (
     <section className="h3-search">
       <div className="h3-search-main">
-        <div className="h3-title"><span className="h3-tile big"><Icon name="search" size={20} /></span><h2>Buscá un equipo</h2></div>
+        <div className="h3-title"><span className="h3-tile big"><Icon name="search" size={20} /></span><h2>Buscá un celular</h2></div>
         <div className="hs-wrap">
           <form className="h3-bar" onSubmit={(e) => { e.preventDefault(); run(); }}>
             <Icon name="search" size={20} />

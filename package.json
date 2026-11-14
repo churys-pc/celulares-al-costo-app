@@ -1,6 +1,6 @@
 {
   "name": "celulares-al-costo-app",
-  "version": "0.18.0",
+  "version": "0.18.1",
   "private": true,
   "description": "App Windows + web móvil para local de celulares: catálogo, comparador, diagnóstico iPhone y tasación.",
   "main": "dist/electron.cjs",
