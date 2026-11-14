@@ -1,11 +1,32 @@
 // Simulador del servicio de Apple (usbmuxd + lockdownd + diagnostics_relay) SOLO para pruebas y desarrollo.
 // Habla el mismo protocolo que el servicio real, sin TLS (EnableSessionSSL: false).
 import net from 'node:net';
+import tls from 'node:tls';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import { execFileSync } from 'node:child_process';
 import { toXml as rawXml, parseAny } from '../../src/server/plist.ts';
 // Como el servicio real de Apple: plist «formateado», con saltos de línea y tabulaciones entre etiquetas.
 const toXml = (v: unknown) => rawXml(v).replace(/(<\/[a-z]+>|<(?:dict|array|plist[^>]*)>)(?=<)/g, '$1\n\t');
 
+/** Certificados como los del emparejamiento (RSA 2048, autofirmados): uno para la PC y otro para el iPhone. */
+let certs: { hostCert: string; hostKey: string; devCert: string; devKey: string } | null = null;
+function pairCerts() {
+  if (certs) return certs;
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'pair-'));
+  const mk = (name: string) => {
+    execFileSync('openssl', ['req', '-x509', '-newkey', 'rsa:2048', '-nodes', '-keyout', path.join(dir, `${name}.key`), '-out', path.join(dir, `${name}.crt`), '-days', '30', '-subj', `/CN=${name}`], { stdio: 'ignore' });
+    return { cert: fs.readFileSync(path.join(dir, `${name}.crt`), 'utf8'), key: fs.readFileSync(path.join(dir, `${name}.key`), 'utf8') };
+  };
+  const h = mk('host'), d = mk('device');
+  certs = { hostCert: h.cert, hostKey: h.key, devCert: d.cert, devKey: d.key };
+  return certs;
+}
+
 export interface FakeDevice {
+  /** Sesión cifrada como en un iPhone real (EnableSessionSSL / EnableServiceSSL). */
+  ssl?: boolean;
   udid: string; deviceId: number; paired: boolean; locked?: boolean; values: Record<string, any>;
   disk?: Record<string, any>; battery?: Record<string, any>; ioreg?: Record<string, any> | null; deviceClass?: string;
 }
@@ -16,13 +37,22 @@ export function startFakeMux(devices: FakeDevice[]) {
   const server = net.createServer((s) => {
     sockets.add(s); s.on('close', () => sockets.delete(s)); s.on('error', () => {});
     let buf = Buffer.alloc(0); let mode: 'mux' | 'lockdown' | 'diag' = 'mux'; let dev: FakeDevice | null = null; let session = false;
+    let out: net.Socket | tls.TLSSocket = s;
+    /** El servidor pasa a TLS en el mismo socket (después de responder StartSession o al abrir el servicio). */
+    const upgrade = () => {
+      const c = pairCerts();
+      s.removeListener('data', onData);
+      const t = new tls.TLSSocket(s, { isServer: true, cert: c.devCert, key: c.devKey, requestCert: true, rejectUnauthorized: false });
+      t.on('data', onData); t.on('error', () => {});
+      out = t;
+    };
     const muxReply = (tag: number, obj: any) => {
       const body = Buffer.from(toXml(obj)); const h = Buffer.alloc(16);
       h.writeUInt32LE(16 + body.length, 0); h.writeUInt32LE(1, 4); h.writeUInt32LE(8, 8); h.writeUInt32LE(tag, 12);
       s.write(Buffer.concat([h, body]));
     };
-    const ldReply = (obj: any) => { const b = Buffer.from(toXml(obj)); const h = Buffer.alloc(4); h.writeUInt32BE(b.length, 0); s.write(Buffer.concat([h, b])); };
-    s.on('data', (d: Buffer) => {
+    const ldReply = (obj: any) => { const b = Buffer.from(toXml(obj)); const h = Buffer.alloc(4); h.writeUInt32BE(b.length, 0); out.write(Buffer.concat([h, b])); };
+    const onData = (d: Buffer) => {
       buf = Buffer.concat([buf, d]);
       for (;;) {
         if (mode === 'mux') {
@@ -32,7 +62,7 @@ export function startFakeMux(devices: FakeDevice[]) {
           if (msg.MessageType === 'ListDevices') muxReply(tag, { DeviceList: devices.map((x) => ({ DeviceID: x.deviceId, MessageType: 'Attached', Properties: { ConnectionType: 'USB', SerialNumber: x.udid, DeviceID: x.deviceId } })) });
           else if (msg.MessageType === 'ReadPairRecord') {
             const x = devices.find((y) => y.udid === msg.PairRecordID);
-            if (x?.paired) muxReply(tag, { PairRecordData: Buffer.from(toXml({ HostID: 'HOST-1', SystemBUID: 'BUID-1', HostCertificate: Buffer.from('-----BEGIN CERTIFICATE-----\nx\n-----END CERTIFICATE-----\n'), HostPrivateKey: Buffer.from('k') })) });
+            if (x?.paired) { const c = pairCerts(); muxReply(tag, { PairRecordData: Buffer.from(toXml({ HostID: 'HOST-1', SystemBUID: 'BUID-1', HostCertificate: Buffer.from(c.hostCert), HostPrivateKey: Buffer.from(c.hostKey), DeviceCertificate: Buffer.from(c.devCert) })) }); }
             else muxReply(tag, { MessageType: 'Result', Number: 2 });
           } else if (msg.MessageType === 'Connect') {
             const port = ((msg.PortNumber & 0xff) << 8) | (msg.PortNumber >> 8);
@@ -40,6 +70,7 @@ export function startFakeMux(devices: FakeDevice[]) {
             if (!dev) { muxReply(tag, { MessageType: 'Result', Number: 2 }); continue; }
             muxReply(tag, { MessageType: 'Result', Number: 0 });
             mode = port === 62078 ? 'lockdown' : port === diagPort ? 'diag' : 'lockdown';
+            if (mode === 'diag' && dev.ssl) upgrade();
           } else muxReply(tag, { MessageType: 'Result', Number: 1 });
         } else {
           if (buf.length < 4) return;
@@ -63,15 +94,16 @@ export function startFakeMux(devices: FakeDevice[]) {
             case 'StartSession':
               if (d.locked) ldReply({ Request: 'StartSession', Error: 'PasswordProtected' });
               else if (!d.paired || msg.HostID !== 'HOST-1') ldReply({ Request: 'StartSession', Error: 'InvalidHostID' });
-              else { session = true; ldReply({ Request: 'StartSession', SessionID: 'S1', EnableSessionSSL: false }); }
+              else { session = true; ldReply({ Request: 'StartSession', SessionID: 'S1', EnableSessionSSL: !!d.ssl }); if (d.ssl) upgrade(); }
               break;
-            case 'StartService': ldReply(session ? { Request: 'StartService', Port: diagPort, EnableServiceSSL: false, Service: msg.Service } : { Error: 'NoRunningSession' }); break;
+            case 'StartService': ldReply(session ? { Request: 'StartService', Port: diagPort, EnableServiceSSL: !!d.ssl, Service: msg.Service } : { Error: 'NoRunningSession' }); break;
             case 'StopSession': session = false; ldReply({ Request: 'StopSession' }); break;
             default: ldReply({ Error: 'InvalidRequest' });
           }
         }
       }
-    });
+    };
+    s.on('data', onData);
   });
   return new Promise<{ port: number; close: () => Promise<void>; devices: FakeDevice[] }>((ok) => server.listen(0, '127.0.0.1', () => ok({
     port: (server.address() as net.AddressInfo).port, devices,

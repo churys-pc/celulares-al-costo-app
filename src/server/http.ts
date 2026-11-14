@@ -19,7 +19,7 @@ import { TaskRepo } from './tasks.ts';
 import { newsState, refreshNews } from './news.ts';
 import { DiagStore, DiagError } from './diag.ts';
 import { DiagLan } from './diagLan.ts';
-import { UsbWatcher, readDevice } from './usbmux.ts';
+import { UsbWatcher, readDevice, techText } from './usbmux.ts';
 import { ValidationError, type ProductFilter } from '../shared/types.ts';
 
 const MAX_BODY = 5 * 1024 * 1024;
@@ -123,8 +123,12 @@ export function createServer(db: Db, webRoot: string, dataDir: string, opts: { s
       if (same === false) throw new DiagError(409, 'Es otro iPhone: no coincide con el equipo de este diagnóstico. Conectá el mismo equipo o iniciá un diagnóstico nuevo.');
       let r;
       try { r = await readDevice(usb.mux, dev); }
-      catch { diag.setUsbState(m[1], { state: 'error', at: new Date().toISOString() }); throw new DiagError(502, 'No se pudo leer el iPhone. Revisá el cable (de datos), desbloquealo y volvé a conectarlo.'); }
-      const state = { state: r.state, message: r.message, read: r.read, missing: r.missing, at: new Date().toISOString() };
+      catch (e) {
+        const detail = techText(e);
+        diag.setUsbState(m[1], { state: 'error', detail, at: new Date().toISOString() });
+        throw new DiagError(502, `No se pudo leer el iPhone. Revisá el cable (de datos), desbloquealo y volvé a conectarlo. (Detalle técnico: ${detail})`);
+      }
+      const state = { state: r.state, message: r.message, detail: r.detail ?? null, read: r.read, missing: r.missing, at: new Date().toISOString() };
       // Sin autorización también se guardan modelo e iOS, pero no se fija la identidad del equipo hasta tener la sesión.
       if (r.state === 'connected') return diag.applyUsb(m[1], dev.udid, r.info, state);
       diag.setUsbState(m[1], state);

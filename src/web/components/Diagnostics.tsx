@@ -8,7 +8,7 @@ import { useIsAdmin } from '../session.ts';
 
 interface Diag {
   id: string; ref: string; status: 'open' | 'closed' | 'cancelled'; createdAt: string; closedAt: string | null; createdBy: string | null;
-  device: DeviceInfo; masked: boolean; usbState: { state: string; message: string | null; read?: string[]; missing?: string[]; at: string } | null; hasUsbIdentity: boolean;
+  device: DeviceInfo; masked: boolean; usbState: { state: string; message: string | null; detail?: string | null; read?: string[]; missing?: string[]; at: string } | null; hasUsbIdentity: boolean;
   observations: string; current: Record<string, TestResult>; history: Record<string, TestResult[]>; requests: string[]; verdict: Verdict;
   phone: { qrExpiresAt: string | null; pending: { id: string; code: string; info: string; since: string }[]; active: { id: string; info: string; lastSeen: string | null } | null };
 }
@@ -136,6 +136,7 @@ function Session({ id, onBack, onReport }: { id: string; onBack: () => void; onR
     : usbState === 'connected' && d?.usbState && autoRead.current === device.key ? { key: 'connected', label: 'Conectado' }
     : usbState === 'pending_trust' ? { key: 'pending', label: 'Pendiente de autorización' }
     : usbState === 'locked' ? { key: 'pending', label: 'Desbloqueá el iPhone' }
+    : usbState === 'error' && autoRead.current === device.key && !reading ? { key: 'disconnected', label: 'Lectura incompleta' }
     : reading ? { key: 'reading', label: 'Leyendo…' } : { key: 'detected', label: 'Detectado' };
 
   async function readUsb(key: string) {
@@ -163,7 +164,7 @@ function Session({ id, onBack, onReport }: { id: string; onBack: () => void; onR
   // Con los datos leídos (o si se sigue sin USB) se genera el QR automáticamente.
   useEffect(() => {
     if (!open || autoQr.current || d?.phone.active) return;
-    if (usbState === 'connected' || manualDevice || usb?.service === 'unavailable') { autoQr.current = true; void newQr(); }
+    if (usbState === 'connected' || usbState === 'error' || manualDevice || usb?.service === 'unavailable') { autoQr.current = true; void newQr(); }
   }, [open, usbState, manualDevice, usb?.service, d?.phone.active]);
 
   async function act(path: string, body?: unknown) {
@@ -202,6 +203,7 @@ function Session({ id, onBack, onReport }: { id: string; onBack: () => void; onR
                     <option value="">Elegir…</option>{devices.map((x) => <option key={x.key} value={x.key}>{x.model ?? x.productType ?? 'iPhone'}{x.ios ? ` · iOS ${x.ios}` : ''}</option>)}
                   </select></label>)}
               {d.usbState?.message && device && <p className="dg-note">{d.usbState.message}</p>}
+              {d.usbState?.detail && device && <p className="muted small dg-tech">Detalle técnico: {d.usbState.detail}</p>}
               {status.key === 'disconnected' && <p className="dg-note">Se desconectó el cable. El avance se conserva: al reconectar se verifica que sea el mismo iPhone.</p>}
               {status.key === 'none' && !wasConnected && <p className="muted small">¿No aparece? Probá otro cable o puerto, desbloqueá el iPhone y abrí la app Dispositivos Apple para comprobar si Windows lo reconoce.</p>}
               <div className="dg-acts">

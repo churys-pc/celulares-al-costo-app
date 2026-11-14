@@ -131,6 +131,32 @@ test('USB: lectura con la PC autorizada (modelo, iOS, capacidad, serie, IMEI y b
   } finally { await mux.close(); }
 });
 
+test('USB: sesión cifrada como en un iPhone real (TLS con el certificado del emparejamiento)', async () => {
+  const mux = await startFakeMux([SAMPLE_IPHONE({ ssl: true })]);
+  try {
+    const m = new Usbmux({ host: '127.0.0.1', port: mux.port });
+    const [dev] = await m.listDevices();
+    const r = await readDevice(m, dev);
+    assert.equal(r.state, 'connected', r.detail ?? '');
+    assert.equal(r.info.serial, 'F2LXK0ABCD12'); assert.equal(r.info.capacityGb, 128); assert.equal(r.info.battery!.cycles, 412);
+  } finally { await mux.close(); }
+});
+
+test('USB: si falla un paso se conserva lo leído y se informa en qué paso', async () => {
+  const mux = await startFakeMux([SAMPLE_IPHONE({ ssl: true })]);
+  try {
+    const m = new Usbmux({ host: '127.0.0.1', port: mux.port });
+    const [dev] = await m.listDevices();
+    // Registro de emparejamiento con una clave que no corresponde al certificado: falla la conexión cifrada.
+    const orig = m.readPairRecord.bind(m);
+    m.readPairRecord = async (u: string) => ({ ...(await orig(u))!, HostPrivateKey: Buffer.from('-----BEGIN PRIVATE KEY-----\nAAAA\n-----END PRIVATE KEY-----\n') });
+    const r = await readDevice(m, dev);
+    assert.equal(r.state, 'error');
+    assert.equal(r.info.model, 'iPhone 13'); assert.equal(r.info.ios, '18.1');
+    assert.match(r.detail!, /^conexión cifrada: /); assert.match(r.message!, /Podés seguir/);
+  } finally { await mux.close(); }
+});
+
 test('USB: sin autorización, bloqueado, sin servicio, otro tipo de equipo y varios iPhone', async () => {
   const mux = await startFakeMux([SAMPLE_IPHONE({ paired: false }), SAMPLE_IPHONE({ udid: 'B-2', deviceId: 8, locked: true, values: { ...SAMPLE_IPHONE().values, ProductType: 'iPhone17,3' } })]);
   try {

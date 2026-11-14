@@ -159,9 +159,18 @@ class PlistChannel {
   async upgrade(pair: Record<string, any>) {
     this.reader.detach();
     const pem = (x: any) => (Buffer.isBuffer(x) ? x.toString('utf8') : String(x));
-    const s = tls.connect({ socket: this.sock as net.Socket, cert: pem(pair.HostCertificate), key: pem(pair.HostPrivateKey), rejectUnauthorized: false,
-      checkServerIdentity: () => undefined, minVersion: 'TLSv1', ciphers: 'DEFAULT:@SECLEVEL=0' });
-    await new Promise<void>((ok, ko) => { s.once('secureConnect', () => ok()); s.once('error', ko); setTimeout(() => ko(new Error('TLS sin respuesta')), TIMEOUT); });
+    const base = { socket: this.sock as net.Socket, cert: pem(pair.HostCertificate), key: pem(pair.HostPrivateKey), rejectUnauthorized: false,
+      checkServerIdentity: () => undefined, minVersion: 'TLSv1' as const };
+    // OpenSSL (Node) necesita bajar el nivel de seguridad para los certificados de emparejamiento; BoringSSL (Electron)
+    // no entiende «@SECLEVEL» y rechaza la lista: en ese caso se conecta sin esa opción.
+    let s: tls.TLSSocket;
+    try { s = tls.connect(process.versions.electron ? base : { ...base, ciphers: 'DEFAULT:@SECLEVEL=0' }); }
+    catch { s = tls.connect(base); }
+    await new Promise<void>((ok, ko) => {
+      const t = setTimeout(() => ko(new Error('el cifrado no respondió')), TIMEOUT);
+      s.once('secureConnect', () => { clearTimeout(t); ok(); });
+      s.once('error', (e) => { clearTimeout(t); ko(e); });
+    });
     this.sock = s; this.reader = new Reader(s);
   }
   close() { try { this.sock.destroy(); } catch {} }
@@ -169,7 +178,10 @@ class PlistChannel {
 
 const BASIC_KEYS = ['ProductType', 'ProductVersion', 'BuildVersion', 'DeviceClass'];
 
-export interface UsbReading { state: UsbState; info: DeviceInfo; read: string[]; missing: string[]; message: string | null }
+export interface UsbReading { state: UsbState; info: DeviceInfo; read: string[]; missing: string[]; message: string | null; detail?: string | null }
+
+/** Texto técnico corto, sin identificadores largos. */
+export const techText = (e: any) => String(e?.code ? `${e.code} ${e.message ?? ''}` : e?.message ?? e ?? '').replace(/[0-9A-F]{8}-?[0-9A-F]{8,}/gi, '•••').replace(/\s+/g, ' ').trim().slice(0, 140);
 
 function errText(e: any): string { return String(e?.Error ?? e?.message ?? e ?? '').slice(0, 80); }
 
@@ -177,8 +189,12 @@ function errText(e: any): string { return String(e?.Error ?? e?.message ?? e ?? 
 export async function readDevice(mux: Usbmux, dev: { deviceId: number; udid: string }): Promise<UsbReading> {
   const info: DeviceInfo = { battery: {} };
   const read: string[] = [];
-  const ld = new PlistChannel(await mux.connect(dev.deviceId, 62078));
+  let step = 'conexión con el iPhone';
+  let ld: PlistChannel;
+  try { ld = new PlistChannel(await mux.connect(dev.deviceId, 62078)); }
+  catch (e) { return { state: 'error', info, read, missing: [], message: 'No se pudo abrir la conexión con el iPhone. Desconectalo, desbloquealo y volvé a conectarlo.', detail: `${step}: ${techText(e)}` }; }
   try {
+    step = 'consulta inicial';
     const qt = await ld.request({ Request: 'QueryType' });
     if (qt.Type !== 'com.apple.mobile.lockdown') throw new Error('el equipo no respondió como un iPhone');
     // Sin sesión: lo que el iPhone entrega a cualquier PC.
@@ -188,16 +204,20 @@ export async function readDevice(mux: Usbmux, dev: { deviceId: number; udid: str
     if (bv.ProductType) { info.productType = String(bv.ProductType); info.model = modelName(info.productType); read.push('model'); }
     if (bv.ProductVersion) { info.ios = String(bv.ProductVersion); read.push('ios'); }
     if (bv.BuildVersion) info.build = String(bv.BuildVersion);
+    step = 'registro de autorización';
     const pair = await mux.readPairRecord(dev.udid);
     const partial = (state: UsbState, message: string): UsbReading => ({ state, info, read, missing: ['capacityGb', 'serial', 'imei1', 'battery'], message });
     if (!pair?.HostID || !pair?.HostCertificate) return partial('pending_trust', 'La PC no está autorizada: desbloqueá el iPhone, abrí Dispositivos Apple (o iTunes) y tocá «Confiar» en el iPhone.');
+    step = 'inicio de sesión';
     const ss = await ld.request({ Request: 'StartSession', HostID: pair.HostID, SystemBUID: pair.SystemBUID });
     if (ss.Error) {
       if (/PasswordProtected/i.test(ss.Error)) return partial('locked', 'Desbloqueá el iPhone y volvé a intentar.');
       if (/InvalidHostID|PairingDialogResponsePending|UserDeniedPairing|InvalidPairRecord/i.test(ss.Error)) return partial('pending_trust', 'El iPhone no tiene autorizada esta PC: desbloquealo y tocá «Confiar» (si no aparece, abrí Dispositivos Apple con el iPhone conectado).');
       return partial('error', 'El iPhone no aceptó la sesión. Desconectalo, desbloquealo y volvé a conectarlo.');
     }
+    step = 'conexión cifrada';
     if (ss.EnableSessionSSL) await ld.upgrade(pair);
+    step = 'datos del equipo';
     const full = ((await ld.request({ Request: 'GetValue' })).Value ?? {}) as Record<string, any>;
     if (full.SerialNumber) { info.serial = String(full.SerialNumber); read.push('serial'); }
     if (full.InternationalMobileEquipmentIdentity) { info.imei1 = String(full.InternationalMobileEquipmentIdentity); read.push('imei1'); }
@@ -205,6 +225,7 @@ export async function readDevice(mux: Usbmux, dev: { deviceId: number; udid: str
     if (full.ModelNumber) info.modelNumber = `${full.ModelNumber}${full.RegionInfo ?? ''}`;
     if (full.ProductType && !info.productType) { info.productType = String(full.ProductType); info.model = modelName(info.productType); }
     if (full.ProductVersion && !info.ios) info.ios = String(full.ProductVersion);
+    step = 'capacidad y batería';
     const disk = ((await ld.request({ Request: 'GetValue', Domain: 'com.apple.disk_usage' })).Value ?? {}) as Record<string, any>;
     const cap = capacityGb(Number(disk.TotalDiskCapacity));
     if (cap) { info.capacityGb = cap; read.push('capacityGb'); }
@@ -235,6 +256,11 @@ export async function readDevice(mux: Usbmux, dev: { deviceId: number; udid: str
     await ld.request({ Request: 'StopSession', SessionID: ss.SessionID }).catch(() => {});
     const want = ['model', 'ios', 'capacityGb', 'serial', 'imei1', 'battery.chargePct', 'battery.cycles'];
     return { state: 'connected', info, read, missing: want.filter((k) => !read.includes(k)), message: null };
+  } catch (e) {
+    // Lo leído hasta acá se conserva (modelo e iOS); el resto se puede cargar a mano.
+    const want = ['model', 'ios', 'capacityGb', 'serial', 'imei1', 'battery.chargePct', 'battery.cycles'];
+    return { state: 'error', info, read, missing: want.filter((k) => !read.includes(k)),
+      message: 'No se pudieron leer todos los datos por USB. Podés seguir: completá lo que falte con «Editar» y abrí las pruebas con el QR.', detail: `${step}: ${techText(e)}` };
   } finally { ld.close(); }
 }
 

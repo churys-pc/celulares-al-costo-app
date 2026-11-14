@@ -47,6 +47,12 @@ jobs:
           node-version: 22
       - run: npm install
       - run: npm test
+      - name: Lectura USB cifrada con el motor de Electron (BoringSSL, Windows)
+        shell: bash
+        env:
+          ELECTRON_RUN_AS_NODE: '1'
+          MSYS2_ARG_CONV_EXCL: '*'
+        run: npm run check:usb-electron
       - name: Generar instalador
         env:
           DATA_REPO_TOKEN: ${{ secrets.DATA_REPO_TOKEN }}
